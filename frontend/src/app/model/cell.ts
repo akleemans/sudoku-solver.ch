@@ -3,8 +3,9 @@ export class Cell {
   public peers: Cell[];
   public cellId: number;
 
-  public constructor(cellId: number) {
+  public constructor(cellId: number, c: string) {
     this.cellId = cellId;
+    this.candidates = c.length === 1 ? c : '123456789';
   }
 
   public propagateToPeers(): void {
@@ -16,18 +17,18 @@ export class Cell {
   }
 
   public removeCandidate(value: string): void {
-    this.candidates.replace(value, '');
+    this.candidates = this.candidates.replace(value, '');
   }
 
   public toString(): string {
     return this.candidates.length === 1 ? this.candidates : ' ';
   }
 
-  public valid(): boolean {
+  public isValid(): boolean {
     return this.candidates.length >= 1;
   }
 
-  public solved(): boolean {
+  public isSolved(): boolean {
     return this.candidates.length === 1;
   }
 }
