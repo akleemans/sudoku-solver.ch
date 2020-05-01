@@ -1,0 +1,87 @@
+<div class="toggle-buttons btn-group" role="group">
+  <button type="button" [class.active]="viewMode === ViewMode.numbers" class="btn btn-outline-dark"
+          (click)="setViewMode(ViewMode.numbers)">
+    Enter numbers
+  </button>
+  <button type="button" [class.active]="viewMode === ViewMode.constraints" class="btn btn-outline-dark"
+          (click)="setViewMode(ViewMode.constraints)">
+    Add constraints
+  </button>
+</div>
+
+<div *ngIf="viewMode === ViewMode.numbers" class="flex-container">
+  <div class="left-side">
+    <ul>
+      <li *ngFor="let c of cellNumbers;">
+        <input type="text" [(ngModel)]="cells[c]" maxlength="1" autocomplete="false" style="color: blue;">
+      </li>
+    </ul>
+  </div>
+
+  <div class="right-side">
+    Click on cells to enter numbers which are already known.
+  </div>
+</div>
+
+<div *ngIf="viewMode === ViewMode.constraints" class="flex-container">
+  <div class="left-side">
+    <ul>
+      <li *ngFor="let c of cellNumbers;" (click)="toggleSelection(c)" [style.background-color]="selectedCells.includes(c) ? selectionColor : 'white'">
+        <span>{{cells[c]}}</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="right-side">
+    <button type="button" class="btn btn-outline-dark" (click)="solve()">
+      Solve
+    </button>
+
+    Click on one or multiple cell to add a constraint.
+
+    # of selected cells: {{selectedCells.length}}
+
+    Type:
+    <select class="custom-select">
+      <option selected>Choose constraint type</option>
+      <option value="ConstraintType"></option>
+      <option value="2">Two</option>
+      <option value="3">Three</option>
+    </select>
+
+    * Single cell constraints:
+    * Cell is odd/even
+    * 2-cell value constraints:
+    * Cell A is bigger than B
+    * Cell A is [exactly X (1-9)] bigger than B
+    * Cell A is factor 2/3/4 as big as B
+    * 2+ cell constraints:
+    * Cells form a complete 1-9 unit
+    * Cells form sum of X
+    * Cells form product of X
+
+    <!--
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+        Constraint type:
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" (click)="addConstraint()">Single cell: </a>
+        <a class="dropdown-item" href="#">Another action</a>
+        <a class="dropdown-item" href="#">Something else here</a>
+      </div>
+    </div>
+    -->
+
+    (constraint details: sum, odd/even, ...)
+
+    <button type="button" class="btn btn-outline-dark">
+      Add
+    </button>
+
+    List of Constraints:
+
+  </div>
+</div>
+
