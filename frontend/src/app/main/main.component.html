@@ -12,22 +12,29 @@
 <div *ngIf="viewMode === ViewMode.numbers" class="flex-container">
   <div class="left-side">
     <ul>
-      <li *ngFor="let c of cellNumbers;">
-        <input type="text" [(ngModel)]="cells[c]" maxlength="1" autocomplete="false" style="color: blue;">
+      <li *ngFor="let cell of cells;">
+        <input type="text" [(ngModel)]="cell.value" maxlength="1" autocomplete="false" [style.color]="cell.original ? 'blue' : 'red'">
       </li>
     </ul>
   </div>
 
   <div class="right-side">
-    Click on cells to enter numbers which are already known.
+    <p>
+      Click on cells to enter numbers which are already known.
+    </p>
+
+    <button type="button" class="btn btn-outline-dark" (click)="clear()">
+      clear
+    </button>
   </div>
 </div>
 
 <div *ngIf="viewMode === ViewMode.constraints" class="flex-container">
   <div class="left-side">
     <ul>
-      <li *ngFor="let c of cellNumbers;" (click)="toggleSelection(c)" [style.background-color]="selectedCells.includes(c) ? selectionColor : 'white'">
-        <span>{{cells[c]}}</span>
+      <li *ngFor="let cell of cells;" (click)="toggleSelection(cell)"
+          [style.background-color]="cell.bgColor">
+        <span>{{cell.value}}</span>
       </li>
     </ul>
   </div>
@@ -44,21 +51,18 @@
     Type:
     <select class="custom-select">
       <option selected>Choose constraint type</option>
-      <option value="ConstraintType"></option>
+      <option [value]="ConstraintType.SINGLE_CELL_ODD_EVEN">Single cell: odd/even</option>
       <option value="2">Two</option>
       <option value="3">Three</option>
     </select>
 
-    * Single cell constraints:
-    * Cell is odd/even
-    * 2-cell value constraints:
-    * Cell A is bigger than B
-    * Cell A is [exactly X (1-9)] bigger than B
-    * Cell A is factor 2/3/4 as big as B
-    * 2+ cell constraints:
-    * Cells form a complete 1-9 unit
-    * Cells form sum of X
-    * Cells form product of X
+    Description & attributes:
+    <div *ngIf="selectedType === ConstraintType.SINGLE_CELL_ODD_EVEN">
+      One or more cells which are odd or even.
+
+      Type:
+      Odd / Even
+    </div>
 
     <!--
     <div class="dropdown">
@@ -85,3 +89,8 @@
   </div>
 </div>
 
+<div>
+  sudoku-solver.ch lets you solve custom Sudokus, and a wide range of known 9x9 Sudoku types:
+
+  images of Sudoku X, Killer-Sudoku etc.
+</div>

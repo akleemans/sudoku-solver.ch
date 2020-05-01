@@ -1,15 +1,34 @@
-import {randomColor} from 'randomcolor';
+import * as _ from 'lodash';
 import {Component, OnInit} from '@angular/core';
+import {Cell} from "../model/cell";
+import {Sudoku} from "../model/sudoku";
+import {Solver} from "../model/solver";
+import {Util} from "./util";
 
 enum ViewMode {
   numbers,
   constraints
 }
 
+class GridCell {
+  public bgColor: string = 'white';
+  public value: string = '';
+  public original: boolean
+}
+
 enum ConstraintType {
-  SINGLE_ODD_EVEN,
-  TWO_BIGGER_SMALLER,
-  TWO_
+  SINGLE_CELL_ODD_EVEN,
+  TWO_CELLS_BIGGER_THAN,
+  TWO_CELLS_EXACT_DIFFERENCE,
+  TWO_CELLS_EXACT_FACTOR,
+  MULTI_CELL_UNIT,
+  MULTI_CELL_SUM,
+  MULTI_CELL_PRODUCT
+}
+
+class Constraint {
+  public type: ConstraintType;
+  public cells: Cell[];
 }
 
 
@@ -33,31 +52,41 @@ enum ConstraintType {
 })
 export class MainComponent implements OnInit {
   public ViewMode: typeof ViewMode = ViewMode;
+  public ConstraintType: typeof ConstraintType = ConstraintType;
+
   public viewMode: ViewMode = ViewMode.numbers;
 
-  public cellNumbers: number[];
-  public cells: string[] = [];
+  public cells: GridCell[] = [];
 
   public selectionColor: string;
-  public selectedCells: number[] = [];
+  public selectedCells: GridCell[] = [];
+  public selectedType: ConstraintType;
+
+  public constraints: Constraint[];
 
   public constructor() {
   }
 
   public ngOnInit(): void {
-    this.cellNumbers = Array(81).fill(1).map((x, i) => i);
-    this.selectionColor = this.getRandomColor();
+    this.cells = _.range(81).map(i => new GridCell());
+    this.selectionColor = Util.getRandomColor();
+
+    // init with sudoku
+    let sudokuStr = '7.18.43.......2.....453..7.6.....7..1...9...5..8.....38...195....23........6.89.4';
+    for (let i of _.range(81)) {
+      this.cells[i].value = sudokuStr[i] === '.' ? '' : sudokuStr[i];
+    }
   }
 
   public setViewMode(viewMode: ViewMode): void {
     this.viewMode = viewMode;
   }
 
-  public toggleSelection(id: number) {
-    if (this.selectedCells.includes(id)) {
-      this.selectedCells = this.selectedCells.filter(c => c != id);
+  public toggleSelection(cell: GridCell) {
+    if (this.selectedCells.includes(cell)) {
+      this.selectedCells = this.selectedCells.filter(c => c !== cell);
     } else {
-      this.selectedCells.push(id);
+      this.selectedCells.push(cell);
     }
   }
 
@@ -65,9 +94,20 @@ export class MainComponent implements OnInit {
     console.log('ok');
   }
 
+  public clear(): void {
+    // TODO clear cells
+  }
+
   public solve(): void {
-    // const sudoku = new Sudoku(this.cells);
-    // Solver.solve(sudoku);
+    // Mark filled cells
+    this.cells.forEach(cell => {
+      if (cell.value !== '') {
+        cell.original = true;
+      }
+    })
+    const sudoku = new Sudoku(this.cells.map(c => c.value));
+    const solvedSudoku = Solver.solve(sudoku);
+    this.adaptSolution(solvedSudoku);
 
     // Create a new worker
     const worker = new Worker('./main.worker', {type: 'module'});
@@ -78,7 +118,9 @@ export class MainComponent implements OnInit {
     worker.postMessage('hello');
   }
 
-  private getRandomColor(): string {
-    return randomColor();
+  private adaptSolution(sudoku: Sudoku): void {
+    for (let i of _.range(81)) {
+      this.cells[i].value = sudoku.cells[i].candidates;
+    }
   }
 }
