@@ -13,7 +13,7 @@ enum ViewMode {
 class GridCell {
   public bgColor: string = 'white';
   public value: string = '';
-  public original: boolean
+  public calculated: boolean
 }
 
 enum ConstraintType {
@@ -29,8 +29,18 @@ enum ConstraintType {
 class Constraint {
   public type: ConstraintType;
   public cells: Cell[];
-}
+  // Used for MULTI_CELL_SUM,
+  public sum: number;
 
+  // Used for TWO_CELLS_EXACT_DIFFERENCE
+  public difference: number;
+
+  // Used for TWO_CELLS_EXACT_FACTOR
+  public factor;
+
+  // Used for MULTI_CELL_PRODUCT
+  public product;
+}
 
 /*
 * Single cell constraints:
@@ -85,26 +95,34 @@ export class MainComponent implements OnInit {
   public toggleSelection(cell: GridCell) {
     if (this.selectedCells.includes(cell)) {
       this.selectedCells = this.selectedCells.filter(c => c !== cell);
+      cell.bgColor = 'white';
     } else {
       this.selectedCells.push(cell);
+      cell.bgColor = this.selectionColor;
     }
   }
 
   public addConstraint(): void {
+    // TODO
     console.log('ok');
+    this.constraints.push();
+
+    this.resetSelection();
+    this.selectionColor = Util.getRandomColor();
   }
 
   public clear(): void {
-    // TODO clear cells
+    this.cells.forEach(cell => cell.value = '');
+  }
+
+  public resetSelection(): void {
+    this.cells.forEach(cell => cell.bgColor = 'white');
+    this.selectedCells = [];
   }
 
   public solve(): void {
-    // Mark filled cells
-    this.cells.forEach(cell => {
-      if (cell.value !== '') {
-        cell.original = true;
-      }
-    })
+    this.resetSelection();
+
     const sudoku = new Sudoku(this.cells.map(c => c.value));
     const solvedSudoku = Solver.solve(sudoku);
     this.adaptSolution(solvedSudoku);
@@ -113,14 +131,20 @@ export class MainComponent implements OnInit {
     const worker = new Worker('./main.worker', {type: 'module'});
     worker.onmessage = ({data}) => {
       console.log(`Page got message: ${data}!`);
+      worker.terminate();
     };
     console.log('Posting hello to worker...');
     worker.postMessage('hello');
   }
 
   private adaptSolution(sudoku: Sudoku): void {
+    // Set values on cells
     for (let i of _.range(81)) {
-      this.cells[i].value = sudoku.cells[i].candidates;
+      let cell = this.cells[i];
+      if (cell.value === '') {
+        cell.calculated = true;
+        cell.value = sudoku.cells[i].candidates;
+      }
     }
   }
 }

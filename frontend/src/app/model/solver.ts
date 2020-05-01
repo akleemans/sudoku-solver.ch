@@ -25,8 +25,7 @@ export class Solver {
       if (iterations % 1000 == 0) {
         console.log('>> Iteration ', iterations, 'stack size:', stack.length, 'stack:', stack);
       }
-      console.log('>> Iteration ', iterations, 'stack size:', stack.length, 'stack:', JSON.stringify(stack));
-      if (iterations >= 100) {
+      if (iterations >= 10000) {
         console.log('Something not right, stopping at 10k iterations.');
         break;
       }
@@ -45,15 +44,12 @@ export class Solver {
         console.log('Starting to guess on layer.')
         nextGuess = possibleGuesses[0]
       } else {
-        // possibleGuesses.indexOf(lastGuess)
         let lastGuessIdx = _.findIndex(possibleGuesses, g => g[0] === lastGuess[0] && g[1] === lastGuess[1])
-        console.log('lastGuessIdx:', lastGuessIdx);
         if (lastGuessIdx + 1 === possibleGuesses.length) {
           console.log('No more guesses possible, go up.')
           continue;
         }
         nextGuess = possibleGuesses[lastGuessIdx + 1]
-        console.log('lastGuess:', lastGuess.toString(), 'nextGuess:', nextGuess.toString(), 'possibleGuesses:', possibleGuesses);
 
         // Important part: If one cell can't hold ANY number, don't try any others.
         // It means that this branch can not be the solution!
@@ -62,8 +58,6 @@ export class Solver {
           continue;
         }
       }
-
-      console.log('Working with nextGuess:', nextGuess)
 
       // 2. Do the guess & add to stack
       const idx = nextGuess[0];

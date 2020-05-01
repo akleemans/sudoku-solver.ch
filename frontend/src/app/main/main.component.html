@@ -9,11 +9,12 @@
   </button>
 </div>
 
-<div *ngIf="viewMode === ViewMode.numbers" class="flex-container">
-  <div class="left-side">
+<div [hidden]="viewMode !== ViewMode.numbers" class="flex-container">
+  <div class="grid left-side">
     <ul>
       <li *ngFor="let cell of cells;">
-        <input type="text" [(ngModel)]="cell.value" maxlength="1" autocomplete="false" [style.color]="cell.original ? 'blue' : 'red'">
+        <input type="text" [(ngModel)]="cell.value" maxlength="1" autocomplete="false"
+               [style.color]="cell.calculated ? 'green' : 'blue'">
       </li>
     </ul>
   </div>
@@ -29,12 +30,14 @@
   </div>
 </div>
 
-<div *ngIf="viewMode === ViewMode.constraints" class="flex-container">
-  <div class="left-side">
-    <ul>
+<div [hidden]="viewMode !== ViewMode.constraints" class="flex-container">
+  <div class="grid left-side">
+    <ul style="cursor: pointer;">
       <li *ngFor="let cell of cells;" (click)="toggleSelection(cell)"
           [style.background-color]="cell.bgColor">
-        <span>{{cell.value}}</span>
+        <span [style.color]="cell.calculated ? 'green' : 'black'">
+          {{cell.value}}
+        </span>
       </li>
     </ul>
   </div>
@@ -51,9 +54,13 @@
     Type:
     <select class="custom-select">
       <option selected>Choose constraint type</option>
-      <option [value]="ConstraintType.SINGLE_CELL_ODD_EVEN">Single cell: odd/even</option>
-      <option value="2">Two</option>
-      <option value="3">Three</option>
+      <option [value]="ConstraintType.SINGLE_CELL_ODD_EVEN">Odd or even cell(s)</option>
+      <option [value]="ConstraintType.TWO_CELLS_BIGGER_THAN">Two cells: Bigger/smaller than</option>
+      <option [value]="ConstraintType.TWO_CELLS_EXACT_DIFFERENCE">Two cells: Exact difference</option>
+      <option [value]="ConstraintType.TWO_CELLS_EXACT_FACTOR">Two cells: Exact factor</option>
+      <option [value]="ConstraintType.MULTI_CELL_UNIT">Multiple cells: Complete unit (1-9)</option>
+      <option [value]="ConstraintType.MULTI_CELL_SUM">Multiple cells: sum</option>
+      <option [value]="ConstraintType.MULTI_CELL_PRODUCT">Multiple cells: product</option>
     </select>
 
     Description & attributes:
@@ -93,4 +100,40 @@
   sudoku-solver.ch lets you solve custom Sudokus, and a wide range of known 9x9 Sudoku types:
 
   images of Sudoku X, Killer-Sudoku etc.
+  <ul>
+    <li>
+      Sudoku X: Two additional diagonal units
+    </li>
+    <li>
+      Hyper Sudoku: Four additional units
+    </li>
+    <li>
+      Killer Sudoku (Sum Sudoku): No 3x3 units, but 9 custom units instead
+    </li>
+    <li>
+      Odd-Even Sudoku: Normal Sudoku with odd/even constraints
+    </li>
+    <li>
+      Greater/Less Than Sudoku: Normal Sudoku with greater/less than constraints
+    </li>
+    <li>
+      Any combinations of the above
+    </li>
+  </ul>
+
+  <h3>Technical details</h3>
+  <p>
+    The solver is based on backtracking as described by <a href="https://norvig.com/sudoku.html">Peter Norvig</a>.
+    It uses custom constraints for propagation and a different heuristic (based on the entered constraints) to optimize
+    the search.
+    The solving is done inside of a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API">
+    Web Worker</a>.
+  </p>
+  <p>
+    The grid is based on the work of <a href="https://codepen.io/sdobson">Sam Dobson</a>.
+  </p>
+
+  <p>
+    &copy; 2020 by <a href="https://www.kleemans.ch">Adrianus Kleemans</a>
+  </p>
 </div>
