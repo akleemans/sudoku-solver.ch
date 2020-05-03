@@ -31,7 +31,7 @@ export class Constraint {
   public toString(): string {
     let cellStr = this.cellIds.map(c => c.toString()).join(', ')
     let desc = '';
-    // TODO return a description for contraint
+    // TODO return a description for all contraints
     switch (this.type) {
       case ConstraintType.SINGLE_CELL_ODD_EVEN:
         desc = 'Cells ' + cellStr;

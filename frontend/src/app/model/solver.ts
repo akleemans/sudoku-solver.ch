@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import {Sudoku} from "./sudoku";
+import {Cell} from "./cell";
 
 export class Solver {
 
@@ -22,13 +23,15 @@ export class Solver {
     // Work on stack with Depth-First-Search (DFS)
     let iterations = 0
     while (stack.length > 0) {
-      if (iterations % 1000 == 0) {
-        console.log('>> Iteration ', iterations, 'stack size:', stack.length, 'stack:', stack);
+      if (iterations % 10 == 0) {
+        console.log('>> Iteration ', iterations, 'stack size:', stack.length, 'stack:', stack.map(i => i[1]?.toString()));
       }
+      /*
       if (iterations >= 10000) {
         console.log('Something not right, stopping at 10k iterations.');
         break;
       }
+      */
       iterations += 1
 
       // 1. Pop state and calculate next guess
@@ -92,38 +95,35 @@ export class Solver {
    * @param sudoku The Sudoku in the state where guesses should be calculated
    */
   public static calculateGuesses(sudoku: Sudoku): [number, string][] {
-    /*
-    const cellsInUnit = {};
-    for (let sumUnit of sudoku.sumUnits) {
-      let cellIds = sumUnit[0];
-      let unitSize = cellIds.length;
-      for (let cell of cellIds) {
-        cellsInUnit[cell.cellId] = unitSize;
-      }
-    }
-     */
-
-    // TODO with more constraints, use a more general approach for heuristic
-    // (function which weighs different aspects such as remaining candidates, sum_units, etc.
     let guesses: [number, string, number][] = [];
     for (let cell of sudoku.cells) {
       // If no single candidate on cell, we can guess
       if (cell.candidates.length > 1) {
         for (let c of cell.candidates) {
-          guesses.push([cell.cellId, c, cell.candidates.length])
-          // guesses.push([cell.cellId, c, cellsInUnit[cell.cellId]])
+          guesses.push([cell.cellId, c, Solver.getCellScore(cell, sudoku)])
         }
       }
     }
 
-    // sorted_guesses = sorted(guesses, key=lambda x: x[2])
-    // return [(g[0], g[1]) for g of sorted_guesses]
     let sortedGuesses: [number, string][] = guesses
       .sort((c1, c2) => c1[2] - c2[2])
       .map(c => [c[0], c[1]]);
-    // let sortedGuesses = _.sortBy(guesses, c => c[2])
-    // sorted_guesses = guesses.sort((c1, c2) => c1[2] > c2[])
-    // console.log('sorted guesses:', sortedGuesses);
     return sortedGuesses;
+  }
+
+  /*
+   * Heuristic which cell to try first. The lower the number, the sooner the cell will up for a guess.
+   */
+  public static getCellScore(cell: Cell, sudoku: Sudoku): number {
+    let nr = cell.candidates.length * 10;
+
+    // Check if in sum units
+    let cellsInSumUnit = sudoku.cellsPerSumUnit[nr];
+    if (cellsInSumUnit !== undefined) {
+      nr = nr - 10 + cellsInSumUnit
+    }
+
+    // TODO later: add other constraints into calculation
+    return nr;
   }
 }

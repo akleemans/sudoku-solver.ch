@@ -1,7 +1,6 @@
 import {Util} from "./util";
 
 describe('Util', () => {
-
   it('should correctly count string occurences', () => {
     expect(Util.count('4555566556', '5')).toBe(6);
     expect(Util.count('4555566556', '4')).toBe(1);

@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-
 import {MainComponent} from './main.component';
+import {FormsModule} from "@angular/forms";
 
 describe('MainComponent', () => {
   let component: MainComponent;
@@ -8,7 +8,12 @@ describe('MainComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [MainComponent]
+      imports: [
+        FormsModule,
+      ],
+      declarations: [
+        MainComponent
+      ],
     }).compileComponents();
   }));
 
@@ -19,6 +24,6 @@ describe('MainComponent', () => {
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component).toBeDefined();
   });
 });

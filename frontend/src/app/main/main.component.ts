@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
 import {Component, OnInit} from '@angular/core';
-import {Cell} from "../model/cell";
 import {Sudoku} from "../model/sudoku";
 import {Solver} from "../model/solver";
-import {Util} from "./util";
+import {Constraint} from "../model/constraint";
+import {ConstraintType} from "../model/constraint-type";
 
 enum ViewMode {
   numbers,
@@ -11,49 +11,15 @@ enum ViewMode {
 }
 
 class GridCell {
+  public cellId: number;
   public bgColor: string = 'white';
   public value: string = '';
   public calculated: boolean
+
+  public constructor(cellId: number) {
+    this.cellId = cellId;
+  }
 }
-
-enum ConstraintType {
-  SINGLE_CELL_ODD_EVEN,
-  TWO_CELLS_BIGGER_THAN,
-  TWO_CELLS_EXACT_DIFFERENCE,
-  TWO_CELLS_EXACT_FACTOR,
-  MULTI_CELL_UNIT,
-  MULTI_CELL_SUM,
-  MULTI_CELL_PRODUCT
-}
-
-class Constraint {
-  public type: ConstraintType;
-  public cells: Cell[];
-  // Used for MULTI_CELL_SUM,
-  public sum: number;
-
-  // Used for TWO_CELLS_EXACT_DIFFERENCE
-  public difference: number;
-
-  // Used for TWO_CELLS_EXACT_FACTOR
-  public factor;
-
-  // Used for MULTI_CELL_PRODUCT
-  public product;
-}
-
-/*
-* Single cell constraints:
-	* Cell is odd/even
-* 2-cell value constraints:
-	* Cell A is bigger than B
-	* Cell A is [exactly X (1-9)] bigger than B
-	* Cell A is factor 2/3/4 as big as B
-* 2+ cell constraints:
- * Cells form a complete 1-9 unit
- * Cells form sum of X
- * Cells form product of X
- */
 
 @Component({
   selector: 'app-main',
@@ -65,27 +31,15 @@ export class MainComponent implements OnInit {
   public ConstraintType: typeof ConstraintType = ConstraintType;
 
   public viewMode: ViewMode = ViewMode.numbers;
-
   public cells: GridCell[] = [];
-
-  public selectionColor: string;
-  public selectedCells: GridCell[] = [];
-  public selectedType: ConstraintType;
-
-  public constraints: Constraint[];
+  public currentConstraint: Constraint = new Constraint();
+  public constraints: Constraint[] = [];
 
   public constructor() {
   }
 
   public ngOnInit(): void {
-    this.cells = _.range(81).map(i => new GridCell());
-    this.selectionColor = Util.getRandomColor();
-
-    // init with sudoku
-    let sudokuStr = '7.18.43.......2.....453..7.6.....7..1...9...5..8.....38...195....23........6.89.4';
-    for (let i of _.range(81)) {
-      this.cells[i].value = sudokuStr[i] === '.' ? '' : sudokuStr[i];
-    }
+    this.cells = _.range(81).map(i => new GridCell(i));
   }
 
   public setViewMode(viewMode: ViewMode): void {
@@ -93,22 +47,27 @@ export class MainComponent implements OnInit {
   }
 
   public toggleSelection(cell: GridCell) {
-    if (this.selectedCells.includes(cell)) {
-      this.selectedCells = this.selectedCells.filter(c => c !== cell);
+    if (this.currentConstraint.cellIds.includes(cell.cellId)) {
+      this.currentConstraint.cellIds = this.currentConstraint.cellIds.filter(c => c !== cell.cellId);
       cell.bgColor = 'white';
     } else {
-      this.selectedCells.push(cell);
-      cell.bgColor = this.selectionColor;
+      this.currentConstraint.cellIds.push(cell.cellId);
+      cell.bgColor = this.currentConstraint.color;
     }
   }
 
   public addConstraint(): void {
-    // TODO
-    console.log('ok');
-    this.constraints.push();
+    console.log('Adding constraint:', this.currentConstraint);
+    this.constraints.push(this.currentConstraint);
+    let savedType = this.currentConstraint.type;
+    this.currentConstraint = new Constraint();
+    this.currentConstraint.type = savedType;
+    // TODO show constraint on cell differently (little color dot?)
+    // this.resetSelection();
+  }
 
-    this.resetSelection();
-    this.selectionColor = Util.getRandomColor();
+  public deleteConstraint(constraint: Constraint): void {
+    this.constraints = this.constraints.filter(c => c != constraint);
   }
 
   public clear(): void {
@@ -117,14 +76,14 @@ export class MainComponent implements OnInit {
 
   public resetSelection(): void {
     this.cells.forEach(cell => cell.bgColor = 'white');
-    this.selectedCells = [];
   }
 
   public solve(): void {
     this.resetSelection();
-
-    const sudoku = new Sudoku(this.cells.map(c => c.value));
+    const sudoku = new Sudoku(this.cells.map(c => c.value), this.constraints);
     const solvedSudoku = Solver.solve(sudoku);
+
+    // TODO only adapt if Sudoku solved - if other status, update status message
     this.adaptSolution(solvedSudoku);
 
     // Create a new worker

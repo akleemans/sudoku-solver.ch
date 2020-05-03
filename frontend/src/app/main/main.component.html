@@ -21,9 +21,17 @@
 
   <div class="right-side">
     <p>
-      Click on cells to enter numbers which are already known.
+      Enter the numbers which are already known.
     </p>
 
+    <p>
+      For a regular Sudoku, click "solve" below, else add contraints
+      by switching to the "Add constraints" view.
+    </p>
+
+    <button type="button" class="btn btn-outline-dark" (click)="solve()">
+      solve
+    </button>
     <button type="button" class="btn btn-outline-dark" (click)="clear()">
       clear
     </button>
@@ -43,63 +51,100 @@
   </div>
 
   <div class="right-side">
+    <p>
+      Click on cells to select them ({{currentConstraint.cellIds.length}} selected)
+    </p>
+
+    <select class="custom-select" [(ngModel)]="currentConstraint.type">
+      <option selected>Choose constraint type</option>
+      <!--
+      <option [disabled]="currentConstraint.cells.length === 0" [ngValue]="ConstraintType.SINGLE_CELL_ODD_EVEN">
+        Odd or even cell(s)
+      </option>
+      -->
+      <!--
+      <option [disabled]="currentConstraint.cellIds.length !== 2" [ngValue]="ConstraintType.TWO_CELLS_BIGGER_THAN">
+        Two cells: Bigger/smaller than
+      </option>
+      -->
+      <!--
+      <option [disabled]="currentConstraint.cellIds.length !== 2" [ngValue]="ConstraintType.TWO_CELLS_EXACT_DIFFERENCE">
+        Two cells: Exact difference
+      </option>
+      -->
+      <!--
+      <option [disabled]="currentConstraint.cellIds.length !== 2" [ngValue]="ConstraintType.TWO_CELLS_EXACT_FACTOR">
+        Two cells: Exact factor
+      </option>
+      -->
+      <option [disabled]="currentConstraint.cellIds.length !== 9" [ngValue]="ConstraintType.MULTI_CELL_UNIT">
+        Multiple cells: Complete unit (1-9)
+      </option>
+      <option [disabled]="currentConstraint.cellIds.length < 2" [ngValue]="ConstraintType.MULTI_CELL_SUM">
+        Multiple cells: sum
+      </option>
+      <!--
+      <option [disabled]="currentConstraint.cellIds.length < 2" [ngValue]="ConstraintType.MULTI_CELL_PRODUCT">
+        Multiple cells: product
+      </option>
+      -->
+    </select>
+
+    <!-- Type descriptions -->
+    <div *ngIf="currentConstraint.type === undefined" style="height: 100px;">
+      Choose a constraint type to show its description.
+    </div>
+
+    <div *ngIf="currentConstraint.type === ConstraintType.SINGLE_CELL_ODD_EVEN">
+      <p><b>Description:</b> One or more cells which are odd or even.</p>
+      <div class="form-inline">
+        <b>Choose if odd/even:</b>
+        <select class="form-control custom-select" [(ngModel)]="currentConstraint.isEven">
+          <option [value]="true">Even</option>
+          <option [value]="false">Odd</option>
+        </select>
+      </div>
+    </div>
+
+    <div *ngIf="currentConstraint.type === ConstraintType.MULTI_CELL_SUM">
+      <p><b>Description:</b> Multiple cells must add up to a sum.</p>
+      <div class="form-inline">
+        <b>Enter sum:</b>
+        <input class="form-control" type="number" [(ngModel)]="currentConstraint.sum">
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-outline-dark" (click)="addConstraint()"
+            [disabled]="currentConstraint.cellIds.length === 0">
+      Add
+    </button>
+    <hr>
+    <b>List of Constraints:</b>
+    <div class="constraint-list">
+      <div *ngFor="let constraint of constraints">
+        <span [style.background]="constraint.color" class="mydot"></span>
+        {{constraint.toString()}}
+        <svg (click)="deleteConstraint(constraint)" style="cursor: pointer;" class="bi bi-trash" width="1em"
+             height="1em" viewBox="0 0 16 16"
+             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"/>
+          <path fill-rule="evenodd"
+                d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                clip-rule="evenodd"/>
+        </svg>
+      </div>
+    </div>
+
     <button type="button" class="btn btn-outline-dark" (click)="solve()">
       Solve
     </button>
-
-    Click on one or multiple cell to add a constraint.
-
-    # of selected cells: {{selectedCells.length}}
-
-    Type:
-    <select class="custom-select">
-      <option selected>Choose constraint type</option>
-      <option [value]="ConstraintType.SINGLE_CELL_ODD_EVEN">Odd or even cell(s)</option>
-      <option [value]="ConstraintType.TWO_CELLS_BIGGER_THAN">Two cells: Bigger/smaller than</option>
-      <option [value]="ConstraintType.TWO_CELLS_EXACT_DIFFERENCE">Two cells: Exact difference</option>
-      <option [value]="ConstraintType.TWO_CELLS_EXACT_FACTOR">Two cells: Exact factor</option>
-      <option [value]="ConstraintType.MULTI_CELL_UNIT">Multiple cells: Complete unit (1-9)</option>
-      <option [value]="ConstraintType.MULTI_CELL_SUM">Multiple cells: sum</option>
-      <option [value]="ConstraintType.MULTI_CELL_PRODUCT">Multiple cells: product</option>
-    </select>
-
-    Description & attributes:
-    <div *ngIf="selectedType === ConstraintType.SINGLE_CELL_ODD_EVEN">
-      One or more cells which are odd or even.
-
-      Type:
-      Odd / Even
-    </div>
-
-    <!--
-    <div class="dropdown">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
-        Constraint type:
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" (click)="addConstraint()">Single cell: </a>
-        <a class="dropdown-item" href="#">Another action</a>
-        <a class="dropdown-item" href="#">Something else here</a>
-      </div>
-    </div>
-    -->
-
-    (constraint details: sum, odd/even, ...)
-
-    <button type="button" class="btn btn-outline-dark">
-      Add
-    </button>
-
-    List of Constraints:
-
   </div>
 </div>
 
-<div>
+<div class="showcase">
   sudoku-solver.ch lets you solve custom Sudokus, and a wide range of known 9x9 Sudoku types:
 
-  images of Sudoku X, Killer-Sudoku etc.
   <ul>
     <li>
       Sudoku X: Two additional diagonal units
