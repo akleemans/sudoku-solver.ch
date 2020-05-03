@@ -2,15 +2,17 @@ import * as _ from 'lodash';
 
 import {Cell} from "./cell";
 import {Util} from "../main/util";
+import {Constraint} from "./constraint";
+import {ConstraintType} from "./constraint-type";
 
 export class Sudoku {
   public cells: Cell[] = [];
   public units: Cell[][] = [];
   public sumUnits: [Cell[], number][] = [];
+  public cellsPerSumUnit: { [key: number]: number } = {};
 
-  public constructor(cells: string[]) {
+  public constructor(cells: string[], constraints?: Constraint[]) {
     for (let i of _.range(81)) {
-      // console.log('Adding cell i:', i);
       this.cells.push(new Cell(i, cells[i]));
     }
 
@@ -47,11 +49,9 @@ export class Sudoku {
 
       // Set peers on cell
       cell.peers = _.union(row, col, block);
-
     }
 
     // Build units
-    // this.units = [];
     for (let idx of _.range(9)) {
       let unit = [];
       for (let i of _.range(9)) {
@@ -76,20 +76,23 @@ export class Sudoku {
       this.units.push(block)
     }
 
-    // TODO build sum units
-    /*
-    if (sumUnits.length > 0) {
-      for (let sumUnit of sumUnits)  {
-    // Link cells
-    let sumIds = sum_unit[0];
-    let totalSum = sum_unit[1];
-    let cells = [];
-    for (let idx of sumIds) {
-      cells.push(this.cells[idx]);
-    {
-    this.sumUnits.push([cells, total_sum])
+    // TODO Add units from constraints
+    // let unitConstraints = constraints.filter(c => c.type === ConstraintType.MULTI_CELL_UNIT);
+
+    // Add sum units from constraints
+    let sumConstraints = constraints?.filter(c => c.type === ConstraintType.MULTI_CELL_SUM);
+    if (sumConstraints?.length > 0) {
+      console.log('Sudoku got', sumConstraints.length, 'sum constraints:', sumConstraints);
+      for (let sumConstraint of sumConstraints) {
+        let sumCells: Cell[] = sumConstraint.cellIds.map(c => this.cells[c]);
+        this.sumUnits.push([sumCells, sumConstraint.sum])
+
+        for (let cell of sumCells) {
+          // TODO consider case where a cell is in multiple sum units
+          this.cellsPerSumUnit[cell.cellId] = sumCells.length;
+        }
+      }
     }
-    */
   }
 
   public serialize(): string[] {
@@ -101,10 +104,13 @@ export class Sudoku {
   }
 
   public getTotalCandidates(): number {
-    // console.log('getTotalCandidates(): Cells:', this.cells);
     return _.sum(this.cells.map(c => c.candidates.length));
   }
 
+  /**
+   * Sets the state from a list of candidates.
+   * Expects the
+   */
   public setState(candidateList: string[]): void {
     for (let i = 0; i < 81; i++) {
       this.cells[i].candidates = candidateList[i];
@@ -160,20 +166,14 @@ export class Sudoku {
       }
     }
 
-    // TODO sum units
-    /*
-      // Check sums
-      for (let sumUnit of this.sumUnits) {
-          // Check if all cells are filled
-          let cells = sumUnit[0];
-          let total_sum = sumUnit[1]
-          if not all([len(c.candidates) == 1 for c of cells]):
-              return False
-          // Check if sum adds up
-          if sum([int(c.candidates) for c of cells]) != total_sum:
-              return False
-       }
-     */
+    // Check sum units
+    for (let sumUnit of this.sumUnits) {
+      let cells = sumUnit[0];
+      let totalSum = sumUnit[1];
+      if (_.sum(cells.map(c => +c.candidates)) !== totalSum) {
+        return false;
+      }
+    }
 
     return true;
   }
@@ -214,20 +214,30 @@ export class Sudoku {
     }
 
     // Check if sums add up
-    /*
-    for sum_unit of this.sum_units:
-        // Check if all cells are filled, the sum adds up
-        cells, total_sum = sum_unit
-        if all([len(c.candidates) == 1 for c of cells]):
-            if sum([int(c.candidates) for c of cells]) != total_sum:
-                return False
-        // Check if sum can still be fulfilled
-        current_sum = sum([int(c.candidates) for c of cells if len(c.candidates) == 1])
-        missing_sum = total_sum - current_sum
-        unfilled_cells = len([c for c of cells if len(c.candidates) > 1])
-        if missing_sum < unfilled_cells or missing_sum > 9 * unfilled_cells:
-            return False
-*/
+    for (let sumUnit of this.sumUnits) {
+      // Check if the sum adds up if all cells are filled
+      let cells = sumUnit[0];
+      let totalSum = sumUnit[1];
+      let allCandidates = cells.map(c => c.candidates).join('');
+      if (allCandidates.length === 9) {
+        let unitSum = 0;
+        for (let c of allCandidates) {
+          unitSum += +c;
+        }
+        if (unitSum !== totalSum) {
+          return false;
+        }
+      }
+
+      // Check if sum can still be fulfilled
+      let currentSum = _.sum(cells.filter(c => c.candidates.length === 1).map(c => +c.candidates));
+      let missingSum = totalSum - currentSum
+      let unfilledCells = cells.filter(c => c.candidates.length > 1).length;
+      if (missingSum < unfilledCells || missingSum > 9 * unfilledCells) {
+        return false;
+      }
+    }
+
     return true;
   }
 
@@ -238,15 +248,12 @@ export class Sudoku {
     let totalCandidates = 81 * 9;
 
     while (this.isValid() && this.getTotalCandidates() < totalCandidates) {
-      // console.log('Propagating with totalCandidates:', totalCandidates);
       totalCandidates = this.getTotalCandidates();
 
       // Propagate (1)
       for (let cell of this.cells) {
         cell.propagateToPeers();
       }
-      // console.log('...after cell propagation::', this.getTotalCandidates());
-
 
       // Propagate (2)
       for (let unit of this.units) {
@@ -263,18 +270,21 @@ export class Sudoku {
         }
       }
 
-      // TODO Propagate sums
-      /*
-            for sum_unit of this.sum_units:
-                cells, total_sum = sum_unit
-                unfilled_cells = [c for c of cells if len(c.candidates) > 1]
-                if len(unfilled_cells) == 1:
-                    cell = unfilled_cells[0]
-                    value = total_sum - sum([int(c.candidates) for c of cells if len(c.candidates) == 1])
-                    if 1 <= value <= 9:
-                        cell.candidates = str(value)
-             }
-       */
+      // Propagate sums
+      for (let sumUnit of this.sumUnits) {
+        let cells = sumUnit[0];
+        let totalSum = sumUnit[1];
+        let unfilledCells = cells.filter(c => c.candidates.length > 1);
+        if (unfilledCells.length === 1) {
+          let cell = unfilledCells[0];
+          let value = totalSum - _.sum(cells
+            .filter(c => c.candidates.length === 1)
+            .map(c => +c.candidates));
+          if (1 <= value || value <= 9) {
+            cell.candidates = value.toString();
+          }
+        }
+      }
     }
   }
 }
