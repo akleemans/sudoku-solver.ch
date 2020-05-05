@@ -1,4 +1,5 @@
 import {Util} from "./util";
+import {Cell} from "../model/cell";
 
 describe('Util', () => {
   describe('count', () => {
@@ -23,7 +24,6 @@ describe('Util', () => {
 
     it('should replace special chars', () => {
       expect(Util.replaceAll('   ', ' ', '.')).toBe('...');
-      // expect(Util.replaceAll('?.(', '?', '-')).toBe('-.(');
     });
   });
 
@@ -34,6 +34,27 @@ describe('Util', () => {
       expect(color.length).toBe(7);
       expect(color.startsWith('#')).toBeTrue();
       expect(color).not.toBe(Util.getRandomColor());
+    });
+  });
+
+  describe('getValueSum', () => {
+    it('should correctly sum up filled cells', () => {
+      let cells = [
+        new Cell(0, '1'),
+        new Cell(1, '2'),
+        new Cell(2, ''),
+      ]
+      expect(Util.getValueSum(cells)).toBe(3);
+
+      cells[2].candidates = '7';
+      expect(Util.getValueSum(cells)).toBe(10);
+    });
+
+    it('should return 0 of no filled cells', () => {
+      let cells = [
+        new Cell(0, ''),
+      ]
+      expect(Util.getValueSum(cells)).toBe(0);
     });
   });
 });

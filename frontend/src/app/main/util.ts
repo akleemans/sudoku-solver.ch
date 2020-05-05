@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import {randomColor} from 'randomcolor';
 import {Constraint} from "../model/constraint";
 import {ConstraintType} from "../model/constraint-type";
+import {Cell} from "../model/cell";
 
 export class Util {
   /**
@@ -50,5 +51,13 @@ export class Util {
       constraints.push(constraint);
     }
     return constraints;
+  }
+
+  /**
+   * Calculate the sum of the already known number of a cell array.
+   */
+  public static getValueSum(cells: Cell[]): number {
+    return _.sum(cells.filter(c => c.candidates.length === 1)
+      .map(c => +c.candidates));
   }
 }
