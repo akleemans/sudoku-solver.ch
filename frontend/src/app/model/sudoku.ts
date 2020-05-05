@@ -1,19 +1,26 @@
 import * as _ from 'lodash';
-
 import {Cell} from "./cell";
-import {Util} from "../main/util";
 import {Constraint} from "./constraint";
 import {ConstraintType} from "./constraint-type";
+import {SumUnit} from "./sum-unit";
+import {Util} from "./util";
 
 export class Sudoku {
   public cells: Cell[] = [];
   public units: Cell[][] = [];
-  public sumUnits: [Cell[], number][] = [];
+  public sumUnits: SumUnit[] = [];
   public cellsPerSumUnit: { [key: number]: number } = {};
 
-  public constructor(cells: string[], constraints?: Constraint[]) {
+  public constructor(cells: string[], constraints: Constraint[] = []) {
+    // Prepare odd/even cells
+    let cellMap = [];
+    constraints
+      .filter(c => c.type === ConstraintType.SINGLE_CELL_ODD_EVEN)
+      .forEach(c => {
+        c.cellIds.forEach(cellId => cellMap[cellId] = c.isEven);
+      });
     for (let i of _.range(81)) {
-      this.cells.push(new Cell(i, cells[i]));
+      this.cells.push(new Cell(i, cells[i], cellMap[i]));
     }
 
     // Build peers list
@@ -76,16 +83,23 @@ export class Sudoku {
       this.units.push(block)
     }
 
-    // TODO Add units from constraints
-    // let unitConstraints = constraints.filter(c => c.type === ConstraintType.MULTI_CELL_UNIT);
+    // Add units from constraints
+    let unitConstraints = constraints.filter(c => c.type === ConstraintType.MULTI_CELL_UNIT);
+    for (let constraint of unitConstraints) {
+      let unit = [];
+      for (let idx of constraint.cellIds) {
+        unit.push(this.cells[idx]);
+      }
+      console.log('Adding unit: ' + unit);
+      this.units.push(unit)
+    }
 
     // Add sum units from constraints
     let sumConstraints = constraints?.filter(c => c.type === ConstraintType.MULTI_CELL_SUM);
     if (sumConstraints?.length > 0) {
-      console.log('Sudoku got', sumConstraints.length, 'sum constraints:', sumConstraints);
       for (let sumConstraint of sumConstraints) {
         let sumCells: Cell[] = sumConstraint.cellIds.map(c => this.cells[c]);
-        this.sumUnits.push([sumCells, sumConstraint.sum])
+        this.sumUnits.push(new SumUnit(sumCells, sumConstraint.sum))
 
         for (let cell of sumCells) {
           // TODO consider case where a cell is in multiple sum units
@@ -131,12 +145,16 @@ export class Sudoku {
     return blockIdx;
   }
 
+  /**
+   * Returns the Sudoku as a "standard" string representation, eg.
+   * 1..2.45..7.8.. etc.
+   */
   public toString(): string {
     let s = '';
     for (let cell of this.cells) {
       s += cell.toString();
     }
-    return s.replace(' ', '.');
+    return Util.replaceAll(s, ' ', '.');
   }
 
   /**
@@ -167,12 +185,8 @@ export class Sudoku {
     }
 
     // Check sum units
-    for (let sumUnit of this.sumUnits) {
-      let cells = sumUnit[0];
-      let totalSum = sumUnit[1];
-      if (_.sum(cells.map(c => +c.candidates)) !== totalSum) {
-        return false;
-      }
+    if (!_.every(this.sumUnits, sumUnit => sumUnit.isSolved())) {
+      return false;
     }
 
     return true;
@@ -182,11 +196,9 @@ export class Sudoku {
    * Checks if Sudoku still solvable.
    */
   public isValid(): boolean {
-    for (let cell of this.cells) {
-      if (!cell.isValid()) {
-        // console.log('isValid(): Cell', cell.cellId, 'not valid:', cell.toString());
-        return false;
-      }
+    // Check that all cells are still valid
+    if (!_.every(this.cells.map(c => c.isValid()))) {
+      return false;
     }
 
     // Check if units can still contain all numbers
@@ -194,7 +206,6 @@ export class Sudoku {
       let allCandidates = _.map(unit, 'candidates').join('');
       for (let v of '123456789') {
         if (!allCandidates.includes(v)) {
-          // console.log('isValid(): Unit', unit, 'candidates do not contain vale:', v);
           return false;
         }
       }
@@ -213,29 +224,9 @@ export class Sudoku {
       }
     }
 
-    // Check if sums add up
-    for (let sumUnit of this.sumUnits) {
-      // Check if the sum adds up if all cells are filled
-      let cells = sumUnit[0];
-      let totalSum = sumUnit[1];
-      let allCandidates = cells.map(c => c.candidates).join('');
-      if (allCandidates.length === 9) {
-        let unitSum = 0;
-        for (let c of allCandidates) {
-          unitSum += +c;
-        }
-        if (unitSum !== totalSum) {
-          return false;
-        }
-      }
-
-      // Check if sum can still be fulfilled
-      let currentSum = _.sum(cells.filter(c => c.candidates.length === 1).map(c => +c.candidates));
-      let missingSum = totalSum - currentSum
-      let unfilledCells = cells.filter(c => c.candidates.length > 1).length;
-      if (missingSum < unfilledCells || missingSum > 9 * unfilledCells) {
-        return false;
-      }
+    // Check that all sum units are still valid
+    if (!_.every(this.sumUnits.map(sumUnit => sumUnit.isValid()))) {
+      return false;
     }
 
     return true;
@@ -251,9 +242,7 @@ export class Sudoku {
       totalCandidates = this.getTotalCandidates();
 
       // Propagate (1)
-      for (let cell of this.cells) {
-        cell.propagateToPeers();
-      }
+      this.cells.forEach(cell => cell.propagateToPeers());
 
       // Propagate (2)
       for (let unit of this.units) {
@@ -270,21 +259,8 @@ export class Sudoku {
         }
       }
 
-      // Propagate sums
-      for (let sumUnit of this.sumUnits) {
-        let cells = sumUnit[0];
-        let totalSum = sumUnit[1];
-        let unfilledCells = cells.filter(c => c.candidates.length > 1);
-        if (unfilledCells.length === 1) {
-          let cell = unfilledCells[0];
-          let value = totalSum - _.sum(cells
-            .filter(c => c.candidates.length === 1)
-            .map(c => +c.candidates));
-          if (1 <= value || value <= 9) {
-            cell.candidates = value.toString();
-          }
-        }
-      }
+      // Propagate (3): Sum units
+      this.sumUnits.forEach(sumUnit => sumUnit.propagate());
     }
   }
 }

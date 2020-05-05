@@ -2,10 +2,14 @@ export class Cell {
   public candidates: string;
   public peers: Cell[];
   public cellId: number;
+  private allCandidates: string = '123456789';
 
-  public constructor(cellId: number, c: string) {
+  public constructor(cellId: number, c: string, isEven?: boolean) {
     this.cellId = cellId;
-    this.candidates = c.length === 1 ? c : '123456789';
+    if (isEven !== undefined) {
+      this.allCandidates = isEven ? '2468' : '13579';
+    }
+    this.candidates = (c.length === 1 ? c : this.allCandidates);
   }
 
   public propagateToPeers(): void {

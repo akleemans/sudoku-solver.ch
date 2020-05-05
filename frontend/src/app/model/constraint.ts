@@ -1,5 +1,5 @@
-import {Util} from "../main/util";
 import {ConstraintType} from "./constraint-type";
+import {Util} from "./util";
 
 export class Constraint {
   public type: ConstraintType;

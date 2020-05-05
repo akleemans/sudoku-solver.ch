@@ -1,5 +1,5 @@
 import {Cell} from "./cell";
-import {Util} from "../main/util";
+import {Util} from "./util";
 
 export class SumUnit {
   public constructor(

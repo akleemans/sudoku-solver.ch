@@ -1,8 +1,6 @@
 import * as _ from 'lodash';
 import {randomColor} from 'randomcolor';
-import {Constraint} from "../model/constraint";
-import {ConstraintType} from "../model/constraint-type";
-import {Cell} from "../model/cell";
+import {Cell} from './cell';
 
 export class Util {
   /**
@@ -36,21 +34,6 @@ export class Util {
       cells.push(sudokuStr[i] === '.' ? '123456789' : sudokuStr[i]);
     }
     return cells;
-  }
-
-  /**
-   * Build sum constraints from a simplified list version.
-   */
-  public static getSumConstraints(list: [number[], number][]): Constraint[] {
-    const constraints = [];
-    for (let item of list) {
-      let constraint = new Constraint();
-      constraint.type = ConstraintType.MULTI_CELL_SUM;
-      constraint.cellIds = item[0];
-      constraint.sum = item[1];
-      constraints.push(constraint);
-    }
-    return constraints;
   }
 
   /**

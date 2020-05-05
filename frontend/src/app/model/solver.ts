@@ -22,16 +22,11 @@ export class Solver {
 
     // Work on stack with Depth-First-Search (DFS)
     let iterations = 0
+    let startTime = new Date();
     while (stack.length > 0) {
-      if (iterations % 10 == 0) {
+      if (iterations % 1000 == 0) {
         console.log('>> Iteration ', iterations, 'stack size:', stack.length, 'stack:', stack.map(i => i[1]?.toString()));
       }
-      /*
-      if (iterations >= 10000) {
-        console.log('Something not right, stopping at 10k iterations.');
-        break;
-      }
-      */
       iterations += 1
 
       // 1. Pop state and calculate next guess
@@ -44,12 +39,12 @@ export class Solver {
 
       let nextGuess;
       if (lastGuess === null) {
-        console.log('Starting to guess on layer.')
+        // console.log('Starting to guess on layer.')
         nextGuess = possibleGuesses[0]
       } else {
         let lastGuessIdx = _.findIndex(possibleGuesses, g => g[0] === lastGuess[0] && g[1] === lastGuess[1])
         if (lastGuessIdx + 1 === possibleGuesses.length) {
-          console.log('No more guesses possible, go up.')
+          // console.log('No more guesses possible, go up.')
           continue;
         }
         nextGuess = possibleGuesses[lastGuessIdx + 1]
@@ -57,7 +52,7 @@ export class Solver {
         // Important part: If one cell can't hold ANY number, don't try any others.
         // It means that this branch can not be the solution!
         if (lastGuess[0] !== nextGuess[0]) {
-          console.log('All numbers tried for one cell, branch can not be satisfied.')
+          // console.log('All numbers tried for one cell, branch can not be satisfied.')
           continue;
         }
       }
@@ -70,7 +65,9 @@ export class Solver {
 
       // 3. Decide how to proceed
       if (sudoku.isSolved()) {
-        console.log('Solved succesfully in', iterations, 'iterations');
+        // @ts-ignore
+        const diff = Math.abs(new Date() - startTime) / 1000.0;
+        console.log('Solved succesfully in', diff, 's (', iterations, 'iterations):', sudoku.toString());
         return sudoku;
       }
 
@@ -78,12 +75,13 @@ export class Solver {
       stack.push([candidates, nextGuess])
 
       if (sudoku.isValid()) {
-        console.log('Sudoku valid but not solved, going to next layer.')
+        // console.log('Sudoku valid but not solved, going to next layer.')
         stack.push([sudoku.serialize(), null])
       }
     }
 
     // If not successful, return original Sudoku
+    console.log('Solving not successful, returning original Sudoku.');
     return sudoku;
   }
 
@@ -99,8 +97,9 @@ export class Solver {
     for (let cell of sudoku.cells) {
       // If no single candidate on cell, we can guess
       if (cell.candidates.length > 1) {
+        const cellScore = Solver.getCellScore(cell, sudoku);
         for (let c of cell.candidates) {
-          guesses.push([cell.cellId, c, Solver.getCellScore(cell, sudoku)])
+          guesses.push([cell.cellId, c, cellScore])
         }
       }
     }
@@ -115,12 +114,12 @@ export class Solver {
    * Heuristic which cell to try first. The lower the number, the sooner the cell will up for a guess.
    */
   public static getCellScore(cell: Cell, sudoku: Sudoku): number {
-    let nr = cell.candidates.length * 10;
+    let nr = cell.candidates.length;
 
     // Check if in sum units
     let cellsInSumUnit = sudoku.cellsPerSumUnit[nr];
     if (cellsInSumUnit !== undefined) {
-      nr = nr - 10 + cellsInSumUnit
+      nr = cellsInSumUnit
     }
 
     // TODO later: add other constraints into calculation
