@@ -1,6 +1,6 @@
 import {Util} from "./util";
 
-describe('Util', () => {
+fdescribe('Util', () => {
   describe('count', () => {
     it('should correctly count string occurences', () => {
       expect(Util.count('4555566556', '5')).toBe(6);
@@ -11,6 +11,19 @@ describe('Util', () => {
     it('should correctly count zero occurence', () => {
       expect(Util.count('', '1')).toBe(0);
       expect(Util.count('23456789', '1')).toBe(0);
+    });
+  });
+
+  describe('replaceAll', () => {
+    it('should creplace standard chars', () => {
+      expect(Util.replaceAll('4564', '4', '6')).toBe('6566');
+      expect(Util.replaceAll('5', '6', '4')).toBe('5');
+      expect(Util.replaceAll('', '6', '4')).toBe('');
+    });
+
+    it('should replace special chars', () => {
+      expect(Util.replaceAll('   ', ' ', '.')).toBe('...');
+      expect(Util.replaceAll('?.(', '?', '-')).toBe('-.(');
     });
   });
 

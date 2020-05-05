@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import {randomColor} from 'randomcolor';
 import {Constraint} from "../model/constraint";
 import {ConstraintType} from "../model/constraint-type";
+import {escapeRegExp} from "tslint/lib/utils";
 
 export class Util {
   /**
@@ -10,6 +11,13 @@ export class Util {
   public static count(str: string, value: string) {
     const regExp = new RegExp(value, 'gi');
     return (str.match(regExp) || []).length;
+  }
+
+  /**
+   * Replace all string occurences of oldVal with newVal in str.
+   */
+  public static replaceAll(str: string, oldVal: string, newVal: string) {
+    return str.replace(new RegExp(escapeRegExp(oldVal), 'g'), newVal);
   }
 
   /**
