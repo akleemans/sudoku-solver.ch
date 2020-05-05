@@ -57,4 +57,24 @@ describe('Util', () => {
       expect(Util.getValueSum(cells)).toBe(0);
     });
   });
+
+  describe('allFilled', () => {
+    it('should return true if all cells are filled', () => {
+      let cells = [
+        new Cell(0, '1'),
+        new Cell(1, '2'),
+        new Cell(2, '4'),
+      ]
+      expect(Util.allFilled(cells)).toBeTrue();
+    });
+
+    it('should return false if some cells are not filled', () => {
+      let cells = [
+        new Cell(0, '1'),
+        new Cell(1, '2'),
+        new Cell(2, ''),
+      ]
+      expect(Util.allFilled(cells)).toBeFalse();
+    });
+  });
 });

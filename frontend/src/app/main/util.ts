@@ -60,4 +60,11 @@ export class Util {
     return _.sum(cells.filter(c => c.candidates.length === 1)
       .map(c => +c.candidates));
   }
+
+  /**
+   * Checks if all cells of an array are filled with one value.
+   */
+  public static allFilled(cells: Cell[]): boolean {
+    return _.every(cells.map(c => c.isSolved()));
+  }
 }
