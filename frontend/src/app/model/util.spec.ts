@@ -1,5 +1,5 @@
-import {Util} from "./util";
-import {Cell} from "../model/cell";
+import {Util} from './util';
+import {Cell} from './cell';
 
 describe('Util', () => {
   describe('count', () => {

@@ -9,7 +9,7 @@
   </button>
 </div>
 
-<div [hidden]="viewMode !== ViewMode.numbers" class="flex-container">
+<div *ngIf="viewMode === ViewMode.numbers" class="flex-container">
   <div class="grid left-side">
     <ul>
       <li *ngFor="let cell of cells;">
@@ -30,15 +30,15 @@
     </p>
 
     <button type="button" class="btn btn-outline-dark" (click)="solve()">
-      solve
+      Solve
     </button>
-    <button type="button" class="btn btn-outline-dark" (click)="clear()">
-      clear
+    <button type="button" class="btn btn-outline-dark" (click)="clearCells()">
+      Clear
     </button>
   </div>
 </div>
 
-<div [hidden]="viewMode !== ViewMode.constraints" class="flex-container">
+<div *ngIf="viewMode === ViewMode.constraints" class="flex-container">
   <div class="grid left-side">
     <ul style="cursor: pointer;">
       <li *ngFor="let cell of cells;" (click)="toggleSelection(cell)"
@@ -57,11 +57,9 @@
 
     <select class="custom-select" [(ngModel)]="currentConstraint.type">
       <option selected>Choose constraint type</option>
-      <!--
-      <option [disabled]="currentConstraint.cells.length === 0" [ngValue]="ConstraintType.SINGLE_CELL_ODD_EVEN">
+      <option [disabled]="currentConstraint.cellIds.length === 0" [ngValue]="ConstraintType.SINGLE_CELL_ODD_EVEN">
         Odd or even cell(s)
       </option>
-      -->
       <!--
       <option [disabled]="currentConstraint.cellIds.length !== 2" [ngValue]="ConstraintType.TWO_CELLS_BIGGER_THAN">
         Two cells: Bigger/smaller than
@@ -115,7 +113,7 @@
     </div>
 
     <button type="button" class="btn btn-outline-dark" (click)="addConstraint()"
-            [disabled]="currentConstraint.cellIds.length === 0">
+            [disabled]="currentConstraint.cellIds.length === 0 || currentConstraint.type === undefined">
       Add
     </button>
     <hr>
@@ -136,33 +134,66 @@
       </div>
     </div>
 
+    <b>Global options</b>
+    <div style="margin-bottom: 20px;">
+      <input type="checkbox" [(ngModel)]="useBlockUnits"> Use standard 3x3 block units
+    </div>
+
     <button type="button" class="btn btn-outline-dark" (click)="solve()">
       Solve
     </button>
   </div>
 </div>
 
+<div *ngIf="viewMode === ViewMode.solving" class="flex-container">
+  <div class="grid left-side">
+    <ul>
+      <li *ngFor="let cell of cells;">
+        <input type="text" [(ngModel)]="cell.value" maxlength="1" autocomplete="false"
+               [style.color]="cell.calculated ? 'green' : 'blue'">
+      </li>
+    </ul>
+  </div>
+
+  <div class="right-side">
+    <p>
+      Status: {{status}}
+    </p>
+
+    <div *ngIf="solvingInProgress" class="spinner-border" role="status">
+      <!-- <span class="sr-only">Loading...</span>-->
+    </div>
+
+    <button *ngIf="!solvingInProgress" type="button" class="btn btn-outline-dark" (click)="clearAll()">
+      Clear
+    </button>
+  </div>
+</div>
+
 <div class="showcase">
-  sudoku-solver.ch lets you solve custom Sudokus, and a wide range of known 9x9 Sudoku types:
+  This webapp lets you solve custom Sudokus, and a wide range of known 9x9 Sudoku types:
 
   <ul>
     <li>
-      Sudoku X: Two additional diagonal units
+      <b>Sudoku X</b>: Two additional diagonal units
     </li>
     <li>
-      Hyper Sudoku: Four additional units
+      <b>Hyper Sudoku</b>: Four additional units
     </li>
     <li>
-      Killer Sudoku (Sum Sudoku): No 3x3 units, but 9 custom units instead
+      <b>Killer Sudoku (Sum Sudoku)</b>: Regions of variable size must form sums
     </li>
     <li>
-      Odd-Even Sudoku: Normal Sudoku with odd/even constraints
+      <b>Nonomino</b>: No 3x3 block units, but 9 custom, irregular units instead
     </li>
     <li>
-      Greater/Less Than Sudoku: Normal Sudoku with greater/less than constraints
+      <b>Odd-Even Sudoku</b>: Normal Sudoku with odd/even constraints
     </li>
     <li>
-      Any combinations of the above
+      <b>Greater/Less Than Sudoku</b>: Normal Sudoku with greater/less than constraints
+    </li>
+    <li>
+      Custom combinations of the above (for example special Sudokus for Geocaching puzzles)
     </li>
   </ul>
 
@@ -175,10 +206,14 @@
     Web Worker</a>.
   </p>
   <p>
+    The solver is open source (MIT license) and available on <a
+    href="https://github.com/akleemans/sudoku-solver.ch">Github</a>
+  </p>
+  <p>
     The grid is based on the work of <a href="https://codepen.io/sdobson">Sam Dobson</a>.
   </p>
 
-  <p>
-    &copy; 2020 by <a href="https://www.kleemans.ch">Adrianus Kleemans</a>
+  <p style="margin-bottom: 50px;">
+    &copy; 2021 by <a href="https://www.kleemans.ch">Adrianus Kleemans</a>
   </p>
 </div>

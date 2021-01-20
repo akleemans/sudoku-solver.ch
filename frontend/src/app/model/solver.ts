@@ -1,18 +1,19 @@
 import * as _ from 'lodash';
-import {Sudoku} from "./sudoku";
-import {Cell} from "./cell";
+import {Sudoku} from './sudoku';
+import {Cell} from './cell';
 
 export class Solver {
 
   public static solve(sudoku: Sudoku): Sudoku {
     // Initial propagation - if already solved or unsolvable, return
-    sudoku.propagate()
+    sudoku.propagate();
 
     if (sudoku.isSolved()) {
-      console.log('Solved without backtracking.')
+      console.log('Solved without backtracking.');
       return sudoku;
     } else if (!sudoku.isValid()) {
-      throw Error('Unsolvable Sudoku!')
+      console.log('Solved invalid.');
+      return sudoku;
     }
 
     // Add current state to stack:
@@ -21,13 +22,13 @@ export class Solver {
     const stack: [string[], [number, string] | null][] = [[sudoku.serialize(), null]];
 
     // Work on stack with Depth-First-Search (DFS)
-    let iterations = 0
+    let iterations = 0;
     let startTime = new Date();
     while (stack.length > 0) {
-      if (iterations % 1000 == 0) {
+      if (iterations % 100 == 0) {
         console.log('>> Iteration ', iterations, 'stack size:', stack.length, 'stack:', stack.map(i => i[1]?.toString()));
       }
-      iterations += 1
+      iterations += 1;
 
       // 1. Pop state and calculate next guess
       let item = stack.pop();
@@ -35,24 +36,24 @@ export class Solver {
       let lastGuess = item[1];
       sudoku.setState(candidates);
 
-      let possibleGuesses = Solver.calculateGuesses(sudoku)
+      let possibleGuesses = Solver.calculateGuesses(sudoku);
 
       let nextGuess;
       if (lastGuess === null) {
-        // console.log('Starting to guess on layer.')
-        nextGuess = possibleGuesses[0]
+        console.log('Starting to guess on layer.');
+        nextGuess = possibleGuesses[0];
       } else {
-        let lastGuessIdx = _.findIndex(possibleGuesses, g => g[0] === lastGuess[0] && g[1] === lastGuess[1])
+        let lastGuessIdx = _.findIndex(possibleGuesses, g => g[0] === lastGuess[0] && g[1] === lastGuess[1]);
         if (lastGuessIdx + 1 === possibleGuesses.length) {
-          // console.log('No more guesses possible, go up.')
+          console.log('No more guesses possible, go up.');
           continue;
         }
-        nextGuess = possibleGuesses[lastGuessIdx + 1]
+        nextGuess = possibleGuesses[lastGuessIdx + 1];
 
         // Important part: If one cell can't hold ANY number, don't try any others.
         // It means that this branch can not be the solution!
         if (lastGuess[0] !== nextGuess[0]) {
-          // console.log('All numbers tried for one cell, branch can not be satisfied.')
+          console.log('All numbers tried for one cell, branch can not be satisfied.');
           continue;
         }
       }
@@ -72,11 +73,12 @@ export class Solver {
       }
 
       // Add current guess to stack
-      stack.push([candidates, nextGuess])
+      console.log('Add current guess to stack:', [candidates, nextGuess]);
+      stack.push([candidates, nextGuess]);
 
       if (sudoku.isValid()) {
-        // console.log('Sudoku valid but not solved, going to next layer.')
-        stack.push([sudoku.serialize(), null])
+        console.log('Sudoku valid but not solved, going to next layer.');
+        stack.push([sudoku.serialize(), null]);
       }
     }
 
@@ -99,7 +101,7 @@ export class Solver {
       if (cell.candidates.length > 1) {
         const cellScore = Solver.getCellScore(cell, sudoku);
         for (let c of cell.candidates) {
-          guesses.push([cell.cellId, c, cellScore])
+          guesses.push([cell.cellId, c, cellScore]);
         }
       }
     }
@@ -111,7 +113,7 @@ export class Solver {
   }
 
   /*
-   * Heuristic which cell to try first. The lower the number, the sooner the cell will up for a guess.
+   * Heuristic which cell to try first. The lower the number, the sooner the cell will be up for a guess.
    */
   public static getCellScore(cell: Cell, sudoku: Sudoku): number {
     let nr = cell.candidates.length;
@@ -119,7 +121,7 @@ export class Solver {
     // Check if in sum units
     let cellsInSumUnit = sudoku.cellsPerSumUnit[nr];
     if (cellsInSumUnit !== undefined) {
-      nr = cellsInSumUnit
+      nr = nr - 10 + cellsInSumUnit;
     }
 
     // TODO later: add other constraints into calculation

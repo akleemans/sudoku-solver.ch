@@ -1,9 +1,10 @@
 import * as _ from 'lodash';
-import {Cell} from "./cell";
-import {Constraint} from "./constraint";
-import {ConstraintType} from "./constraint-type";
-import {SumUnit} from "./sum-unit";
-import {Util} from "./util";
+import {Cell} from './cell';
+import {Constraint} from './constraint';
+import {ConstraintType} from './constraint-type';
+import {SumUnit} from './sum-unit';
+import {Util} from './util';
+import {GlobalOptions} from './sudoku-options';
 
 export class Sudoku {
   public cells: Cell[] = [];
@@ -11,7 +12,7 @@ export class Sudoku {
   public sumUnits: SumUnit[] = [];
   public cellsPerSumUnit: { [key: number]: number } = {};
 
-  public constructor(cells: string[], constraints: Constraint[] = []) {
+  public constructor(cells: string[], constraints: Constraint[] = [], globalOptions: GlobalOptions = {useBlockUnits: true}) {
     // Prepare odd/even cells
     let cellMap = [];
     constraints
@@ -28,29 +29,31 @@ export class Sudoku {
       const cell = this.cells[i];
 
       // row
-      let idx = i - i % 9
+      let idx = i - i % 9;
       let row = [];
       for (let j = 0; j < 9; j++) {
         if (i !== idx + j) {
-          row.push(this.cells[idx + j])
+          row.push(this.cells[idx + j]);
         }
       }
 
       // column
-      let baseIdx = i % 9
-      let col = []
+      let baseIdx = i % 9;
+      let col = [];
       for (let j of _.range(9)) {
-        idx = j * 9 + baseIdx
+        idx = j * 9 + baseIdx;
         if (idx !== i) {
-          col.push(this.cells[idx])
+          col.push(this.cells[idx]);
         }
       }
 
       // 3x3 block
       let block = [];
-      for (let j of this.getBlockIds(i)) {
-        if (j !== i) {
-          block.push(this.cells[j]);
+      if (globalOptions.useBlockUnits) {
+        for (let j of this.getBlockIds(i)) {
+          if (j !== i) {
+            block.push(this.cells[j]);
+          }
         }
       }
 
@@ -75,12 +78,14 @@ export class Sudoku {
       this.units.push(unit);
     }
 
-    for (let i of [0, 3, 6, 27, 30, 33, 54, 57, 60]) {
-      let block = [];
-      for (let idx of this.getBlockIds(i)) {
-        block.push(this.cells[idx]);
+    if (globalOptions.useBlockUnits) {
+      for (let i of [0, 3, 6, 27, 30, 33, 54, 57, 60]) {
+        let block = [];
+        for (let idx of this.getBlockIds(i)) {
+          block.push(this.cells[idx]);
+        }
+        this.units.push(block);
       }
-      this.units.push(block)
     }
 
     // Add units from constraints
@@ -91,17 +96,18 @@ export class Sudoku {
         unit.push(this.cells[idx]);
       }
       console.log('Adding unit: ' + unit);
-      this.units.push(unit)
+      this.units.push(unit);
     }
 
     // Add sum units from constraints
-    let sumConstraints = constraints?.filter(c => c.type === ConstraintType.MULTI_CELL_SUM);
-    if (sumConstraints?.length > 0) {
+    let sumConstraints = constraints.filter(c => c.type === ConstraintType.MULTI_CELL_SUM);
+    if (sumConstraints.length > 0) {
       for (let sumConstraint of sumConstraints) {
         let sumCells: Cell[] = sumConstraint.cellIds.map(c => this.cells[c]);
-        this.sumUnits.push(new SumUnit(sumCells, sumConstraint.sum))
+        this.sumUnits.push(new SumUnit(sumCells, sumConstraint.sum));
 
         for (let cell of sumCells) {
+          // TODO remove
           // TODO consider case where a cell is in multiple sum units
           this.cellsPerSumUnit[cell.cellId] = sumCells.length;
         }
@@ -133,13 +139,13 @@ export class Sudoku {
 
   public getBlockIds(idx: number): number[] {
     const blockIdx = [];
-    const blockY = (idx % 9) - idx % 3
+    const blockY = (idx % 9) - idx % 3;
     const lineStart = _.toInteger((idx - idx % 9) / 9);
-    const blockX = lineStart - lineStart % 3
+    const blockX = lineStart - lineStart % 3;
     for (let x of _.range(3)) {
       for (let y of _.range(3)) {
-        let idx = (blockX + x) * 9 + blockY + y
-        blockIdx.push(idx)
+        let idx = (blockX + x) * 9 + blockY + y;
+        blockIdx.push(idx);
       }
     }
     return blockIdx;

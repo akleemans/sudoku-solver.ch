@@ -1,5 +1,5 @@
-import {Constraint} from "../model/constraint";
-import {ConstraintType} from "../model/constraint-type";
+import {Constraint} from './constraint';
+import {ConstraintType} from './constraint-type';
 
 export class TestUtil {
   /**
@@ -14,6 +14,7 @@ export class TestUtil {
       constraint.sum = item[1];
       constraints.push(constraint);
     }
+    console.log('Returning constraints:', constraints);
     return constraints;
   }
 
@@ -50,6 +51,20 @@ export class TestUtil {
       let constraint = new Constraint();
       constraint.type = ConstraintType.MULTI_CELL_UNIT;
       constraint.cellIds = unit;
+      constraints.push(constraint);
+    }
+    return constraints;
+  }
+
+  /**
+   * Build Nonomino constraints from a list.
+   */
+  public static getNonominoConstraints(list: number[][]): Constraint[] {
+    const constraints = [];
+    for (let item of list) {
+      let constraint = new Constraint();
+      constraint.type = ConstraintType.MULTI_CELL_UNIT;
+      constraint.cellIds = item;
       constraints.push(constraint);
     }
     return constraints;

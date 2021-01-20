@@ -1,20 +1,21 @@
 import * as _ from 'lodash';
 import {Component, OnInit} from '@angular/core';
-import {Sudoku} from "../model/sudoku";
-import {Solver} from "../model/solver";
-import {Constraint} from "../model/constraint";
-import {ConstraintType} from "../model/constraint-type";
+import {Constraint} from '../model/constraint';
+import {ConstraintType} from '../model/constraint-type';
+import {WorkerMessage, WorkerStatus} from '../model/worker-message';
+import {SudokuOptions} from '../model/sudoku-options';
 
 enum ViewMode {
   numbers,
-  constraints
+  constraints,
+  solving
 }
 
 class GridCell {
   public cellId: number;
   public bgColor: string = 'white';
   public value: string = '';
-  public calculated: boolean
+  public calculated: boolean;
 
   public constructor(cellId: number) {
     this.cellId = cellId;
@@ -34,15 +35,24 @@ export class MainComponent implements OnInit {
   public cells: GridCell[] = [];
   public currentConstraint: Constraint = new Constraint();
   public constraints: Constraint[] = [];
+  public useBlockUnits = true;
 
-  public constructor() {
-  }
+  public status: string = '';
+  public solvingInProgress = false;
 
   public ngOnInit(): void {
     this.cells = _.range(81).map(i => new GridCell(i));
+
+    let sudokuStr = '.1......86....57..3....6.4.8...4.27.........5.74.6.....3.....9...79.....2...1..5.';
+    for (let i of _.range(81)) {
+      this.cells[i].value = (sudokuStr[i] === '.' ? '' : sudokuStr[i]);
+    }
   }
 
   public setViewMode(viewMode: ViewMode): void {
+    if (this.viewMode === ViewMode.solving) {
+      this.clearAll();
+    }
     this.viewMode = viewMode;
   }
 
@@ -67,11 +77,21 @@ export class MainComponent implements OnInit {
   }
 
   public deleteConstraint(constraint: Constraint): void {
+    // TODO remove coloring from cells
     this.constraints = this.constraints.filter(c => c != constraint);
   }
 
-  public clear(): void {
+  public clearCells(): void {
     this.cells.forEach(cell => cell.value = '');
+  }
+
+  public clearConstraints(): void {
+    this.constraints = [];
+  }
+
+  public clearAll(): void {
+    this.clearCells();
+    this.clearConstraints();
   }
 
   public resetSelection(): void {
@@ -80,29 +100,49 @@ export class MainComponent implements OnInit {
 
   public solve(): void {
     this.resetSelection();
-    const sudoku = new Sudoku(this.cells.map(c => c.value), this.constraints);
-    const solvedSudoku = Solver.solve(sudoku);
-
-    // TODO only adapt if Sudoku solved - if other status, update status message
-    this.adaptSolution(solvedSudoku);
-
+    this.setViewMode(ViewMode.solving);
+    this.status = 'Solving...';
+    this.solvingInProgress = true;
     // Create a new worker
     const worker = new Worker('./main.worker', {type: 'module'});
-    worker.onmessage = ({data}) => {
-      console.log(`Page got message: ${data}!`);
-      worker.terminate();
+    worker.onmessage = (event) => {
+      console.log(`MainComponent got worker message: ${event.data}!`);
+      let message: WorkerMessage = event.data;
+      switch (message.status) {
+        case WorkerStatus.SOLVED:
+          this.adaptSolution(message.content);
+          this.status = `Solved!`;
+          this.solvingInProgress = false;
+          worker.terminate();
+          break;
+        case WorkerStatus.SOLVING:
+          this.status = 'Solving: ' + message.content;
+          break;
+        case WorkerStatus.INVALID:
+        case WorkerStatus.UNSOLVABLE:
+          worker.terminate();
+          this.solvingInProgress = false;
+          this.status = 'Sudoku not solvable!';
+          break;
+      }
     };
-    console.log('Posting hello to worker...');
-    worker.postMessage('hello');
+    let sudokuOptions: SudokuOptions = {
+      cells: this.cells.map(c => c.value),
+      constraints: this.constraints,
+      globalOptions: {
+        useBlockUnits: true
+      }
+    };
+    worker.postMessage(sudokuOptions);
   }
 
-  private adaptSolution(sudoku: Sudoku): void {
+  private adaptSolution(sudokuStr: string): void {
     // Set values on cells
     for (let i of _.range(81)) {
       let cell = this.cells[i];
       if (cell.value === '') {
         cell.calculated = true;
-        cell.value = sudoku.cells[i].candidates;
+        cell.value = sudokuStr[i];
       }
     }
   }

@@ -1,5 +1,5 @@
-import {Cell} from "./cell";
-import {SumUnit} from "./sum-unit";
+import {Cell} from './cell';
+import {SumUnit} from './sum-unit';
 
 describe('Sum unit', () => {
   describe('isValid', () => {
