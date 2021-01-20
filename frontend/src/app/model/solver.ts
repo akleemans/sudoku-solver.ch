@@ -40,12 +40,12 @@ export class Solver {
 
       let nextGuess;
       if (lastGuess === null) {
-        console.log('Starting to guess on layer.');
+        // console.log('Starting to guess on layer.');
         nextGuess = possibleGuesses[0];
       } else {
         let lastGuessIdx = _.findIndex(possibleGuesses, g => g[0] === lastGuess[0] && g[1] === lastGuess[1]);
         if (lastGuessIdx + 1 === possibleGuesses.length) {
-          console.log('No more guesses possible, go up.');
+          // console.log('No more guesses possible, go up.');
           continue;
         }
         nextGuess = possibleGuesses[lastGuessIdx + 1];
@@ -53,7 +53,7 @@ export class Solver {
         // Important part: If one cell can't hold ANY number, don't try any others.
         // It means that this branch can not be the solution!
         if (lastGuess[0] !== nextGuess[0]) {
-          console.log('All numbers tried for one cell, branch can not be satisfied.');
+          // console.log('All numbers tried for one cell, branch can not be satisfied.');
           continue;
         }
       }
@@ -73,11 +73,11 @@ export class Solver {
       }
 
       // Add current guess to stack
-      console.log('Add current guess to stack:', [candidates, nextGuess]);
+      // console.log('Add current guess to stack:', [candidates, nextGuess]);
       stack.push([candidates, nextGuess]);
 
       if (sudoku.isValid()) {
-        console.log('Sudoku valid but not solved, going to next layer.');
+        // console.log('Sudoku valid but not solved, going to next layer.');
         stack.push([sudoku.serialize(), null]);
       }
     }

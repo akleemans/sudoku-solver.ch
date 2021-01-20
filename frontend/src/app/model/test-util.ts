@@ -14,7 +14,6 @@ export class TestUtil {
       constraint.sum = item[1];
       constraints.push(constraint);
     }
-    console.log('Returning constraints:', constraints);
     return constraints;
   }
 

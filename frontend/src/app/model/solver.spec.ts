@@ -80,8 +80,8 @@ describe('Solver', () => {
       expect(solution.toString()).toBe(expectedSolution);
     });
 
-    xit('should solve Geocaching puzzle K', () => {
-      const sudokuStr = '.................................................................................';
+    it('should solve Geocaching puzzle K', () => {
+      const sudokuStr = '.25....1......37......1...87.............................................4....87.';
       const expectedSolution = '825749613194863752637512498769231584483975261512684937358497126276158349941326875';
       const cells = Util.getCellsFromString(sudokuStr);
       const sumCells: [number[], number][] = [
@@ -171,6 +171,17 @@ describe('Solver', () => {
     it('should solve Hyper Sudoku', () => {
       const sudokuStr = '......31.4.3............9.7..8..3.6......8....5276...8......2...19..5..46.7..4...';
       const expectedSolution = '795846312423917856861532947978423165346158729152769438584691273219375684637284591';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const constraints = TestUtil.getHyperConstraints();
+      const sudoku = new Sudoku(cells, constraints);
+      const solution = Solver.solve(sudoku);
+      expect(solution.toString()).toBe(expectedSolution);
+    });
+
+    it('should solve Hyper Sudoku 2', () => {
+      // From http://www.sudoku-space.com/hyper-sudoku/
+      const sudokuStr = '..2........693.4.......5.3.5..1...92.....7.1.....9...5....72...2.74.8..6.6.......';
+      const expectedSolution = '312784569756931428948265731573146892689527314421893675895672143237418956164359287';
       const cells = Util.getCellsFromString(sudokuStr);
       const constraints = TestUtil.getHyperConstraints();
       const sudoku = new Sudoku(cells, constraints);
