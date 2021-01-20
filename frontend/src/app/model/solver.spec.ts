@@ -1,23 +1,11 @@
-import {Solver} from "./solver";
-import {Sudoku} from "./sudoku";
-import {Constraint} from "./constraint";
-import {ConstraintType} from "./constraint-type";
-import {Util} from "./util";
-import {TestUtil} from "./test-util";
+import {Solver} from './solver';
+import {Sudoku} from './sudoku';
+import {Constraint} from './constraint';
+import {ConstraintType} from './constraint-type';
+import {Util} from './util';
+import {TestUtil} from './test-util';
 
 describe('Solver', () => {
-  let originalTimeout;
-
-  beforeEach(function () {
-    originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-    // One minute
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
-  });
-
-  afterEach(function () {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
-  });
-
   describe('Standard Sudoku', () => {
     it('should solve easy Sudoku', () => {
       let sudokuStr = '.7.8.2.4.....7.....6..512.7.32.6.59..1.....2.....4......1.96.5.3...1......97.5.8.';
@@ -53,7 +41,7 @@ describe('Solver', () => {
   });
 
   describe('Killer / Sum Sudoku', () => {
-    xit('should custom sum Sudoku Nr. 1', () => {
+    xit('should solve Geocaching puzzle A', () => {
       const sudokuStr = '.................................................................................';
       const expectedSolution = '592176483416938275378254196167395824934862751825741369289513647741629538653487912';
       const cells = Util.getCellsFromString(sudokuStr);
@@ -92,7 +80,7 @@ describe('Solver', () => {
       expect(solution.toString()).toBe(expectedSolution);
     });
 
-    xit('should custom sum Sudoku Nr. 2', () => {
+    xit('should solve Geocaching puzzle K', () => {
       const sudokuStr = '.................................................................................';
       const expectedSolution = '825749613194863752637512498769231584483975261512684937358497126276158349941326875';
       const cells = Util.getCellsFromString(sudokuStr);
@@ -129,6 +117,24 @@ describe('Solver', () => {
       let solution = Solver.solve(new Sudoku(cells, constraints));
       expect(solution.toString()).toBe(expectedSolution);
     });
+
+    it('should solve Geocaching puzzle R', () => {
+      const sudokuStr = '.6....8..1..7........1.....7......2.3....7.......429....8..5......2...3..5..7.6..';
+      const expectedSolution = '567329814182754369439186257794813526325967148816542973248635791671298435953471682';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const sumCells: [number[], number][] = [
+        [[7, 8], 5],
+        [[16, 17], 15],
+        [[39, 40], 15],
+        [[42, 43], 5],
+        [[46, 55], 5],
+        [[63, 72], 15],
+      ];
+      const constraints = TestUtil.getSumConstraints(sumCells);
+      let sudoku = new Sudoku(cells, constraints);
+      let solution = Solver.solve(sudoku);
+      expect(solution.toString()).toBe(expectedSolution);
+    });
   });
 
   describe('Odd-Even Sudoku', () => {
@@ -141,7 +147,21 @@ describe('Solver', () => {
       constraint.type = ConstraintType.SINGLE_CELL_ODD_EVEN;
       constraint.isEven = true;
       let constraints = [constraint];
-      let sudoku = new Sudoku(cells, constraints)
+      let sudoku = new Sudoku(cells, constraints);
+      let solution = Solver.solve(sudoku);
+      expect(solution.toString()).toBe(expectedSolution);
+    });
+
+    it('should solve odd Sudoku, Geocaching puzzle J', () => {
+      let sudokuStr = '..2...9....8...1..35.....62...3.7.......4.......9.5...67.....39..4...6....5...8..';
+      let expectedSolution = '142736985768529143359418762296387514587241396413965278671852439824193657935674821';
+      let cells = Util.getCellsFromString(sudokuStr);
+      let constraint = new Constraint();
+      constraint.cellIds = [12, 14, 28, 30, 32, 34, 46, 48, 50, 52, 66, 68];
+      constraint.type = ConstraintType.SINGLE_CELL_ODD_EVEN;
+      constraint.isEven = false;
+      let constraints = [constraint];
+      let sudoku = new Sudoku(cells, constraints);
       let solution = Solver.solve(sudoku);
       expect(solution.toString()).toBe(expectedSolution);
     });
@@ -153,7 +173,7 @@ describe('Solver', () => {
       const expectedSolution = '795846312423917856861532947978423165346158729152769438584691273219375684637284591';
       const cells = Util.getCellsFromString(sudokuStr);
       const constraints = TestUtil.getHyperConstraints();
-      const sudoku = new Sudoku(cells, constraints)
+      const sudoku = new Sudoku(cells, constraints);
       const solution = Solver.solve(sudoku);
       expect(solution.toString()).toBe(expectedSolution);
     });
@@ -165,9 +185,71 @@ describe('Solver', () => {
       const expectedSolution = '681794325543281976279356418164839257837425169952617843728163594415978632396542781';
       const cells = Util.getCellsFromString(sudokuStr);
       const constraints = TestUtil.getSudokuXConstraints();
-      const sudoku = new Sudoku(cells, constraints)
+      const sudoku = new Sudoku(cells, constraints);
+      const solution = Solver.solve(sudoku);
+      expect(solution.toString()).toBe(expectedSolution);
+    });
+
+    it('should solve Geocaching puzzle F', () => {
+      const sudokuStr = '..95.71.....4.6...4.......812..6..37...7.4...76..2..942.......9...6.9.....62.53..';
+      const expectedSolution = '639587142582416973417392658124968537398754216765123894253871469841639725976245381';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const constraints = TestUtil.getSudokuXConstraints();
+      const sudoku = new Sudoku(cells, constraints);
+      const solution = Solver.solve(sudoku);
+      expect(solution.toString()).toBe(expectedSolution);
+    });
+
+    it('should solve Geocaching puzzle Q', () => {
+      const sudokuStr = '2.......6..........6..5......89.1.....6...84....4.7.......7........2....5.......8';
+      const expectedSolution = '294318756357649182861752934438961527716235849925487613682573491179824365543196278';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const constraints = TestUtil.getSudokuXConstraints();
+      const sudoku = new Sudoku(cells, constraints);
       const solution = Solver.solve(sudoku);
       expect(solution.toString()).toBe(expectedSolution);
     });
   });
+
+  describe('Nonomino', () => {
+    it('should solve Wikipedia Nonomino', () => {
+      // From https://de.m.wikipedia.org/wiki/Datei:A_nonomino_sudoku.svg
+      const sudokuStr = '3.......4..2.6.1...1.9.8.2...5...6...2.....1...9...8...8.3.4.6...4.1.9..5.......7';
+      const expectedSolution = '358196274492567138613978425175842693826453719249731856987324561734615982561289347';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const constraints = TestUtil.getNonominoConstraints([
+        [0, 1, 2, 9, 10, 11, 18, 27, 28], // red
+        [3, 12, 13, 14, 23, 24, 25, 34, 35], // orange
+        [4, 5, 6, 7, 8, 15, 16, 17, 26], // yellow
+        [19, 20, 21, 22, 29, 36, 37, 38, 39], // green
+        [30, 31, 32, 33, 40, 47, 48, 49, 50], // turquoise
+        [41, 42, 43, 44, 51, 58, 59, 60, 61], // blue
+        [45, 46, 55, 56, 57, 66, 67, 68, 77], // light purple
+        [52, 53, 62, 69, 70, 71, 78, 79, 80], // bordeaux
+        [54, 63, 64, 65, 72, 73, 74, 75, 76], // dark purple
+      ]);
+      const sudoku = new Sudoku(cells, constraints, {useBlockUnits: false});
+      const solution = Solver.solve(sudoku);
+      expect(solution.toString()).toBe(expectedSolution);
+    });
+  });
+
+  /*
+    describe('Difference / factor (Geocache Sudoku B)', () => {
+      it('should solve black / white dots Sudoku', () => {
+        const sudokuStr = '.................................................................................';
+
+        // TODO
+        const expectedSolution = 'TODO';
+        const cells = Util.getCellsFromString(sudokuStr);
+        // TODO
+        const constraints = [
+          new Constraint()
+        ];
+        const sudoku = new Sudoku(cells, constraints)
+        const solution = Solver.solve(sudoku);
+        expect(solution.toString()).toBe(expectedSolution);
+      });
+    });*/
+
 });
