@@ -11,7 +11,7 @@ export class Constraint {
   }
 
   // Used for SINGLE_CELL_ODD_EVEN
-  public isEven: boolean;
+  public isEven: boolean = true;
 
   // Used for MULTI_CELL_SUM
   public sum: number;
@@ -23,15 +23,18 @@ export class Constraint {
   public factor: number;
 
   // Used for TWO_CELLS_EXACT_DIFFERENCE, TWO_CELLS_EXACT_FACTOR
+  // TODO maybe not used, so remove first?
   public unknownOrder: boolean;
 
   // Used for MULTI_CELL_PRODUCT
   public product;
 
+  // Used for MULTI_CELL_SUM (Killer Sudoku)
+  public noDuplicates: boolean = false;
+
   public toString(): string {
     let cellStr = this.cellIds.map(c => c.toString()).join(', ');
     let desc = '';
-    // TODO return a description for all contraints
     switch (this.type) {
       case ConstraintType.SINGLE_CELL_ODD_EVEN:
         desc = 'Cells ' + cellStr;

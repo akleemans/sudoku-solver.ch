@@ -121,10 +121,11 @@ export class Solver {
     // Check if in sum units
     let cellsInSumUnit = sudoku.cellsPerSumUnit[nr];
     if (cellsInSumUnit !== undefined) {
-      nr = nr - 10 + cellsInSumUnit;
+      nr = cell.candidates.length - 5 + cellsInSumUnit;
     }
 
     // TODO later: add other constraints into calculation
+
     return nr;
   }
 }

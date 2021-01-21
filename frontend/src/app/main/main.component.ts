@@ -13,9 +13,10 @@ enum ViewMode {
 
 class GridCell {
   public cellId: number;
-  public bgColor: string = 'white';
   public value: string = '';
   public calculated: boolean;
+  public bgColor: string = 'white';
+  public colors: string[] = [];
 
   public constructor(cellId: number) {
     this.cellId = cellId;
@@ -70,19 +71,29 @@ export class MainComponent implements OnInit {
     console.log('Adding constraint:', this.currentConstraint);
     this.constraints.push(this.currentConstraint);
     let savedType = this.currentConstraint.type;
+    // On every marked cell, add color dot
+    this.cells.filter(c => this.currentConstraint.cellIds.includes(c.cellId))
+      .forEach(c => {
+        console.log('Pushing color', this.currentConstraint.color, 'to c:', c.cellId);
+        c.colors.push(this.currentConstraint.color);
+      });
+
     this.currentConstraint = new Constraint();
     this.currentConstraint.type = savedType;
-    // TODO show constraint on cell differently (little color dot?)
-    // this.resetSelection();
+    this.resetSelection();
   }
 
   public deleteConstraint(constraint: Constraint): void {
-    // TODO remove coloring from cells
     this.constraints = this.constraints.filter(c => c != constraint);
+    this.cells.forEach(c => c.colors = c.colors.filter(col => col !== constraint.color));
   }
 
   public clearCells(): void {
-    this.cells.forEach(cell => cell.value = '');
+    this.cells.forEach(cell => {
+      cell.value = '';
+      cell.colors = [];
+    });
+    this.viewMode = ViewMode.numbers;
   }
 
   public clearConstraints(): void {

@@ -7,7 +7,7 @@ describe('Sum unit', () => {
       let sumUnit = new SumUnit([
         new Cell(0, '5'),
         new Cell(0, '789')
-      ], 14);
+      ], 14, false);
 
       expect(sumUnit.isValid()).toBeTrue();
     });
@@ -16,7 +16,7 @@ describe('Sum unit', () => {
       let sumUnit = new SumUnit([
         new Cell(0, '5'),
         new Cell(0, '789')
-      ], 15);
+      ], 15, false);
 
       expect(sumUnit.isValid()).toBeFalse();
     });
@@ -27,7 +27,7 @@ describe('Sum unit', () => {
       let sumUnit = new SumUnit([
         new Cell(0, '5'),
         new Cell(0, '789')
-      ], 14);
+      ], 14, false);
 
       expect(sumUnit.isSolved()).toBeFalse();
     });
@@ -36,7 +36,16 @@ describe('Sum unit', () => {
       let sumUnit = new SumUnit([
         new Cell(0, '5'),
         new Cell(0, '9')
-      ], 14);
+      ], 14, false);
+
+      expect(sumUnit.isSolved()).toBeTrue();
+    });
+
+    it('should recognize unsolved sum unit, because of duplicate constraint', () => {
+      let sumUnit = new SumUnit([
+        new Cell(0, '5'),
+        new Cell(0, '5')
+      ], 10, true);
 
       expect(sumUnit.isSolved()).toBeTrue();
     });

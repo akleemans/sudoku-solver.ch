@@ -50,4 +50,16 @@ export class Util {
   public static allFilled(cells: Cell[]): boolean {
     return _.every(cells.map(c => c.isSolved()));
   }
+
+  /**
+   * Checks if there are duplicates in a cell array.
+   * Empty cells are not considered. Cells with multiple candidates are not considered.
+   */
+  public static containsDuplicates(cells: Cell[]): boolean {
+    // Remove empty values
+    const filledCellValues = cells
+      .filter(c => c.candidates.length === 1)
+      .map(c => c.candidates);
+    return _.uniq(filledCellValues).length !== filledCellValues.length;
+  }
 }

@@ -43,7 +43,7 @@ describe('Util', () => {
         new Cell(0, '1'),
         new Cell(1, '2'),
         new Cell(2, ''),
-      ]
+      ];
       expect(Util.getValueSum(cells)).toBe(3);
 
       cells[2].candidates = '7';
@@ -53,7 +53,7 @@ describe('Util', () => {
     it('should return 0 of no filled cells', () => {
       let cells = [
         new Cell(0, ''),
-      ]
+      ];
       expect(Util.getValueSum(cells)).toBe(0);
     });
   });
@@ -64,7 +64,7 @@ describe('Util', () => {
         new Cell(0, '1'),
         new Cell(1, '2'),
         new Cell(2, '4'),
-      ]
+      ];
       expect(Util.allFilled(cells)).toBeTrue();
     });
 
@@ -73,8 +73,45 @@ describe('Util', () => {
         new Cell(0, '1'),
         new Cell(1, '2'),
         new Cell(2, ''),
-      ]
+      ];
       expect(Util.allFilled(cells)).toBeFalse();
+    });
+  });
+
+  describe('containsDuplicates', () => {
+    it('should return false on unique cells', () => {
+      let cells = [
+        new Cell(0, '1'),
+        new Cell(1, '2'),
+        new Cell(2, '4'),
+      ];
+      expect(Util.containsDuplicates(cells)).toBeFalse();
+    });
+
+    it('should return false on unique cells with empty values', () => {
+      let cells = [
+        new Cell(0, '1'),
+        new Cell(1, ''),
+        new Cell(2, ''),
+      ];
+      expect(Util.containsDuplicates(cells)).toBeFalse();
+    });
+
+    it('should return true on duplicates', () => {
+      let cells = [
+        new Cell(0, '1'),
+        new Cell(1, '2'),
+        new Cell(2, '1'),
+      ];
+      expect(Util.containsDuplicates(cells)).toBeTrue();
+    });
+
+    it('should return false on candidates', () => {
+      let cells = [
+        new Cell(0, '12'),
+        new Cell(1, '12'),
+      ];
+      expect(Util.containsDuplicates(cells)).toBeFalse();
     });
   });
 });

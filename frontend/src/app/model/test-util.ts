@@ -2,16 +2,27 @@ import {Constraint} from './constraint';
 import {ConstraintType} from './constraint-type';
 
 export class TestUtil {
+
+  /**
+   * Build constraints for Killer / Sum Sudoku.
+   * This is similar to sum units with an additional unique constraint
+   * (no duplicate numbers in a group).
+   */
+  public static getKillerConstraints(list: [number[], number][]): Constraint[] {
+    return TestUtil.getSumConstraints(list, true);
+  }
+
   /**
    * Build sum constraints from a simplified list version.
    */
-  public static getSumConstraints(list: [number[], number][]): Constraint[] {
+  public static getSumConstraints(list: [number[], number][], noDuplicates: boolean = false): Constraint[] {
     const constraints = [];
     for (let item of list) {
       let constraint = new Constraint();
       constraint.type = ConstraintType.MULTI_CELL_SUM;
       constraint.cellIds = item[0];
       constraint.sum = item[1];
+      constraint.noDuplicates = noDuplicates;
       constraints.push(constraint);
     }
     return constraints;

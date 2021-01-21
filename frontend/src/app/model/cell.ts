@@ -17,6 +17,9 @@ export class Cell {
       for (let peer of this.peers) {
         peer.removeCandidate(this.candidates);
       }
+
+      // TODO do propagation of greater/less than (exact or not)
+      // we can also remove bigger / smaller numbers
     }
   }
 

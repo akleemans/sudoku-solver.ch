@@ -94,6 +94,14 @@
   margin-bottom: -2px;
 }
 
+.smalldot {
+  border-radius: 50%;
+  display: inline-block;
+  height: 8px;
+  width: 8px;
+  position: absolute;
+}
+
 .constraint-list {
   margin-bottom: 10px;
   min-height: 20px;

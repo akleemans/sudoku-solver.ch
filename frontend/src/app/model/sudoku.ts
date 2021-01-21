@@ -10,6 +10,7 @@ export class Sudoku {
   public cells: Cell[] = [];
   public units: Cell[][] = [];
   public sumUnits: SumUnit[] = [];
+  // TODO add product units here
   public cellsPerSumUnit: { [key: number]: number } = {};
 
   public constructor(cells: string[], constraints: Constraint[] = [], globalOptions: GlobalOptions = {useBlockUnits: true}) {
@@ -104,11 +105,9 @@ export class Sudoku {
     if (sumConstraints.length > 0) {
       for (let sumConstraint of sumConstraints) {
         let sumCells: Cell[] = sumConstraint.cellIds.map(c => this.cells[c]);
-        this.sumUnits.push(new SumUnit(sumCells, sumConstraint.sum));
+        this.sumUnits.push(new SumUnit(sumCells, sumConstraint.sum, sumConstraint.noDuplicates));
 
         for (let cell of sumCells) {
-          // TODO remove
-          // TODO consider case where a cell is in multiple sum units
           this.cellsPerSumUnit[cell.cellId] = sumCells.length;
         }
       }
