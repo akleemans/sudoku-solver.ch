@@ -1,6 +1,6 @@
 import {Sudoku} from './sudoku';
-import {Util} from "./util";
-import {TestUtil} from "./test-util";
+import {Util} from './util';
+import {TestUtil} from './test-util';
 
 describe('Sudoku', () => {
   describe('isValid', () => {
@@ -126,4 +126,4 @@ const getCustomSumSudoku = () => {
   ];
   const constraints = TestUtil.getSumConstraints(sumCells);
   return new Sudoku(cells, constraints);
-}
+};

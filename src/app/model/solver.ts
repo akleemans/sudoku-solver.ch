@@ -23,27 +23,27 @@ export class Solver {
 
     // Work on stack with Depth-First-Search (DFS)
     let iterations = 0;
-    let startTime = new Date();
+    const startTime = new Date();
     while (stack.length > 0) {
-      if (iterations % 100 == 0) {
+      if (iterations % 100 === 0) {
         console.log('>> Iteration ', iterations, 'stack size:', stack.length, 'stack:', stack.map(i => i[1]?.toString()));
       }
       iterations += 1;
 
       // 1. Pop state and calculate next guess
-      let item = stack.pop();
-      let candidates = item[0];
-      let lastGuess = item[1];
+      const item = stack.pop();
+      const candidates = item[0];
+      const lastGuess = item[1];
       sudoku.setState(candidates);
 
-      let possibleGuesses = Solver.calculateGuesses(sudoku);
+      const possibleGuesses = Solver.calculateGuesses(sudoku);
 
       let nextGuess;
       if (lastGuess === null) {
         // console.log('Starting to guess on layer.');
         nextGuess = possibleGuesses[0];
       } else {
-        let lastGuessIdx = _.findIndex(possibleGuesses, g => g[0] === lastGuess[0] && g[1] === lastGuess[1]);
+        const lastGuessIdx = _.findIndex(possibleGuesses, g => g[0] === lastGuess[0] && g[1] === lastGuess[1]);
         if (lastGuessIdx + 1 === possibleGuesses.length) {
           // console.log('No more guesses possible, go up.');
           continue;
@@ -95,18 +95,18 @@ export class Solver {
    * @param sudoku The Sudoku in the state where guesses should be calculated
    */
   public static calculateGuesses(sudoku: Sudoku): [number, string][] {
-    let guesses: [number, string, number][] = [];
-    for (let cell of sudoku.cells) {
+    const guesses: [number, string, number][] = [];
+    for (const cell of sudoku.cells) {
       // If no single candidate on cell, we can guess
       if (cell.candidates.length > 1) {
         const cellScore = Solver.getCellScore(cell, sudoku);
-        for (let c of cell.candidates) {
+        for (const c of cell.candidates) {
           guesses.push([cell.cellId, c, cellScore]);
         }
       }
     }
 
-    let sortedGuesses: [number, string][] = guesses
+    const sortedGuesses: [number, string][] = guesses
       .sort((c1, c2) => c1[2] - c2[2])
       .map(c => [c[0], c[1]]);
     return sortedGuesses;
@@ -119,7 +119,7 @@ export class Solver {
     let nr = cell.candidates.length;
 
     // Check if in sum units
-    let cellsInSumUnit = sudoku.cellsPerSumUnit[nr];
+    const cellsInSumUnit = sudoku.cellsPerSumUnit[nr];
     if (cellsInSumUnit !== undefined) {
       nr = cell.candidates.length - 5 + cellsInSumUnit;
     }

@@ -5,9 +5,9 @@ import {Sudoku} from '../model/sudoku';
 import {WorkerMessage, WorkerStatus} from '../model/worker-message';
 import {SudokuOptions} from '../model/sudoku-options';
 
-addEventListener('message', (event) => {
-  let sudokuOptions: SudokuOptions = event.data;
-  let sudoku = new Sudoku(sudokuOptions.cells, sudokuOptions.constraints, sudokuOptions.globalOptions);
+addEventListener('message', event => {
+  const sudokuOptions: SudokuOptions = event.data;
+  const sudoku = new Sudoku(sudokuOptions.cells, sudokuOptions.constraints, sudokuOptions.globalOptions);
   console.log('Worker got sudoku:', sudoku);
   const solvedSudoku = Solver.solve(sudoku);
 
@@ -17,5 +17,6 @@ addEventListener('message', (event) => {
   } else if (!solvedSudoku.isSolved()) {
     status = WorkerStatus.UNSOLVABLE;
   }
+  // @ts-ignore
   postMessage(new WorkerMessage(status, solvedSudoku.toString()));
 });

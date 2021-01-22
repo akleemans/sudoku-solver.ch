@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "custom-sudoku-solver": {
+    "sudoku-solver": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/custom-sudoku-solver",
+            "outputPath": "docs",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -72,18 +72,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "custom-sudoku-solver:build"
+            "browserTarget": "sudoku-solver:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "custom-sudoku-solver:build:production"
+              "browserTarget": "sudoku-solver:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "custom-sudoku-solver:build"
+            "browserTarget": "sudoku-solver:build"
           }
         },
         "test": {
@@ -109,16 +109,11 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json",
-              "tsconfig.worker.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
             ]
           }
         },
@@ -126,16 +121,16 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "custom-sudoku-solver:serve"
+            "devServerTarget": "sudoku-solver:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "custom-sudoku-solver:serve:production"
+              "devServerTarget": "sudoku-solver:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "custom-sudoku-solver"
+  "defaultProject": "sudoku-solver"
 }

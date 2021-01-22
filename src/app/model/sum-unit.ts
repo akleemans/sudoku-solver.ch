@@ -23,7 +23,7 @@ export class SumUnit {
   public isValid(): boolean {
     if (Util.allFilled(this.cells)) {
       // If cells are filled, check that sum adds up
-      let unitSum = Util.getValueSum(this.cells);
+      const unitSum = Util.getValueSum(this.cells);
       if (unitSum !== this.totalSum) {
         return false;
       }
@@ -35,9 +35,9 @@ export class SumUnit {
     }
 
     // If some cells are empty, check that sum can still be fulfilled
-    let currentSum = Util.getValueSum(this.cells);
-    let missingSum = this.totalSum - currentSum;
-    let unfilledCells = this.cells.filter(c => c.candidates.length > 1).length;
+    const currentSum = Util.getValueSum(this.cells);
+    const missingSum = this.totalSum - currentSum;
+    const unfilledCells = this.cells.filter(c => c.candidates.length > 1).length;
     if (missingSum < unfilledCells || missingSum > 9 * unfilledCells) {
       return false;
     }
@@ -47,10 +47,10 @@ export class SumUnit {
 
   public propagate(): void {
     // If only one cell left, fill it
-    let unfilledCells = this.cells.filter(c => c.candidates.length > 1);
+    const unfilledCells = this.cells.filter(c => c.candidates.length > 1);
     if (unfilledCells.length === 1) {
-      let cell = unfilledCells[0];
-      let value = this.totalSum - Util.getValueSum(this.cells);
+      const cell = unfilledCells[0];
+      const value = this.totalSum - Util.getValueSum(this.cells);
       if (value >= 1 && value <= 9) {
         cell.candidates = value.toString();
       }
@@ -58,9 +58,9 @@ export class SumUnit {
 
     // If noDuplicates option is on, propagate this
     if (this.noDuplicates) {
-      let filledCells = this.cells.filter(c => c.candidates.length === 1);
+      const filledCells = this.cells.filter(c => c.candidates.length === 1);
       filledCells.forEach(filledCell => {
-        for (let anyCell of this.cells) {
+        for (const anyCell of this.cells) {
           if (filledCell.cellId !== anyCell.cellId) {
             anyCell.removeCandidate(filledCell.candidates);
           }

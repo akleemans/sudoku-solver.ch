@@ -6,10 +6,6 @@ export class Constraint {
   public cellIds: number[] = [];
   public color: string;
 
-  public constructor() {
-    this.color = Util.getRandomColor();
-  }
-
   // Used for SINGLE_CELL_ODD_EVEN
   public isEven: boolean = true;
 
@@ -32,8 +28,12 @@ export class Constraint {
   // Used for MULTI_CELL_SUM (Killer Sudoku)
   public noDuplicates: boolean = false;
 
+  public constructor() {
+    this.color = Util.getRandomColor();
+  }
+
   public toString(): string {
-    let cellStr = this.cellIds.map(c => c.toString()).join(', ');
+    const cellStr = this.cellIds.map(c => c.toString()).join(', ');
     let desc = '';
     switch (this.type) {
       case ConstraintType.SINGLE_CELL_ODD_EVEN:

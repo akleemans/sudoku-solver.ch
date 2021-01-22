@@ -29,7 +29,7 @@ describe('Util', () => {
 
   describe('getRandomColor', () => {
     it('should correctly count string occurences', () => {
-      let color = Util.getRandomColor();
+      const color = Util.getRandomColor();
 
       expect(color.length).toBe(7);
       expect(color.startsWith('#')).toBeTrue();
@@ -39,7 +39,7 @@ describe('Util', () => {
 
   describe('getValueSum', () => {
     it('should correctly sum up filled cells', () => {
-      let cells = [
+      const cells = [
         new Cell(0, '1'),
         new Cell(1, '2'),
         new Cell(2, ''),
@@ -51,7 +51,7 @@ describe('Util', () => {
     });
 
     it('should return 0 of no filled cells', () => {
-      let cells = [
+      const cells = [
         new Cell(0, ''),
       ];
       expect(Util.getValueSum(cells)).toBe(0);
@@ -60,7 +60,7 @@ describe('Util', () => {
 
   describe('allFilled', () => {
     it('should return true if all cells are filled', () => {
-      let cells = [
+      const cells = [
         new Cell(0, '1'),
         new Cell(1, '2'),
         new Cell(2, '4'),
@@ -69,7 +69,7 @@ describe('Util', () => {
     });
 
     it('should return false if some cells are not filled', () => {
-      let cells = [
+      const cells = [
         new Cell(0, '1'),
         new Cell(1, '2'),
         new Cell(2, ''),
@@ -80,7 +80,7 @@ describe('Util', () => {
 
   describe('containsDuplicates', () => {
     it('should return false on unique cells', () => {
-      let cells = [
+      const cells = [
         new Cell(0, '1'),
         new Cell(1, '2'),
         new Cell(2, '4'),
@@ -89,7 +89,7 @@ describe('Util', () => {
     });
 
     it('should return false on unique cells with empty values', () => {
-      let cells = [
+      const cells = [
         new Cell(0, '1'),
         new Cell(1, ''),
         new Cell(2, ''),
@@ -98,7 +98,7 @@ describe('Util', () => {
     });
 
     it('should return true on duplicates', () => {
-      let cells = [
+      const cells = [
         new Cell(0, '1'),
         new Cell(1, '2'),
         new Cell(2, '1'),
@@ -107,7 +107,7 @@ describe('Util', () => {
     });
 
     it('should return false on candidates', () => {
-      let cells = [
+      const cells = [
         new Cell(0, '12'),
         new Cell(1, '12'),
       ];

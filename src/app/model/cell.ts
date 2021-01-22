@@ -14,7 +14,7 @@ export class Cell {
 
   public propagateToPeers(): void {
     if (this.candidates.length === 1) {
-      for (let peer of this.peers) {
+      for (const peer of this.peers) {
         peer.removeCandidate(this.candidates);
       }
 

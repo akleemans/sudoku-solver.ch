@@ -29,8 +29,8 @@ class GridCell {
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent implements OnInit {
-  public ViewMode: typeof ViewMode = ViewMode;
-  public ConstraintType: typeof ConstraintType = ConstraintType;
+  public viewModeEnum: typeof ViewMode = ViewMode;
+  public constraintTypeEnum: typeof ConstraintType = ConstraintType;
 
   public viewMode: ViewMode = ViewMode.numbers;
   public cells: GridCell[] = [];
@@ -44,8 +44,8 @@ export class MainComponent implements OnInit {
   public ngOnInit(): void {
     this.cells = _.range(81).map(i => new GridCell(i));
 
-    let sudokuStr = '.1......86....57..3....6.4.8...4.27.........5.74.6.....3.....9...79.....2...1..5.';
-    for (let i of _.range(81)) {
+    const sudokuStr = '.1......86....57..3....6.4.8...4.27.........5.74.6.....3.....9...79.....2...1..5.';
+    for (const i of _.range(81)) {
       this.cells[i].value = (sudokuStr[i] === '.' ? '' : sudokuStr[i]);
     }
   }
@@ -70,7 +70,7 @@ export class MainComponent implements OnInit {
   public addConstraint(): void {
     console.log('Adding constraint:', this.currentConstraint);
     this.constraints.push(this.currentConstraint);
-    let savedType = this.currentConstraint.type;
+    const savedType = this.currentConstraint.type;
     // On every marked cell, add color dot
     this.cells.filter(c => this.currentConstraint.cellIds.includes(c.cellId))
       .forEach(c => {
@@ -84,7 +84,7 @@ export class MainComponent implements OnInit {
   }
 
   public deleteConstraint(constraint: Constraint): void {
-    this.constraints = this.constraints.filter(c => c != constraint);
+    this.constraints = this.constraints.filter(c => c !== constraint);
     this.cells.forEach(c => c.colors = c.colors.filter(col => col !== constraint.color));
   }
 
@@ -116,9 +116,9 @@ export class MainComponent implements OnInit {
     this.solvingInProgress = true;
     // Create a new worker
     const worker = new Worker('./main.worker', {type: 'module'});
-    worker.onmessage = (event) => {
+    worker.onmessage = event => {
       console.log(`MainComponent got worker message: ${event.data}!`);
-      let message: WorkerMessage = event.data;
+      const message: WorkerMessage = event.data;
       switch (message.status) {
         case WorkerStatus.SOLVED:
           this.adaptSolution(message.content);
@@ -137,7 +137,7 @@ export class MainComponent implements OnInit {
           break;
       }
     };
-    let sudokuOptions: SudokuOptions = {
+    const sudokuOptions: SudokuOptions = {
       cells: this.cells.map(c => c.value),
       constraints: this.constraints,
       globalOptions: {
@@ -149,8 +149,8 @@ export class MainComponent implements OnInit {
 
   private adaptSolution(sudokuStr: string): void {
     // Set values on cells
-    for (let i of _.range(81)) {
-      let cell = this.cells[i];
+    for (const i of _.range(81)) {
+      const cell = this.cells[i];
       if (cell.value === '') {
         cell.calculated = true;
         cell.value = sudokuStr[i];

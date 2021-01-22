@@ -8,34 +8,34 @@ import {TestUtil} from './test-util';
 describe('Solver', () => {
   describe('Standard Sudoku', () => {
     it('should solve easy Sudoku', () => {
-      let sudokuStr = '.7.8.2.4.....7.....6..512.7.32.6.59..1.....2.....4......1.96.5.3...1......97.5.8.';
-      let expectedSolution = '175832649923674815864951237432167598716589423598243176281396754357418962649725381';
-      let cells = Util.getCellsFromString(sudokuStr);
-      let solution = Solver.solve(new Sudoku(cells));
+      const sudokuStr = '.7.8.2.4.....7.....6..512.7.32.6.59..1.....2.....4......1.96.5.3...1......97.5.8.';
+      const expectedSolution = '175832649923674815864951237432167598716589423598243176281396754357418962649725381';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const solution = Solver.solve(new Sudoku(cells));
       expect(solution.toString()).toBe(expectedSolution);
     });
 
     it('should solve medium Sudoku', () => {
-      let sudokuStr = '..2....9.1.8.3.5.4.34..5.....7.9.....8.7.1.3.....2.7.....2..15.7.5.4.3.9.6....4..';
-      let expectedSolution = '652417893178932564934865271217398645486751932593624718849273156725146389361589427';
-      let cells = Util.getCellsFromString(sudokuStr);
-      let solution = Solver.solve(new Sudoku(cells));
+      const sudokuStr = '..2....9.1.8.3.5.4.34..5.....7.9.....8.7.1.3.....2.7.....2..15.7.5.4.3.9.6....4..';
+      const expectedSolution = '652417893178932564934865271217398645486751932593624718849273156725146389361589427';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const solution = Solver.solve(new Sudoku(cells));
       expect(solution.toString()).toBe(expectedSolution);
     });
 
     it('should solve hard Sudoku', () => {
-      let sudokuStr = '.1......86....57..3....6.4.8...4.27.........5.74.6.....3.....9...79.....2...1..5.';
-      let expectedSolution = '715294638642835719398176542856349271923781465174562983531627894487953126269418357';
-      let cells = Util.getCellsFromString(sudokuStr);
-      let solution = Solver.solve(new Sudoku(cells));
+      const sudokuStr = '.1......86....57..3....6.4.8...4.27.........5.74.6.....3.....9...79.....2...1..5.';
+      const expectedSolution = '715294638642835719398176542856349271923781465174562983531627894487953126269418357';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const solution = Solver.solve(new Sudoku(cells));
       expect(solution.toString()).toBe(expectedSolution);
     });
 
     it('should solve hardest Sudoku', () => {
-      let sudokuStr = '4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......';
-      let expectedSolution = '417369825632158947958724316825437169791586432346912758289643571573291684164875293';
-      let cells = Util.getCellsFromString(sudokuStr);
-      let solution = Solver.solve(new Sudoku(cells));
+      const sudokuStr = '4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......';
+      const expectedSolution = '417369825632158947958724316825437169791586432346912758289643571573291684164875293';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const solution = Solver.solve(new Sudoku(cells));
       expect(solution.toString()).toBe(expectedSolution);
     });
   });
@@ -76,7 +76,7 @@ describe('Solver', () => {
         [[79, 80], 3],
       ];
       const constraints = TestUtil.getKillerConstraints(sumCells);
-      let solution = await solveAsync(new Sudoku(cells, constraints));
+      const solution = await solveAsync(new Sudoku(cells, constraints));
       expect(solution.toString()).toBe(expectedSolution);
     });
 
@@ -115,7 +115,7 @@ describe('Solver', () => {
         [[79, 80], 12],
       ];
       const constraints = TestUtil.getKillerConstraints(sumCells);
-      let solution = await solveAsync(new Sudoku(cells, constraints));
+      const solution = await solveAsync(new Sudoku(cells, constraints));
       expect(solution.toString()).toBe(expectedSolution);
     });
 
@@ -156,7 +156,7 @@ describe('Solver', () => {
         [[73, 74, 75, 76, 77, 78, 79], 39],
       ];
       const constraints = TestUtil.getKillerConstraints(sumCells);
-      let solution = await solveAsync(new Sudoku(cells, constraints));
+      const solution = await solveAsync(new Sudoku(cells, constraints));
       expect(solution.toString()).toBe(expectedSolution);
     });
   });
@@ -175,38 +175,38 @@ describe('Solver', () => {
         [[63, 72], 15],
       ];
       const constraints = TestUtil.getSumConstraints(sumCells);
-      let sudoku = new Sudoku(cells, constraints);
-      let solution = Solver.solve(sudoku);
+      const sudoku = new Sudoku(cells, constraints);
+      const solution = Solver.solve(sudoku);
       expect(solution.toString()).toBe(expectedSolution);
     });
   });
 
   describe('Odd-Even Sudoku', () => {
     it('should solve even Sudoku', () => {
-      let sudokuStr = '...2.1...............465...9.3...7.1..8...2..5.7...9.4...143...............8.2...';
-      let expectedSolution = '389271645654389172172465893963524781418937256527618934896143527235796418741852369';
-      let cells = Util.getCellsFromString(sudokuStr);
-      let constraint = new Constraint();
+      const sudokuStr = '...2.1...............465...9.3...7.1..8...2..5.7...9.4...143...............8.2...';
+      const expectedSolution = '389271645654389172172465893963524781418937256527618934896143527235796418741852369';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const constraint = new Constraint();
       constraint.cellIds = [1, 7, 9, 17, 63, 71, 73, 79];
       constraint.type = ConstraintType.SINGLE_CELL_ODD_EVEN;
       constraint.isEven = true;
-      let constraints = [constraint];
-      let sudoku = new Sudoku(cells, constraints);
-      let solution = Solver.solve(sudoku);
+      const constraints = [constraint];
+      const sudoku = new Sudoku(cells, constraints);
+      const solution = Solver.solve(sudoku);
       expect(solution.toString()).toBe(expectedSolution);
     });
 
     it('should solve odd Sudoku, Geocaching puzzle J', () => {
-      let sudokuStr = '..2...9....8...1..35.....62...3.7.......4.......9.5...67.....39..4...6....5...8..';
-      let expectedSolution = '142736985768529143359418762296387514587241396413965278671852439824193657935674821';
-      let cells = Util.getCellsFromString(sudokuStr);
-      let constraint = new Constraint();
+      const sudokuStr = '..2...9....8...1..35.....62...3.7.......4.......9.5...67.....39..4...6....5...8..';
+      const expectedSolution = '142736985768529143359418762296387514587241396413965278671852439824193657935674821';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const constraint = new Constraint();
       constraint.cellIds = [12, 14, 28, 30, 32, 34, 46, 48, 50, 52, 66, 68];
       constraint.type = ConstraintType.SINGLE_CELL_ODD_EVEN;
       constraint.isEven = false;
-      let constraints = [constraint];
-      let sudoku = new Sudoku(cells, constraints);
-      let solution = Solver.solve(sudoku);
+      const constraints = [constraint];
+      const sudoku = new Sudoku(cells, constraints);
+      const solution = Solver.solve(sudoku);
       expect(solution.toString()).toBe(expectedSolution);
     });
   });
@@ -310,6 +310,4 @@ describe('Solver', () => {
 });
 
 
-const solveAsync = async (sudoku: Sudoku): Promise<Sudoku> => {
-  return Promise.resolve(Solver.solve(sudoku));
-};
+const solveAsync = async (sudoku: Sudoku): Promise<Sudoku> => Promise.resolve(Solver.solve(sudoku));

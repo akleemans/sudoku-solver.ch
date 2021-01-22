@@ -1,15 +1,15 @@
 <div class="toggle-buttons btn-group" role="group">
-  <button type="button" [class.active]="viewMode === ViewMode.numbers" class="btn btn-outline-dark"
-          (click)="setViewMode(ViewMode.numbers)">
+  <button type="button" [class.active]="viewMode === viewModeEnum.numbers" class="btn btn-outline-dark"
+          (click)="setViewMode(viewModeEnum.numbers)">
     Enter numbers
   </button>
-  <button type="button" [class.active]="viewMode === ViewMode.constraints" class="btn btn-outline-dark"
-          (click)="setViewMode(ViewMode.constraints)">
+  <button type="button" [class.active]="viewMode === viewModeEnum.constraints" class="btn btn-outline-dark"
+          (click)="setViewMode(viewModeEnum.constraints)">
     Add constraints
   </button>
 </div>
 
-<div *ngIf="viewMode === ViewMode.numbers" class="flex-container">
+<div *ngIf="viewMode === viewModeEnum.numbers" class="flex-container">
   <div class="grid left-side">
     <ul>
       <li *ngFor="let cell of cells;">
@@ -38,7 +38,7 @@
   </div>
 </div>
 
-<div *ngIf="viewMode === ViewMode.constraints" class="flex-container">
+<div *ngIf="viewMode === viewModeEnum.constraints" class="flex-container">
   <div class="grid left-side">
     <ul style="cursor: pointer;">
       <li *ngFor="let cell of cells" (click)="toggleSelection(cell)"
@@ -62,7 +62,7 @@
 
     <select class="custom-select" [(ngModel)]="currentConstraint.type">
       <option selected>Choose constraint type</option>
-      <option [disabled]="currentConstraint.cellIds.length === 0" [ngValue]="ConstraintType.SINGLE_CELL_ODD_EVEN">
+      <option [disabled]="currentConstraint.cellIds.length === 0" [ngValue]="constraintTypeEnum.SINGLE_CELL_ODD_EVEN">
         Odd or even cell(s)
       </option>
       <!--
@@ -80,10 +80,10 @@
         Two cells: Exact factor
       </option>
       -->
-      <option [disabled]="currentConstraint.cellIds.length !== 9" [ngValue]="ConstraintType.MULTI_CELL_UNIT">
+      <option [disabled]="currentConstraint.cellIds.length !== 9" [ngValue]="constraintTypeEnum.MULTI_CELL_UNIT">
         Multiple cells: Complete unit (1-9)
       </option>
-      <option [disabled]="currentConstraint.cellIds.length < 2" [ngValue]="ConstraintType.MULTI_CELL_SUM">
+      <option [disabled]="currentConstraint.cellIds.length < 2" [ngValue]="constraintTypeEnum.MULTI_CELL_SUM">
         Multiple cells: sum
       </option>
       <!--
@@ -98,7 +98,7 @@
       Choose a constraint type to show its description.
     </div>
 
-    <div *ngIf="currentConstraint.type === ConstraintType.SINGLE_CELL_ODD_EVEN">
+    <div *ngIf="currentConstraint.type === constraintTypeEnum.SINGLE_CELL_ODD_EVEN">
       <p><b>Description:</b> One or more cells which are odd or even.</p>
       <div class="form-inline">
         <b>Choose if odd/even:</b>
@@ -109,7 +109,7 @@
       </div>
     </div>
 
-    <div *ngIf="currentConstraint.type === ConstraintType.MULTI_CELL_SUM">
+    <div *ngIf="currentConstraint.type === constraintTypeEnum.MULTI_CELL_SUM">
       <p><b>Description:</b> Multiple cells must add up to a sum.</p>
       <div class="form-inline">
         <b>Enter sum:</b>
@@ -156,7 +156,7 @@
   </div>
 </div>
 
-<div *ngIf="viewMode === ViewMode.solving" class="flex-container">
+<div *ngIf="viewMode === viewModeEnum.solving" class="flex-container">
   <div class="grid left-side">
     <ul>
       <li *ngFor="let cell of cells;">

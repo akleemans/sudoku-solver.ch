@@ -29,8 +29,8 @@ export class Util {
    * Builds cells from a Sudoku string like 1..32.. (etc.)
    */
   public static getCellsFromString(sudokuStr: string): string[] {
-    let cells = [];
-    for (let i of _.range(81)) {
+    const cells = [];
+    for (const i of _.range(81)) {
       cells.push(sudokuStr[i] === '.' ? '123456789' : sudokuStr[i]);
     }
     return cells;
