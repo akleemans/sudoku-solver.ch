@@ -12,6 +12,6 @@ Built using [Angular](https://angular.io/) and [Web Workers](https://developer.m
 
 Running
 
-  npm run build
+    npm run build
   
 will create the built site in the `docs` folder, which will then be provided by Github.
