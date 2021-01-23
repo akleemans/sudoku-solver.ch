@@ -66,17 +66,17 @@
         Odd or even cell(s)
       </option>
       <!--
-      <option [disabled]="currentConstraint.cellIds.length !== 2" [ngValue]="ConstraintType.TWO_CELLS_BIGGER_THAN">
+      <option [disabled]="currentConstraint.cellIds.length !== 2" [ngValue]="constraintTypeEnum.TWO_CELLS_BIGGER_THAN">
         Two cells: Bigger/smaller than
       </option>
       -->
       <!--
-      <option [disabled]="currentConstraint.cellIds.length !== 2" [ngValue]="ConstraintType.TWO_CELLS_EXACT_DIFFERENCE">
+      <option [disabled]="currentConstraint.cellIds.length !== 2" [ngValue]="constraintTypeEnum.TWO_CELLS_EXACT_DIFFERENCE">
         Two cells: Exact difference
       </option>
       -->
       <!--
-      <option [disabled]="currentConstraint.cellIds.length !== 2" [ngValue]="ConstraintType.TWO_CELLS_EXACT_FACTOR">
+      <option [disabled]="currentConstraint.cellIds.length !== 2" [ngValue]="constraintTypeEnum.TWO_CELLS_EXACT_FACTOR">
         Two cells: Exact factor
       </option>
       -->
@@ -86,11 +86,9 @@
       <option [disabled]="currentConstraint.cellIds.length < 2" [ngValue]="constraintTypeEnum.MULTI_CELL_SUM">
         Multiple cells: sum
       </option>
-      <!--
-      <option [disabled]="currentConstraint.cellIds.length < 2" [ngValue]="ConstraintType.MULTI_CELL_PRODUCT">
+      <option [disabled]="currentConstraint.cellIds.length < 2" [ngValue]="constraintTypeEnum.MULTI_CELL_PRODUCT">
         Multiple cells: product
       </option>
-      -->
     </select>
 
     <!-- Type descriptions -->
@@ -120,6 +118,14 @@
         <input class="form-control" style="margin-right: 5px;" type="checkbox"
                [(ngModel)]="currentConstraint.noDuplicates">
         No duplicates (Killer Sudoku)
+      </div>
+    </div>
+
+    <div *ngIf="currentConstraint.type === constraintTypeEnum.MULTI_CELL_PRODUCT">
+      <p><b>Description:</b> Multiple cells form a product when multiplied.</p>
+      <div class="form-inline" style="margin-bottom: 10px;">
+        <b>Enter product:</b>
+        <input class="form-control" type="number" [(ngModel)]="currentConstraint.product">
       </div>
     </div>
 
