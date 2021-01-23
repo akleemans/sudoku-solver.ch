@@ -40,8 +40,22 @@ export class Util {
    * Calculate the sum of the already known number of a cell array.
    */
   public static getValueSum(cells: Cell[]): number {
-    return _.sum(cells.filter(c => c.candidates.length === 1)
-      .map(c => +c.candidates));
+    return _.sum(
+      cells.filter(c => c.candidates.length === 1)
+        .map(c => +c.candidates));
+  }
+
+  /**
+   * Calculate the product of the already known number of a cell array.
+   */
+  public static getValueProduct(cells: Cell[]): number {
+    const filledCells = cells.filter(c => c.candidates.length === 1)
+      .map(c => +c.candidates);
+    if (filledCells.length === 0) {
+      return 0;
+    } else {
+      return filledCells.reduce((a, b) => a * b, 1);
+    }
   }
 
   /**

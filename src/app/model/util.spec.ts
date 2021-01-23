@@ -58,6 +58,27 @@ describe('Util', () => {
     });
   });
 
+  describe('getValueProduct', () => {
+    it('should correctly multiply up filled cells', () => {
+      const cells = [
+        new Cell(0, '1'),
+        new Cell(1, '2'),
+        new Cell(2, ''),
+      ];
+      expect(Util.getValueProduct(cells)).toBe(2);
+
+      cells[2].candidates = '7';
+      expect(Util.getValueProduct(cells)).toBe(14);
+    });
+
+    it('should return 0 of no filled cells', () => {
+      const cells = [
+        new Cell(0, ''),
+      ];
+      expect(Util.getValueProduct(cells)).toBe(0);
+    });
+  });
+
   describe('allFilled', () => {
     it('should return true if all cells are filled', () => {
       const cells = [
