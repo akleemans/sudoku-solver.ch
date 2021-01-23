@@ -179,6 +179,40 @@ describe('Solver', () => {
       const solution = Solver.solve(sudoku);
       expect(solution.toString()).toBe(expectedSolution);
     });
+
+    it('should solve Geocaching puzzle N', () => {
+      const sudokuStr = '........................................9.......7.....7.......6.3.....4...9...1..';
+      const expectedSolution = '578361924462975831913482657687134295345296718291758463724519386136827549859643172';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const sumCells: [number[], number][] = [
+        [[2, 11], 10],
+        [[5, 6], 10],
+        [[7, 16], 5],
+        [[8, 17], 5],
+        [[9, 10], 10],
+        [[11, 20], 5],
+        [[18, 19], 10],
+        [[20, 29], 10],
+        [[21, 30], 5],
+        [[22, 31], 11],
+        [[22, 23], 10],
+        [[32, 41], 10],
+        [[34, 43], 10],
+        [[36, 45], 5],
+        [[46, 47], 10],
+        [[51, 52], 10],
+        [[55, 64], 5],
+        [[56, 65], 10],
+        [[58, 59], 10],
+        [[66, 67], 10],
+        [[68, 77], 10],
+        [[75, 76], 10],
+      ];
+      const constraints = TestUtil.getSumConstraints(sumCells);
+      const sudoku = new Sudoku(cells, constraints);
+      const solution = Solver.solve(sudoku);
+      expect(solution.toString()).toBe(expectedSolution);
+    });
   });
 
   describe('Odd-Even Sudoku', () => {
@@ -290,14 +324,13 @@ describe('Solver', () => {
   });
 
   /*
-    describe('Difference / factor (Geocache Sudoku B)', () => {
+    // TODO
+    describe('Sum / factor (Geocache Sudoku B)', () => {
       it('should solve black / white dots Sudoku', () => {
         const sudokuStr = '.................................................................................';
 
-        // TODO
         const expectedSolution = 'TODO';
         const cells = Util.getCellsFromString(sudokuStr);
-        // TODO
         const constraints = [
           new Constraint()
         ];
@@ -307,6 +340,41 @@ describe('Solver', () => {
       });
     });*/
 
+  describe('countCellOccurence', () => {
+    it('should', () => {
+      const sudokuStr = '........................................9.......7.....7.......6.3.....4...9...1..';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const sumCells: [number[], number][] = [
+        [[2, 11], 10],
+        [[5, 6], 10],
+        [[7, 16], 5],
+        [[8, 17], 5],
+        [[9, 10], 10],
+        [[11, 20], 5],
+        [[18, 19], 10],
+        [[20, 29], 10],
+        [[21, 30], 5],
+        [[22, 23], 10],
+        [[32, 41], 10],
+        [[34, 43], 10],
+        [[36, 45], 5],
+        [[46, 47], 10],
+        [[51, 52], 10],
+        [[55, 64], 5],
+        [[56, 65], 10],
+        [[58, 59], 10],
+        [[66, 67], 10],
+        [[68, 77], 10],
+        [[75, 76], 10],
+      ];
+      const constraints = TestUtil.getSumConstraints(sumCells);
+      const sudoku = new Sudoku(cells, constraints);
+
+      expect(Solver.countCellOccurence(sudoku.cells[0], sudoku)).toBe(0);
+      expect(Solver.countCellOccurence(sudoku.cells[2], sudoku)).toBe(1);
+      expect(Solver.countCellOccurence(sudoku.cells[11], sudoku)).toBe(2);
+    });
+  });
 });
 
 
