@@ -46,7 +46,7 @@ describe('Util', () => {
       ];
       expect(Util.getValueSum(cells)).toBe(3);
 
-      cells[2].candidates = '7';
+      cells[2].setCandidates('7');
       expect(Util.getValueSum(cells)).toBe(10);
     });
 
@@ -67,7 +67,7 @@ describe('Util', () => {
       ];
       expect(Util.getValueProduct(cells)).toBe(2);
 
-      cells[2].candidates = '7';
+      cells[2].setCandidates('7');
       expect(Util.getValueProduct(cells)).toBe(14);
     });
 

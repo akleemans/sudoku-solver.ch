@@ -25,7 +25,7 @@ export class Solver {
     let iterations = 0;
     const startTime = new Date();
     while (stack.length > 0) {
-      if (iterations % 100 === 0) {
+      if (iterations % 1000 === 0) {
         console.log('>> Iteration ', iterations, 'stack size:', stack.length, 'stack:', stack.map(i => i[1]?.toString()));
       }
       iterations += 1;
@@ -61,7 +61,7 @@ export class Solver {
       // 2. Do the guess & add to stack
       const idx = nextGuess[0];
       const value = nextGuess[1];
-      sudoku.cells[idx].candidates = value;
+      sudoku.cells[idx].setCandidates(value);
       sudoku.propagate();
 
       // 3. Decide how to proceed
@@ -98,9 +98,9 @@ export class Solver {
     const guesses: [number, string, number][] = [];
     for (const cell of sudoku.cells) {
       // If no single candidate on cell, we can guess
-      if (cell.candidates.length > 1) {
+      if (cell.getCandidates().length > 1) {
         const cellScore = Solver.getCellScore(cell, sudoku);
-        for (const c of cell.candidates) {
+        for (const c of cell.getCandidates()) {
           guesses.push([cell.cellId, c, cellScore]);
         }
       }
@@ -116,16 +116,37 @@ export class Solver {
    * Heuristic which cell to try first. The lower the number, the sooner the cell will be up for a guess.
    */
   public static getCellScore(cell: Cell, sudoku: Sudoku): number {
-    let nr = cell.candidates.length;
+    let nr = cell.getCandidates().length;
 
     // Check if in sum units
+    // TODO check current open cells
     const cellsInSumUnit = sudoku.cellsPerSumUnit[nr];
     if (cellsInSumUnit !== undefined) {
-      nr = cell.candidates.length - 5 + cellsInSumUnit;
+      nr = cell.getCandidates().length - 5 + cellsInSumUnit;
     }
 
-    // TODO later: add other constraints into calculation
+    // Check if in product units
+    // TODO check current open cells
+    const cellsInProductUnit = sudoku.cellsPerProductUnit[nr];
+    if (cellsInProductUnit !== undefined) {
+      nr = cell.getCandidates().length - 5 + cellsInProductUnit;
+    }
+
+    // Check if cells are in multiple sum/product units, choose those first
+    const unitCount = this.countCellOccurence(cell, sudoku);
+    if (unitCount > 1) {
+      const smallestCellCount = Math.min(cellsInSumUnit ?? 0, cellsInSumUnit ?? 0);
+      nr = cell.getCandidates().length - 5 * unitCount + smallestCellCount;
+    }
 
     return nr;
+  }
+
+  /**
+   * Count the amount of sum- and product units the cell is in.
+   */
+  public static countCellOccurence(cell: Cell, sudoku: Sudoku): number {
+    return (sudoku.sumUnits.filter(sU => sU.cells.includes(cell)).length ?? 0)
+      + (sudoku.productUnits.filter(sU => sU.cells.includes(cell)).length ?? 0);
   }
 }

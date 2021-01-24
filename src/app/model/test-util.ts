@@ -29,6 +29,21 @@ export class TestUtil {
   }
 
   /**
+   * Build product constraints from a simplified list version.
+   */
+  public static getProductConstraints(list: [number[], number][]): Constraint[] {
+    const constraints = [];
+    for (const item of list) {
+      const constraint = new Constraint();
+      constraint.type = ConstraintType.MULTI_CELL_PRODUCT;
+      constraint.cellIds = item[0];
+      constraint.product = item[1];
+      constraints.push(constraint);
+    }
+    return constraints;
+  }
+
+  /**
    * Build constraints for Hyper Sudoku.
    */
   public static getHyperConstraints(): Constraint[] {

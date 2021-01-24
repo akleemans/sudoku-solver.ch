@@ -41,7 +41,7 @@ describe('Solver', () => {
   });
 
   describe('Killer Sudoku', () => {
-    // Solvable, takes about 15s
+    // Solved in 15s
     xit('should solve Geocaching puzzle A', async () => {
       const sudokuStr = '.................................................................................';
       const expectedSolution = '592176483416938275378254196167395824934862751825741369289513647741629538653487912';
@@ -119,7 +119,7 @@ describe('Solver', () => {
       expect(solution.toString()).toBe(expectedSolution);
     });
 
-    // Can be solved in 5s
+    // Solved in 5s
     it('should solve Daily No. 5512', async () => {
       // From https://www.killersudokuonline.com/puzzles/2021/puzzle-D343knm5499.gif
       const sudokuStr = '.................................................................................';
@@ -209,6 +209,70 @@ describe('Solver', () => {
         [[75, 76], 10],
       ];
       const constraints = TestUtil.getSumConstraints(sumCells);
+      const sudoku = new Sudoku(cells, constraints);
+      const solution = Solver.solve(sudoku);
+      expect(solution.toString()).toBe(expectedSolution);
+    });
+  });
+
+  describe('Product Sudoku', () => {
+    it('should solve Geocaching puzzle U', () => {
+      const sudokuStr = '.................................................................................';
+      const expectedSolution = '348265179167934582952817346794152863835679421216483795483526917679341258521798634';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const productCells: [number[], number][] = [
+        [[1, 10], 24],
+        [[3, 12], 18],
+        [[5, 14], 20],
+        [[10, 19], 30],
+        [[12, 21], 72],
+        [[13, 22], 3],
+        [[15, 24], 15],
+        [[16, 25], 32],
+        [[27, 36], 56],
+        [[31, 40], 35],
+        [[35, 44], 3],
+        [[36, 45], 16],
+        [[39, 48], 24],
+        [[43, 52], 18],
+        [[44, 53], 5],
+        [[48, 57], 20],
+        [[58, 67], 8],
+        [[61, 70], 5],
+        [[64, 73], 14],
+      ];
+      const constraints = TestUtil.getProductConstraints(productCells);
+      const sudoku = new Sudoku(cells, constraints);
+      const solution = Solver.solve(sudoku);
+      expect(solution.toString()).toBe(expectedSolution);
+    });
+
+    // Solved in 40s
+    xit('should solve Geocaching puzzle I', () => {
+      const sudokuStr = '.................................................................................';
+      const expectedSolution = '384671529716952348259834167975416283863297415421583796692745831538129674147368952';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const productCells: [number[], number][] = [
+        [[1, 9], 56],
+        [[0, 2, 10], 12],
+        [[3, 5, 13], 30],
+        [[7, 17], 16],
+        [[10, 18, 20, 28], 126],
+        [[33, 35, 25, 43], 36],
+        [[36, 38, 28, 46], 336],
+        [[42, 44, 34, 52], 1440],
+        [[36, 46, 54], 96],
+        [[54, 46, 56, 64], 72],
+        [[57, 59, 49, 67], 560],
+        [[60, 62, 52, 70], 504],
+        [[54, 64, 72], 18],
+        [[64, 66, 56, 74], 42],
+        [[72, 64, 74], 21],
+        [[73, 75, 65], 96],
+        [[76, 78, 68], 486],
+        [[78, 80, 70], 126],
+      ];
+      const constraints = TestUtil.getProductConstraints(productCells);
       const sudoku = new Sudoku(cells, constraints);
       const solution = Solver.solve(sudoku);
       expect(solution.toString()).toBe(expectedSolution);

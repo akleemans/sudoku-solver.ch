@@ -5,24 +5,26 @@ import {ConstraintType} from './constraint-type';
 import {SumUnit} from './sum-unit';
 import {Util} from './util';
 import {GlobalOptions} from './sudoku-options';
+import {ProductUnit} from './product-unit';
 
 export class Sudoku {
   public cells: Cell[] = [];
   public units: Cell[][] = [];
   public sumUnits: SumUnit[] = [];
-  // TODO add product units here
   public cellsPerSumUnit: { [key: number]: number } = {};
+  public productUnits: ProductUnit[] = [];
+  public cellsPerProductUnit: { [key: number]: number } = {};
 
   public constructor(cells: string[], constraints: Constraint[] = [], globalOptions: GlobalOptions = {useBlockUnits: true}) {
     // Prepare odd/even cells
-    const cellMap = [];
+    const oddEvenCellMap = [];
     constraints
       .filter(c => c.type === ConstraintType.SINGLE_CELL_ODD_EVEN)
       .forEach(c => {
-        c.cellIds.forEach(cellId => cellMap[cellId] = c.isEven);
+        c.cellIds.forEach(cellId => oddEvenCellMap[cellId] = c.isEven);
       });
     for (const i of _.range(81)) {
-      this.cells.push(new Cell(i, cells[i], cellMap[i]));
+      this.cells.push(new Cell(i, cells[i], oddEvenCellMap[i]));
     }
 
     // Build peers list
@@ -112,27 +114,39 @@ export class Sudoku {
         }
       }
     }
+
+    // Add product units from constraints
+    const productConstraints = constraints.filter(c => c.type === ConstraintType.MULTI_CELL_PRODUCT);
+    if (productConstraints.length > 0) {
+      for (const productConstraint of productConstraints) {
+        const productCells: Cell[] = productConstraint.cellIds.map(c => this.cells[c]);
+        this.productUnits.push(new ProductUnit(productCells, productConstraint.product));
+
+        for (const cell of productCells) {
+          this.cellsPerProductUnit[cell.cellId] = productCells.length;
+        }
+      }
+    }
   }
 
   public serialize(): string[] {
     const l = [];
     for (const cell of this.cells) {
-      l.push(cell.candidates);
+      l.push(cell.getCandidates());
     }
     return l;
   }
 
   public getTotalCandidates(): number {
-    return _.sum(this.cells.map(c => c.candidates.length));
+    return _.sum(this.cells.map(c => c.getCandidates().length));
   }
 
   /**
    * Sets the state from a list of candidates.
-   * Expects the
    */
   public setState(candidateList: string[]): void {
     for (let i = 0; i < 81; i++) {
-      this.cells[i].candidates = candidateList[i];
+      this.cells[i].setCandidates(candidateList[i]);
     }
   }
 
@@ -194,6 +208,11 @@ export class Sudoku {
       return false;
     }
 
+    // Check product units
+    if (!_.every(this.productUnits, productUnit => productUnit.isSolved())) {
+      return false;
+    }
+
     return true;
   }
 
@@ -218,7 +237,7 @@ export class Sudoku {
 
     // Check if units contain numbers only once
     for (const unit of this.units) {
-      const allValues = unit.map(c => c.candidates)
+      const allValues = unit.map(c => c.getCandidates())
         .filter(candidates => candidates.length === 1)
         .join('');
       for (const v of '123456789') {
@@ -231,6 +250,11 @@ export class Sudoku {
 
     // Check that all sum units are still valid
     if (!_.every(this.sumUnits.map(sumUnit => sumUnit.isValid()))) {
+      return false;
+    }
+
+    // Check that all product units are still valid
+    if (!_.every(this.productUnits.map(productUnit => productUnit.isValid()))) {
       return false;
     }
 
@@ -254,10 +278,10 @@ export class Sudoku {
         const allCandidates = _.map(unit, 'candidates').join('');
         for (const v of '123456789') {
           if (Util.count(allCandidates, v) === 1) {
-            const cell = unit.find(c => c.candidates.includes(v));
-            if (cell.candidates.length > 1) {
+            const cell = unit.find(c => c.getCandidates().includes(v));
+            if (cell.getCandidates().length > 1) {
               // Found a cell which can only hold value
-              cell.candidates = v;
+              cell.removeAllExcept(v);
               break;
             }
           }
@@ -266,6 +290,9 @@ export class Sudoku {
 
       // Propagate (3): Sum units
       this.sumUnits.forEach(sumUnit => sumUnit.propagate());
+
+      // Propagate (4): Product units
+      this.productUnits.forEach(productUnit => productUnit.propagate());
     }
   }
 }

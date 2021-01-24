@@ -4,26 +4,25 @@ describe('Cell', () => {
   describe('initialisation', () => {
     it('should init with single candidate', () => {
       const knownCell = new Cell(0, '1');
-      expect(knownCell.candidates).toBe('1');
+      expect(knownCell.getCandidates()).toBe('1');
     });
 
     it('should set all candidates if not single value', () => {
       const allValues = '123456789';
       let unknownCell = new Cell(0, '12');
-      expect(unknownCell.candidates).toBe(allValues);
+      expect(unknownCell.getCandidates()).toBe(allValues);
 
       unknownCell = new Cell(0, '');
-      expect(unknownCell.candidates).toBe(allValues);
+      expect(unknownCell.getCandidates()).toBe(allValues);
     });
   });
-
 
   describe('isValid', () => {
     it('should recognize valid cell', () => {
       let knownCell = new Cell(0, '1');
       expect(knownCell.isValid()).toBeTrue();
 
-      knownCell.candidates = '12';
+      knownCell.setCandidates('12');
       expect(knownCell.isValid()).toBeTrue();
 
       knownCell = new Cell(0, '');
@@ -32,7 +31,7 @@ describe('Cell', () => {
 
     it('should recognize invalid cell', () => {
       const knownCell = new Cell(0, '1');
-      knownCell.candidates = '';
+      knownCell.setCandidates('');
       expect(knownCell.isValid()).toBeFalse();
     });
   });
@@ -42,16 +41,16 @@ describe('Cell', () => {
       const knownCell = new Cell(0, '1');
       expect(knownCell.isSolved()).toBeTrue();
 
-      knownCell.candidates = '9';
+      knownCell.setCandidates('9');
       expect(knownCell.isSolved()).toBeTrue();
     });
 
     it('should recognize unsolved cell', () => {
       let knownCell = new Cell(0, '1');
-      knownCell.candidates = '';
+      knownCell.setCandidates('');
       expect(knownCell.isSolved()).toBeFalse();
 
-      knownCell.candidates = '12';
+      knownCell.setCandidates('12');
       expect(knownCell.isSolved()).toBeFalse();
 
       knownCell = new Cell(0, '');
@@ -62,21 +61,21 @@ describe('Cell', () => {
   describe('removeCandidate', () => {
     it('should remove existing candidate', () => {
       const knownCell = new Cell(0, '1');
-      knownCell.removeCandidate('1');
-      expect(knownCell.candidates).toBe('');
+      knownCell.removeCandidates('1');
+      expect(knownCell.getCandidates()).toBe('');
 
-      knownCell.candidates = '789';
-      knownCell.removeCandidate('8');
-      expect(knownCell.candidates).toBe('79');
+      knownCell.setCandidates('789');
+      knownCell.removeCandidates('8');
+      expect(knownCell.getCandidates()).toBe('79');
 
-      knownCell.removeCandidate('8');
-      expect(knownCell.candidates).toBe('79');
+      knownCell.removeCandidates('8');
+      expect(knownCell.getCandidates()).toBe('79');
     });
 
     it('should not do anything if not existing candidate', () => {
       const knownCell = new Cell(0, '1');
-      knownCell.removeCandidate('2');
-      expect(knownCell.candidates).toBe('1');
+      knownCell.removeCandidates('2');
+      expect(knownCell.getCandidates()).toBe('1');
     });
   });
 
@@ -85,13 +84,13 @@ describe('Cell', () => {
       const knownCell = new Cell(0, '1');
       expect(knownCell.toString()).toBe('1');
 
-      knownCell.candidates = '7';
+      knownCell.setCandidates('7');
       expect(knownCell.toString()).toBe('7');
     });
 
     it('should render empty cell', () => {
       const knownCell = new Cell(0, '');
-      knownCell.candidates = '789';
+      knownCell.setCandidates('789');
 
       expect(knownCell.toString()).toBe(' ');
     });
@@ -102,10 +101,10 @@ describe('Cell', () => {
       const knownCell = new Cell(0, '1');
       const otherCell = new Cell(1, '');
       knownCell.peers = [otherCell];
-      otherCell.candidates = '12';
+      otherCell.setCandidates('12');
 
       knownCell.propagateToPeers();
-      expect(otherCell.candidates).toBe('2');
+      expect(otherCell.getCandidates()).toBe('2');
     });
   });
 });

@@ -6,7 +6,6 @@ export class SumUnit {
     public cells: Cell[],
     public totalSum: number,
     public noDuplicates: boolean) {
-    console.log('Creating sum unit with noDuplicates:', noDuplicates);
   }
 
   public isSolved(): boolean {
@@ -37,7 +36,7 @@ export class SumUnit {
     // If some cells are empty, check that sum can still be fulfilled
     const currentSum = Util.getValueSum(this.cells);
     const missingSum = this.totalSum - currentSum;
-    const unfilledCells = this.cells.filter(c => c.candidates.length > 1).length;
+    const unfilledCells = this.cells.filter(c => c.getCandidates().length > 1).length;
     if (missingSum < unfilledCells || missingSum > 9 * unfilledCells) {
       return false;
     }
@@ -47,22 +46,22 @@ export class SumUnit {
 
   public propagate(): void {
     // If only one cell left, fill it
-    const unfilledCells = this.cells.filter(c => c.candidates.length > 1);
+    const unfilledCells = this.cells.filter(c => c.getCandidates().length > 1);
     if (unfilledCells.length === 1) {
       const cell = unfilledCells[0];
       const value = this.totalSum - Util.getValueSum(this.cells);
       if (value >= 1 && value <= 9) {
-        cell.candidates = value.toString();
+        cell.removeAllExcept(value.toString());
       }
     }
 
     // If noDuplicates option is on, propagate this
     if (this.noDuplicates) {
-      const filledCells = this.cells.filter(c => c.candidates.length === 1);
+      const filledCells = this.cells.filter(c => c.getCandidates().length === 1);
       filledCells.forEach(filledCell => {
         for (const anyCell of this.cells) {
           if (filledCell.cellId !== anyCell.cellId) {
-            anyCell.removeCandidate(filledCell.candidates);
+            anyCell.removeCandidates(filledCell.getCandidates());
           }
         }
       });

@@ -41,16 +41,16 @@ export class Util {
    */
   public static getValueSum(cells: Cell[]): number {
     return _.sum(
-      cells.filter(c => c.candidates.length === 1)
-        .map(c => +c.candidates));
+      cells.filter(c => c.getCandidates().length === 1)
+        .map(c => +c.getCandidates()));
   }
 
   /**
    * Calculate the product of the already known number of a cell array.
    */
   public static getValueProduct(cells: Cell[]): number {
-    const filledCells = cells.filter(c => c.candidates.length === 1)
-      .map(c => +c.candidates);
+    const filledCells = cells.filter(c => c.getCandidates().length === 1)
+      .map(c => +c.getCandidates());
     if (filledCells.length === 0) {
       return 0;
     } else {
@@ -72,8 +72,8 @@ export class Util {
   public static containsDuplicates(cells: Cell[]): boolean {
     // Remove empty values
     const filledCellValues = cells
-      .filter(c => c.candidates.length === 1)
-      .map(c => c.candidates);
+      .filter(c => c.getCandidates().length === 1)
+      .map(c => c.getCandidates());
     return _.uniq(filledCellValues).length !== filledCellValues.length;
   }
 }
