@@ -789,6 +789,12 @@
       var _util__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
       /*! ./util */
       "M+Yo");
+      /* harmony import */
+
+
+      var _product_unit__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+      /*! ./product-unit */
+      "CBs/");
 
       var Sudoku = /*#__PURE__*/function () {
         function Sudoku(cells) {
@@ -803,16 +809,17 @@
 
           this.cells = [];
           this.units = [];
-          this.sumUnits = []; // TODO add product units here
+          this.sumUnits = [];
+          this.cellsPerSumUnit = {};
+          this.productUnits = [];
+          this.cellsPerProductUnit = {}; // Prepare odd/even cells
 
-          this.cellsPerSumUnit = {}; // Prepare odd/even cells
-
-          var cellMap = [];
+          var oddEvenCellMap = [];
           constraints.filter(function (c) {
             return c.type === _constraint_type__WEBPACK_IMPORTED_MODULE_2__["ConstraintType"].SINGLE_CELL_ODD_EVEN;
           }).forEach(function (c) {
             c.cellIds.forEach(function (cellId) {
-              return cellMap[cellId] = c.isEven;
+              return oddEvenCellMap[cellId] = c.isEven;
             });
           });
 
@@ -822,7 +829,7 @@
           try {
             for (_iterator.s(); !(_step = _iterator.n()).done;) {
               var _i3 = _step.value;
-              this.cells.push(new _cell__WEBPACK_IMPORTED_MODULE_1__["Cell"](_i3, cells[_i3], cellMap[_i3]));
+              this.cells.push(new _cell__WEBPACK_IMPORTED_MODULE_1__["Cell"](_i3, cells[_i3], oddEvenCellMap[_i3]));
             } // Build peers list
 
           } catch (err) {
@@ -900,18 +907,18 @@
               var _idx2 = _step4.value;
               var unit = [];
 
-              var _iterator10 = _createForOfIteratorHelper(lodash__WEBPACK_IMPORTED_MODULE_0__["range"](9)),
-                  _step10;
+              var _iterator12 = _createForOfIteratorHelper(lodash__WEBPACK_IMPORTED_MODULE_0__["range"](9)),
+                  _step12;
 
               try {
-                for (_iterator10.s(); !(_step10 = _iterator10.n()).done;) {
-                  var _i4 = _step10.value;
+                for (_iterator12.s(); !(_step12 = _iterator12.n()).done;) {
+                  var _i4 = _step12.value;
                   unit.push(this.cells[_idx2 * 9 + _i4]);
                 }
               } catch (err) {
-                _iterator10.e(err);
+                _iterator12.e(err);
               } finally {
-                _iterator10.f();
+                _iterator12.f();
               }
 
               this.units.push(unit);
@@ -930,19 +937,19 @@
               var rIdx = _step5.value;
               var _unit = [];
 
-              var _iterator11 = _createForOfIteratorHelper(lodash__WEBPACK_IMPORTED_MODULE_0__["range"](9)),
-                  _step11;
+              var _iterator13 = _createForOfIteratorHelper(lodash__WEBPACK_IMPORTED_MODULE_0__["range"](9)),
+                  _step13;
 
               try {
-                for (_iterator11.s(); !(_step11 = _iterator11.n()).done;) {
-                  var cIdx = _step11.value;
+                for (_iterator13.s(); !(_step13 = _iterator13.n()).done;) {
+                  var cIdx = _step13.value;
 
                   _unit.push(this.cells[rIdx + cIdx * 9]);
                 }
               } catch (err) {
-                _iterator11.e(err);
+                _iterator13.e(err);
               } finally {
-                _iterator11.f();
+                _iterator13.f();
               }
 
               this.units.push(_unit);
@@ -990,19 +997,19 @@
               var constraint = _step7.value;
               var _unit2 = [];
 
-              var _iterator12 = _createForOfIteratorHelper(constraint.cellIds),
-                  _step12;
+              var _iterator14 = _createForOfIteratorHelper(constraint.cellIds),
+                  _step14;
 
               try {
-                for (_iterator12.s(); !(_step12 = _iterator12.n()).done;) {
-                  var _idx3 = _step12.value;
+                for (_iterator14.s(); !(_step14 = _iterator14.n()).done;) {
+                  var _idx3 = _step14.value;
 
                   _unit2.push(this.cells[_idx3]);
                 }
               } catch (err) {
-                _iterator12.e(err);
+                _iterator14.e(err);
               } finally {
-                _iterator12.f();
+                _iterator14.f();
               }
 
               console.log('Adding unit: ' + _unit2);
@@ -1050,6 +1057,44 @@
             } finally {
               _iterator8.f();
             }
+          } // Add product units from constraints
+
+
+          var productConstraints = constraints.filter(function (c) {
+            return c.type === _constraint_type__WEBPACK_IMPORTED_MODULE_2__["ConstraintType"].MULTI_CELL_PRODUCT;
+          });
+
+          if (productConstraints.length > 0) {
+            var _iterator10 = _createForOfIteratorHelper(productConstraints),
+                _step10;
+
+            try {
+              for (_iterator10.s(); !(_step10 = _iterator10.n()).done;) {
+                var productConstraint = _step10.value;
+                var productCells = productConstraint.cellIds.map(function (c) {
+                  return _this.cells[c];
+                });
+                this.productUnits.push(new _product_unit__WEBPACK_IMPORTED_MODULE_5__["ProductUnit"](productCells, productConstraint.product));
+
+                var _iterator11 = _createForOfIteratorHelper(productCells),
+                    _step11;
+
+                try {
+                  for (_iterator11.s(); !(_step11 = _iterator11.n()).done;) {
+                    var _cell2 = _step11.value;
+                    this.cellsPerProductUnit[_cell2.cellId] = productCells.length;
+                  }
+                } catch (err) {
+                  _iterator11.e(err);
+                } finally {
+                  _iterator11.f();
+                }
+              }
+            } catch (err) {
+              _iterator10.e(err);
+            } finally {
+              _iterator10.f();
+            }
           }
         }
 
@@ -1058,18 +1103,18 @@
           value: function serialize() {
             var l = [];
 
-            var _iterator13 = _createForOfIteratorHelper(this.cells),
-                _step13;
+            var _iterator15 = _createForOfIteratorHelper(this.cells),
+                _step15;
 
             try {
-              for (_iterator13.s(); !(_step13 = _iterator13.n()).done;) {
-                var cell = _step13.value;
-                l.push(cell.candidates);
+              for (_iterator15.s(); !(_step15 = _iterator15.n()).done;) {
+                var cell = _step15.value;
+                l.push(cell.getCandidates());
               }
             } catch (err) {
-              _iterator13.e(err);
+              _iterator15.e(err);
             } finally {
-              _iterator13.f();
+              _iterator15.f();
             }
 
             return l;
@@ -1078,19 +1123,18 @@
           key: "getTotalCandidates",
           value: function getTotalCandidates() {
             return lodash__WEBPACK_IMPORTED_MODULE_0__["sum"](this.cells.map(function (c) {
-              return c.candidates.length;
+              return c.getCandidates().length;
             }));
           }
           /**
            * Sets the state from a list of candidates.
-           * Expects the
            */
 
         }, {
           key: "setState",
           value: function setState(candidateList) {
             for (var i = 0; i < 81; i++) {
-              this.cells[i].candidates = candidateList[i];
+              this.cells[i].setCandidates(candidateList[i]);
             }
           }
         }, {
@@ -1101,32 +1145,32 @@
             var lineStart = lodash__WEBPACK_IMPORTED_MODULE_0__["toInteger"]((idx - idx % 9) / 9);
             var blockX = lineStart - lineStart % 3;
 
-            var _iterator14 = _createForOfIteratorHelper(lodash__WEBPACK_IMPORTED_MODULE_0__["range"](3)),
-                _step14;
+            var _iterator16 = _createForOfIteratorHelper(lodash__WEBPACK_IMPORTED_MODULE_0__["range"](3)),
+                _step16;
 
             try {
-              for (_iterator14.s(); !(_step14 = _iterator14.n()).done;) {
-                var x = _step14.value;
+              for (_iterator16.s(); !(_step16 = _iterator16.n()).done;) {
+                var x = _step16.value;
 
-                var _iterator15 = _createForOfIteratorHelper(lodash__WEBPACK_IMPORTED_MODULE_0__["range"](3)),
-                    _step15;
+                var _iterator17 = _createForOfIteratorHelper(lodash__WEBPACK_IMPORTED_MODULE_0__["range"](3)),
+                    _step17;
 
                 try {
-                  for (_iterator15.s(); !(_step15 = _iterator15.n()).done;) {
-                    var y = _step15.value;
+                  for (_iterator17.s(); !(_step17 = _iterator17.n()).done;) {
+                    var y = _step17.value;
                     var blockId = (blockX + x) * 9 + blockY + y;
                     blockIdx.push(blockId);
                   }
                 } catch (err) {
-                  _iterator15.e(err);
+                  _iterator17.e(err);
                 } finally {
-                  _iterator15.f();
+                  _iterator17.f();
                 }
               }
             } catch (err) {
-              _iterator14.e(err);
+              _iterator16.e(err);
             } finally {
-              _iterator14.f();
+              _iterator16.f();
             }
 
             return blockIdx;
@@ -1141,18 +1185,18 @@
           value: function toString() {
             var s = '';
 
-            var _iterator16 = _createForOfIteratorHelper(this.cells),
-                _step16;
+            var _iterator18 = _createForOfIteratorHelper(this.cells),
+                _step18;
 
             try {
-              for (_iterator16.s(); !(_step16 = _iterator16.n()).done;) {
-                var cell = _step16.value;
+              for (_iterator18.s(); !(_step18 = _iterator18.n()).done;) {
+                var cell = _step18.value;
                 s += cell.toString();
               }
             } catch (err) {
-              _iterator16.e(err);
+              _iterator18.e(err);
             } finally {
-              _iterator16.f();
+              _iterator18.f();
             }
 
             return _util__WEBPACK_IMPORTED_MODULE_4__["Util"].replaceAll(s, ' ', '.');
@@ -1165,12 +1209,12 @@
           key: "isSolved",
           value: function isSolved() {
             // Check cells
-            var _iterator17 = _createForOfIteratorHelper(this.cells),
-                _step17;
+            var _iterator19 = _createForOfIteratorHelper(this.cells),
+                _step19;
 
             try {
-              for (_iterator17.s(); !(_step17 = _iterator17.n()).done;) {
-                var cell = _step17.value;
+              for (_iterator19.s(); !(_step19 = _iterator19.n()).done;) {
+                var cell = _step19.value;
 
                 if (!cell.isSolved()) {
                   // console.log('isSolved(): Cell not solved');
@@ -1179,17 +1223,17 @@
               } // Check units
 
             } catch (err) {
-              _iterator17.e(err);
+              _iterator19.e(err);
             } finally {
-              _iterator17.f();
+              _iterator19.f();
             }
 
-            var _iterator18 = _createForOfIteratorHelper(this.units),
-                _step18;
+            var _iterator20 = _createForOfIteratorHelper(this.units),
+                _step20;
 
             try {
-              for (_iterator18.s(); !(_step18 = _iterator18.n()).done;) {
-                var unit = _step18.value;
+              for (_iterator20.s(); !(_step20 = _iterator20.n()).done;) {
+                var unit = _step20.value;
                 var values = lodash__WEBPACK_IMPORTED_MODULE_0__["map"](unit, 'candidates').join('');
 
                 if (values.length !== 9) {
@@ -1197,12 +1241,12 @@
                   return false;
                 }
 
-                var _iterator19 = _createForOfIteratorHelper('123456789'),
-                    _step19;
+                var _iterator21 = _createForOfIteratorHelper('123456789'),
+                    _step21;
 
                 try {
-                  for (_iterator19.s(); !(_step19 = _iterator19.n()).done;) {
-                    var v = _step19.value;
+                  for (_iterator21.s(); !(_step21 = _iterator21.n()).done;) {
+                    var v = _step21.value;
 
                     if (!values.includes(v)) {
                       // console.log('isSolved(): Not yet all numbers in', unit);
@@ -1210,20 +1254,27 @@
                     }
                   }
                 } catch (err) {
-                  _iterator19.e(err);
+                  _iterator21.e(err);
                 } finally {
-                  _iterator19.f();
+                  _iterator21.f();
                 }
               } // Check sum units
 
             } catch (err) {
-              _iterator18.e(err);
+              _iterator20.e(err);
             } finally {
-              _iterator18.f();
+              _iterator20.f();
             }
 
             if (!lodash__WEBPACK_IMPORTED_MODULE_0__["every"](this.sumUnits, function (sumUnit) {
               return sumUnit.isSolved();
+            })) {
+              return false;
+            } // Check product units
+
+
+            if (!lodash__WEBPACK_IMPORTED_MODULE_0__["every"](this.productUnits, function (productUnit) {
+              return productUnit.isSolved();
             })) {
               return false;
             }
@@ -1245,57 +1296,57 @@
             } // Check if units can still contain all numbers
 
 
-            var _iterator20 = _createForOfIteratorHelper(this.units),
-                _step20;
+            var _iterator22 = _createForOfIteratorHelper(this.units),
+                _step22;
 
             try {
-              for (_iterator20.s(); !(_step20 = _iterator20.n()).done;) {
-                var unit = _step20.value;
+              for (_iterator22.s(); !(_step22 = _iterator22.n()).done;) {
+                var unit = _step22.value;
                 var allCandidates = lodash__WEBPACK_IMPORTED_MODULE_0__["map"](unit, 'candidates').join('');
 
-                var _iterator22 = _createForOfIteratorHelper('123456789'),
-                    _step22;
+                var _iterator24 = _createForOfIteratorHelper('123456789'),
+                    _step24;
 
                 try {
-                  for (_iterator22.s(); !(_step22 = _iterator22.n()).done;) {
-                    var v = _step22.value;
+                  for (_iterator24.s(); !(_step24 = _iterator24.n()).done;) {
+                    var v = _step24.value;
 
                     if (!allCandidates.includes(v)) {
                       return false;
                     }
                   }
                 } catch (err) {
-                  _iterator22.e(err);
+                  _iterator24.e(err);
                 } finally {
-                  _iterator22.f();
+                  _iterator24.f();
                 }
               } // Check if units contain numbers only once
 
             } catch (err) {
-              _iterator20.e(err);
+              _iterator22.e(err);
             } finally {
-              _iterator20.f();
+              _iterator22.f();
             }
 
-            var _iterator21 = _createForOfIteratorHelper(this.units),
-                _step21;
+            var _iterator23 = _createForOfIteratorHelper(this.units),
+                _step23;
 
             try {
-              for (_iterator21.s(); !(_step21 = _iterator21.n()).done;) {
-                var _unit3 = _step21.value;
+              for (_iterator23.s(); !(_step23 = _iterator23.n()).done;) {
+                var _unit3 = _step23.value;
 
                 var allValues = _unit3.map(function (c) {
-                  return c.candidates;
+                  return c.getCandidates();
                 }).filter(function (candidates) {
                   return candidates.length === 1;
                 }).join('');
 
-                var _iterator23 = _createForOfIteratorHelper('123456789'),
-                    _step23;
+                var _iterator25 = _createForOfIteratorHelper('123456789'),
+                    _step25;
 
                 try {
-                  for (_iterator23.s(); !(_step23 = _iterator23.n()).done;) {
-                    var _v = _step23.value;
+                  for (_iterator25.s(); !(_step25 = _iterator25.n()).done;) {
+                    var _v = _step25.value;
 
                     if (_util__WEBPACK_IMPORTED_MODULE_4__["Util"].count(allValues, _v.toString()) > 1) {
                       // console.log('isValid(): Unit', unit, 'does contain value twice:', v);
@@ -1303,20 +1354,27 @@
                     }
                   }
                 } catch (err) {
-                  _iterator23.e(err);
+                  _iterator25.e(err);
                 } finally {
-                  _iterator23.f();
+                  _iterator25.f();
                 }
               } // Check that all sum units are still valid
 
             } catch (err) {
-              _iterator21.e(err);
+              _iterator23.e(err);
             } finally {
-              _iterator21.f();
+              _iterator23.f();
             }
 
             if (!lodash__WEBPACK_IMPORTED_MODULE_0__["every"](this.sumUnits.map(function (sumUnit) {
               return sumUnit.isValid();
+            }))) {
+              return false;
+            } // Check that all product units are still valid
+
+
+            if (!lodash__WEBPACK_IMPORTED_MODULE_0__["every"](this.productUnits.map(function (productUnit) {
+              return productUnit.isValid();
             }))) {
               return false;
             }
@@ -1339,60 +1397,171 @@
                 return cell.propagateToPeers();
               }); // Propagate (2)
 
-              var _iterator24 = _createForOfIteratorHelper(this.units),
-                  _step24;
+              var _iterator26 = _createForOfIteratorHelper(this.units),
+                  _step26;
 
               try {
-                for (_iterator24.s(); !(_step24 = _iterator24.n()).done;) {
-                  var unit = _step24.value;
+                for (_iterator26.s(); !(_step26 = _iterator26.n()).done;) {
+                  var unit = _step26.value;
                   var allCandidates = lodash__WEBPACK_IMPORTED_MODULE_0__["map"](unit, 'candidates').join('');
 
-                  var _iterator25 = _createForOfIteratorHelper('123456789'),
-                      _step25;
+                  var _iterator27 = _createForOfIteratorHelper('123456789'),
+                      _step27;
 
                   try {
                     var _loop = function _loop() {
-                      var v = _step25.value;
+                      var v = _step27.value;
 
                       if (_util__WEBPACK_IMPORTED_MODULE_4__["Util"].count(allCandidates, v) === 1) {
                         var cell = unit.find(function (c) {
-                          return c.candidates.includes(v);
+                          return c.getCandidates().includes(v);
                         });
 
-                        if (cell.candidates.length > 1) {
+                        if (cell.getCandidates().length > 1) {
                           // Found a cell which can only hold value
-                          cell.candidates = v;
+                          cell.removeAllExcept(v);
                           return "break";
                         }
                       }
                     };
 
-                    for (_iterator25.s(); !(_step25 = _iterator25.n()).done;) {
+                    for (_iterator27.s(); !(_step27 = _iterator27.n()).done;) {
                       var _ret = _loop();
 
                       if (_ret === "break") break;
                     }
                   } catch (err) {
-                    _iterator25.e(err);
+                    _iterator27.e(err);
                   } finally {
-                    _iterator25.f();
+                    _iterator27.f();
                   }
                 } // Propagate (3): Sum units
 
               } catch (err) {
-                _iterator24.e(err);
+                _iterator26.e(err);
               } finally {
-                _iterator24.f();
+                _iterator26.f();
               }
 
               this.sumUnits.forEach(function (sumUnit) {
                 return sumUnit.propagate();
+              }); // Propagate (4): Product units
+
+              this.productUnits.forEach(function (productUnit) {
+                return productUnit.propagate();
               });
             }
           }
         }]);
 
         return Sudoku;
+      }();
+      /***/
+
+    },
+
+    /***/
+    "CBs/":
+    /*!***************************************!*\
+      !*** ./src/app/model/product-unit.ts ***!
+      \***************************************/
+
+    /*! exports provided: ProductUnit */
+
+    /***/
+    function CBs(module, __webpack_exports__, __webpack_require__) {
+      "use strict";
+
+      __webpack_require__.r(__webpack_exports__);
+      /* harmony export (binding) */
+
+
+      __webpack_require__.d(__webpack_exports__, "ProductUnit", function () {
+        return ProductUnit;
+      });
+      /* harmony import */
+
+
+      var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+      /*! ./util */
+      "M+Yo");
+
+      var ProductUnit = /*#__PURE__*/function () {
+        function ProductUnit(cells, totalProduct) {
+          _classCallCheck(this, ProductUnit);
+
+          this.cells = cells;
+          this.totalProduct = totalProduct;
+        }
+
+        _createClass(ProductUnit, [{
+          key: "isSolved",
+          value: function isSolved() {
+            if (!_util__WEBPACK_IMPORTED_MODULE_0__["Util"].allFilled(this.cells)) {
+              return false;
+            } else if (_util__WEBPACK_IMPORTED_MODULE_0__["Util"].getValueProduct(this.cells) !== this.totalProduct) {
+              return false;
+            }
+
+            return true;
+          }
+        }, {
+          key: "isValid",
+          value: function isValid() {
+            if (_util__WEBPACK_IMPORTED_MODULE_0__["Util"].allFilled(this.cells)) {
+              // If cells are filled, check that product is correct
+              if (_util__WEBPACK_IMPORTED_MODULE_0__["Util"].getValueProduct(this.cells) !== this.totalProduct) {
+                return false;
+              }
+            } else {
+              // If product is already bigger, product can not be reached
+              if (_util__WEBPACK_IMPORTED_MODULE_0__["Util"].getValueProduct(this.cells) > this.totalProduct) {
+                return false;
+              } // Check if still solvable
+
+
+              var unfilledCells = this.cells.filter(function (c) {
+                return c.getCandidates().length > 1;
+              });
+
+              if (unfilledCells.length === 1) {
+                var unfilledCell = unfilledCells[0];
+
+                var productOfFilledCells = _util__WEBPACK_IMPORTED_MODULE_0__["Util"].getValueProduct(this.cells);
+
+                var value = Math.round(this.totalProduct / productOfFilledCells); // Value 1) is not possible, 2) is not a whole number, or 3) is not possible by cell
+
+                if (value < 1 || value > 9 || value * productOfFilledCells !== this.totalProduct || !unfilledCell.getCandidates().includes(value.toString())) {
+                  return false;
+                }
+              }
+            }
+
+            return true;
+          }
+        }, {
+          key: "propagate",
+          value: function propagate() {
+            // If only one cell left, fill it
+            var unfilledCells = this.cells.filter(function (c) {
+              return c.getCandidates().length > 1;
+            });
+
+            if (unfilledCells.length === 1) {
+              var cell = unfilledCells[0];
+
+              var productOfFilledCells = _util__WEBPACK_IMPORTED_MODULE_0__["Util"].getValueProduct(this.cells);
+
+              var value = Math.round(this.totalProduct / productOfFilledCells); // Check if calculation is still correct
+
+              if (value * productOfFilledCells === this.totalProduct && value >= 1 && value <= 9) {
+                cell.removeAllExcept(value.toString());
+              }
+            }
+          }
+        }]);
+
+        return ProductUnit;
       }();
       /***/
 
@@ -19427,18 +19596,18 @@
           value: function getCellsFromString(sudokuStr) {
             var cells = [];
 
-            var _iterator26 = _createForOfIteratorHelper(lodash__WEBPACK_IMPORTED_MODULE_0__["range"](81)),
-                _step26;
+            var _iterator28 = _createForOfIteratorHelper(lodash__WEBPACK_IMPORTED_MODULE_0__["range"](81)),
+                _step28;
 
             try {
-              for (_iterator26.s(); !(_step26 = _iterator26.n()).done;) {
-                var i = _step26.value;
+              for (_iterator28.s(); !(_step28 = _iterator28.n()).done;) {
+                var i = _step28.value;
                 cells.push(sudokuStr[i] === '.' ? '123456789' : sudokuStr[i]);
               }
             } catch (err) {
-              _iterator26.e(err);
+              _iterator28.e(err);
             } finally {
-              _iterator26.f();
+              _iterator28.f();
             }
 
             return cells;
@@ -19451,10 +19620,31 @@
           key: "getValueSum",
           value: function getValueSum(cells) {
             return lodash__WEBPACK_IMPORTED_MODULE_0__["sum"](cells.filter(function (c) {
-              return c.candidates.length === 1;
+              return c.getCandidates().length === 1;
             }).map(function (c) {
-              return +c.candidates;
+              return +c.getCandidates();
             }));
+          }
+          /**
+           * Calculate the product of the already known number of a cell array.
+           */
+
+        }, {
+          key: "getValueProduct",
+          value: function getValueProduct(cells) {
+            var filledCells = cells.filter(function (c) {
+              return c.getCandidates().length === 1;
+            }).map(function (c) {
+              return +c.getCandidates();
+            });
+
+            if (filledCells.length === 0) {
+              return 0;
+            } else {
+              return filledCells.reduce(function (a, b) {
+                return a * b;
+              }, 1);
+            }
           }
           /**
            * Checks if all cells of an array are filled with one value.
@@ -19477,9 +19667,9 @@
           value: function containsDuplicates(cells) {
             // Remove empty values
             var filledCellValues = cells.filter(function (c) {
-              return c.candidates.length === 1;
+              return c.getCandidates().length === 1;
             }).map(function (c) {
-              return c.candidates;
+              return c.getCandidates();
             });
             return lodash__WEBPACK_IMPORTED_MODULE_0__["uniq"](filledCellValues).length !== filledCellValues.length;
           }
@@ -19616,7 +19806,6 @@
           this.cells = cells;
           this.totalSum = totalSum;
           this.noDuplicates = noDuplicates;
-          console.log('Creating sum unit with noDuplicates:', noDuplicates);
         }
 
         _createClass(SumUnit, [{
@@ -19654,7 +19843,7 @@
 
             var missingSum = this.totalSum - currentSum;
             var unfilledCells = this.cells.filter(function (c) {
-              return c.candidates.length > 1;
+              return c.getCandidates().length > 1;
             }).length;
 
             if (missingSum < unfilledCells || missingSum > 9 * unfilledCells) {
@@ -19670,7 +19859,7 @@
 
             // If only one cell left, fill it
             var unfilledCells = this.cells.filter(function (c) {
-              return c.candidates.length > 1;
+              return c.getCandidates().length > 1;
             });
 
             if (unfilledCells.length === 1) {
@@ -19679,31 +19868,31 @@
               var value = this.totalSum - _util__WEBPACK_IMPORTED_MODULE_0__["Util"].getValueSum(this.cells);
 
               if (value >= 1 && value <= 9) {
-                cell.candidates = value.toString();
+                cell.removeAllExcept(value.toString());
               }
             } // If noDuplicates option is on, propagate this
 
 
             if (this.noDuplicates) {
               var filledCells = this.cells.filter(function (c) {
-                return c.candidates.length === 1;
+                return c.getCandidates().length === 1;
               });
               filledCells.forEach(function (filledCell) {
-                var _iterator27 = _createForOfIteratorHelper(_this2.cells),
-                    _step27;
+                var _iterator29 = _createForOfIteratorHelper(_this2.cells),
+                    _step29;
 
                 try {
-                  for (_iterator27.s(); !(_step27 = _iterator27.n()).done;) {
-                    var anyCell = _step27.value;
+                  for (_iterator29.s(); !(_step29 = _iterator29.n()).done;) {
+                    var anyCell = _step29.value;
 
                     if (filledCell.cellId !== anyCell.cellId) {
-                      anyCell.removeCandidate(filledCell.candidates);
+                      anyCell.removeCandidates(filledCell.getCandidates());
                     }
                   }
                 } catch (err) {
-                  _iterator27.e(err);
+                  _iterator29.e(err);
                 } finally {
-                  _iterator27.f();
+                  _iterator29.f();
                 }
               });
             }
@@ -19826,7 +20015,8 @@
 
           if (isEven !== undefined) {
             this.allCandidates = isEven ? '2468' : '13579';
-          }
+          } // Reset candidates if cell was not yet set definitively
+
 
           this.candidates = c.length === 1 ? c : this.allCandidates;
         }
@@ -19835,27 +20025,58 @@
           key: "propagateToPeers",
           value: function propagateToPeers() {
             if (this.candidates.length === 1) {
-              var _iterator28 = _createForOfIteratorHelper(this.peers),
-                  _step28;
+              var _iterator30 = _createForOfIteratorHelper(this.peers),
+                  _step30;
 
               try {
-                for (_iterator28.s(); !(_step28 = _iterator28.n()).done;) {
-                  var peer = _step28.value;
-                  peer.removeCandidate(this.candidates);
+                for (_iterator30.s(); !(_step30 = _iterator30.n()).done;) {
+                  var peer = _step30.value;
+                  peer.removeCandidates(this.candidates);
                 } // TODO do propagation of greater/less than (exact or not)
                 // we can also remove bigger / smaller numbers
 
               } catch (err) {
-                _iterator28.e(err);
+                _iterator30.e(err);
               } finally {
-                _iterator28.f();
+                _iterator30.f();
               }
             }
           }
         }, {
-          key: "removeCandidate",
-          value: function removeCandidate(value) {
-            this.candidates = this.candidates.replace(value, '');
+          key: "getCandidates",
+          value: function getCandidates() {
+            return this.candidates;
+          }
+          /**
+           * Sets candidates directly.
+           * This should only be used on (1) guessing and (2) resetting state,
+           * for all regular actions use removeCandidates / removeAllExcept!
+           */
+
+        }, {
+          key: "setCandidates",
+          value: function setCandidates(candidates) {
+            this.candidates = candidates;
+          }
+          /**
+           * Remove all candidates except for given value.
+           */
+
+        }, {
+          key: "removeAllExcept",
+          value: function removeAllExcept(value) {
+            this.removeCandidates('123456789'.replace(value, ''));
+          }
+          /**
+           * Remove one or more candidates.
+           */
+
+        }, {
+          key: "removeCandidates",
+          value: function removeCandidates(values) {
+            for (var i = 0; i < values.length; i++) {
+              this.candidates = this.candidates.replace(values[i], '');
+            }
           }
         }, {
           key: "toString",
@@ -19938,7 +20159,7 @@
             var startTime = new Date();
 
             var _loop2 = function _loop2() {
-              if (iterations % 100 === 0) {
+              if (iterations % 1000 === 0) {
                 console.log('>> Iteration ', iterations, 'stack size:', stack.length, 'stack:', stack.map(function (i) {
                   var _a;
 
@@ -19980,7 +20201,7 @@
 
               var idx = nextGuess[0];
               var value = nextGuess[1];
-              sudoku.cells[idx].candidates = value;
+              sudoku.cells[idx].setCandidates(value);
               sudoku.propagate(); // 3. Decide how to proceed
 
               if (sudoku.isSolved()) {
@@ -20026,36 +20247,36 @@
           value: function calculateGuesses(sudoku) {
             var guesses = [];
 
-            var _iterator29 = _createForOfIteratorHelper(sudoku.cells),
-                _step29;
+            var _iterator31 = _createForOfIteratorHelper(sudoku.cells),
+                _step31;
 
             try {
-              for (_iterator29.s(); !(_step29 = _iterator29.n()).done;) {
-                var cell = _step29.value;
+              for (_iterator31.s(); !(_step31 = _iterator31.n()).done;) {
+                var cell = _step31.value;
 
                 // If no single candidate on cell, we can guess
-                if (cell.candidates.length > 1) {
+                if (cell.getCandidates().length > 1) {
                   var cellScore = Solver.getCellScore(cell, sudoku);
 
-                  var _iterator30 = _createForOfIteratorHelper(cell.candidates),
-                      _step30;
+                  var _iterator32 = _createForOfIteratorHelper(cell.getCandidates()),
+                      _step32;
 
                   try {
-                    for (_iterator30.s(); !(_step30 = _iterator30.n()).done;) {
-                      var c = _step30.value;
+                    for (_iterator32.s(); !(_step32 = _iterator32.n()).done;) {
+                      var c = _step32.value;
                       guesses.push([cell.cellId, c, cellScore]);
                     }
                   } catch (err) {
-                    _iterator30.e(err);
+                    _iterator32.e(err);
                   } finally {
-                    _iterator30.f();
+                    _iterator32.f();
                   }
                 }
               }
             } catch (err) {
-              _iterator29.e(err);
+              _iterator31.e(err);
             } finally {
-              _iterator29.f();
+              _iterator31.f();
             }
 
             var sortedGuesses = guesses.sort(function (c1, c2) {
@@ -20072,16 +20293,47 @@
         }, {
           key: "getCellScore",
           value: function getCellScore(cell, sudoku) {
-            var nr = cell.candidates.length; // Check if in sum units
+            var nr = cell.getCandidates().length; // Check if in sum units
+            // TODO check current open cells
 
             var cellsInSumUnit = sudoku.cellsPerSumUnit[nr];
 
             if (cellsInSumUnit !== undefined) {
-              nr = cell.candidates.length - 5 + cellsInSumUnit;
-            } // TODO later: add other constraints into calculation
+              nr = cell.getCandidates().length - 5 + cellsInSumUnit;
+            } // Check if in product units
+            // TODO check current open cells
 
+
+            var cellsInProductUnit = sudoku.cellsPerProductUnit[nr];
+
+            if (cellsInProductUnit !== undefined) {
+              nr = cell.getCandidates().length - 5 + cellsInProductUnit;
+            } // Check if cells are in multiple sum/product units, choose those first
+
+
+            var unitCount = this.countCellOccurence(cell, sudoku);
+
+            if (unitCount > 1) {
+              var smallestCellCount = Math.min(cellsInSumUnit !== null && cellsInSumUnit !== void 0 ? cellsInSumUnit : 0, cellsInSumUnit !== null && cellsInSumUnit !== void 0 ? cellsInSumUnit : 0);
+              nr = cell.getCandidates().length - 5 * unitCount + smallestCellCount;
+            }
 
             return nr;
+          }
+          /**
+           * Count the amount of sum- and product units the cell is in.
+           */
+
+        }, {
+          key: "countCellOccurence",
+          value: function countCellOccurence(cell, sudoku) {
+            var _a, _b;
+
+            return ((_a = sudoku.sumUnits.filter(function (sU) {
+              return sU.cells.includes(cell);
+            }).length) !== null && _a !== void 0 ? _a : 0) + ((_b = sudoku.productUnits.filter(function (sU) {
+              return sU.cells.includes(cell);
+            }).length) !== null && _b !== void 0 ? _b : 0);
           }
         }]);
 

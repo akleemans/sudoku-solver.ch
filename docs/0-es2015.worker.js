@@ -627,6 +627,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _constraint_type__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./constraint-type */ "hk1m");
 /* harmony import */ var _sum_unit__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sum-unit */ "dOW8");
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./util */ "M+Yo");
+/* harmony import */ var _product_unit__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./product-unit */ "CBs/");
+
 
 
 
@@ -637,17 +639,18 @@ class Sudoku {
         this.cells = [];
         this.units = [];
         this.sumUnits = [];
-        // TODO add product units here
         this.cellsPerSumUnit = {};
+        this.productUnits = [];
+        this.cellsPerProductUnit = {};
         // Prepare odd/even cells
-        const cellMap = [];
+        const oddEvenCellMap = [];
         constraints
             .filter(c => c.type === _constraint_type__WEBPACK_IMPORTED_MODULE_2__["ConstraintType"].SINGLE_CELL_ODD_EVEN)
             .forEach(c => {
-            c.cellIds.forEach(cellId => cellMap[cellId] = c.isEven);
+            c.cellIds.forEach(cellId => oddEvenCellMap[cellId] = c.isEven);
         });
         for (const i of lodash__WEBPACK_IMPORTED_MODULE_0__["range"](81)) {
-            this.cells.push(new _cell__WEBPACK_IMPORTED_MODULE_1__["Cell"](i, cells[i], cellMap[i]));
+            this.cells.push(new _cell__WEBPACK_IMPORTED_MODULE_1__["Cell"](i, cells[i], oddEvenCellMap[i]));
         }
         // Build peers list
         for (let i = 0; i < 81; i++) {
@@ -726,24 +729,34 @@ class Sudoku {
                 }
             }
         }
+        // Add product units from constraints
+        const productConstraints = constraints.filter(c => c.type === _constraint_type__WEBPACK_IMPORTED_MODULE_2__["ConstraintType"].MULTI_CELL_PRODUCT);
+        if (productConstraints.length > 0) {
+            for (const productConstraint of productConstraints) {
+                const productCells = productConstraint.cellIds.map(c => this.cells[c]);
+                this.productUnits.push(new _product_unit__WEBPACK_IMPORTED_MODULE_5__["ProductUnit"](productCells, productConstraint.product));
+                for (const cell of productCells) {
+                    this.cellsPerProductUnit[cell.cellId] = productCells.length;
+                }
+            }
+        }
     }
     serialize() {
         const l = [];
         for (const cell of this.cells) {
-            l.push(cell.candidates);
+            l.push(cell.getCandidates());
         }
         return l;
     }
     getTotalCandidates() {
-        return lodash__WEBPACK_IMPORTED_MODULE_0__["sum"](this.cells.map(c => c.candidates.length));
+        return lodash__WEBPACK_IMPORTED_MODULE_0__["sum"](this.cells.map(c => c.getCandidates().length));
     }
     /**
      * Sets the state from a list of candidates.
-     * Expects the
      */
     setState(candidateList) {
         for (let i = 0; i < 81; i++) {
-            this.cells[i].candidates = candidateList[i];
+            this.cells[i].setCandidates(candidateList[i]);
         }
     }
     getBlockIds(idx) {
@@ -799,6 +812,10 @@ class Sudoku {
         if (!lodash__WEBPACK_IMPORTED_MODULE_0__["every"](this.sumUnits, sumUnit => sumUnit.isSolved())) {
             return false;
         }
+        // Check product units
+        if (!lodash__WEBPACK_IMPORTED_MODULE_0__["every"](this.productUnits, productUnit => productUnit.isSolved())) {
+            return false;
+        }
         return true;
     }
     /**
@@ -820,7 +837,7 @@ class Sudoku {
         }
         // Check if units contain numbers only once
         for (const unit of this.units) {
-            const allValues = unit.map(c => c.candidates)
+            const allValues = unit.map(c => c.getCandidates())
                 .filter(candidates => candidates.length === 1)
                 .join('');
             for (const v of '123456789') {
@@ -832,6 +849,10 @@ class Sudoku {
         }
         // Check that all sum units are still valid
         if (!lodash__WEBPACK_IMPORTED_MODULE_0__["every"](this.sumUnits.map(sumUnit => sumUnit.isValid()))) {
+            return false;
+        }
+        // Check that all product units are still valid
+        if (!lodash__WEBPACK_IMPORTED_MODULE_0__["every"](this.productUnits.map(productUnit => productUnit.isValid()))) {
             return false;
         }
         return true;
@@ -850,10 +871,10 @@ class Sudoku {
                 const allCandidates = lodash__WEBPACK_IMPORTED_MODULE_0__["map"](unit, 'candidates').join('');
                 for (const v of '123456789') {
                     if (_util__WEBPACK_IMPORTED_MODULE_4__["Util"].count(allCandidates, v) === 1) {
-                        const cell = unit.find(c => c.candidates.includes(v));
-                        if (cell.candidates.length > 1) {
+                        const cell = unit.find(c => c.getCandidates().includes(v));
+                        if (cell.getCandidates().length > 1) {
                             // Found a cell which can only hold value
-                            cell.candidates = v;
+                            cell.removeAllExcept(v);
                             break;
                         }
                     }
@@ -861,6 +882,79 @@ class Sudoku {
             }
             // Propagate (3): Sum units
             this.sumUnits.forEach(sumUnit => sumUnit.propagate());
+            // Propagate (4): Product units
+            this.productUnits.forEach(productUnit => productUnit.propagate());
+        }
+    }
+}
+
+
+/***/ }),
+
+/***/ "CBs/":
+/*!***************************************!*\
+  !*** ./src/app/model/product-unit.ts ***!
+  \***************************************/
+/*! exports provided: ProductUnit */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProductUnit", function() { return ProductUnit; });
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util */ "M+Yo");
+
+class ProductUnit {
+    constructor(cells, totalProduct) {
+        this.cells = cells;
+        this.totalProduct = totalProduct;
+    }
+    isSolved() {
+        if (!_util__WEBPACK_IMPORTED_MODULE_0__["Util"].allFilled(this.cells)) {
+            return false;
+        }
+        else if (_util__WEBPACK_IMPORTED_MODULE_0__["Util"].getValueProduct(this.cells) !== this.totalProduct) {
+            return false;
+        }
+        return true;
+    }
+    isValid() {
+        if (_util__WEBPACK_IMPORTED_MODULE_0__["Util"].allFilled(this.cells)) {
+            // If cells are filled, check that product is correct
+            if (_util__WEBPACK_IMPORTED_MODULE_0__["Util"].getValueProduct(this.cells) !== this.totalProduct) {
+                return false;
+            }
+        }
+        else {
+            // If product is already bigger, product can not be reached
+            if (_util__WEBPACK_IMPORTED_MODULE_0__["Util"].getValueProduct(this.cells) > this.totalProduct) {
+                return false;
+            }
+            // Check if still solvable
+            const unfilledCells = this.cells.filter(c => c.getCandidates().length > 1);
+            if (unfilledCells.length === 1) {
+                const unfilledCell = unfilledCells[0];
+                const productOfFilledCells = _util__WEBPACK_IMPORTED_MODULE_0__["Util"].getValueProduct(this.cells);
+                const value = Math.round(this.totalProduct / productOfFilledCells);
+                // Value 1) is not possible, 2) is not a whole number, or 3) is not possible by cell
+                if (value < 1 || value > 9 || value * productOfFilledCells !== this.totalProduct
+                    || !unfilledCell.getCandidates().includes(value.toString())) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    propagate() {
+        // If only one cell left, fill it
+        const unfilledCells = this.cells.filter(c => c.getCandidates().length > 1);
+        if (unfilledCells.length === 1) {
+            const cell = unfilledCells[0];
+            const productOfFilledCells = _util__WEBPACK_IMPORTED_MODULE_0__["Util"].getValueProduct(this.cells);
+            const value = Math.round(this.totalProduct / productOfFilledCells);
+            // Check if calculation is still correct
+            if (value * productOfFilledCells === this.totalProduct && value >= 1 && value <= 9) {
+                cell.removeAllExcept(value.toString());
+            }
         }
     }
 }
@@ -18034,8 +18128,21 @@ class Util {
      * Calculate the sum of the already known number of a cell array.
      */
     static getValueSum(cells) {
-        return lodash__WEBPACK_IMPORTED_MODULE_0__["sum"](cells.filter(c => c.candidates.length === 1)
-            .map(c => +c.candidates));
+        return lodash__WEBPACK_IMPORTED_MODULE_0__["sum"](cells.filter(c => c.getCandidates().length === 1)
+            .map(c => +c.getCandidates()));
+    }
+    /**
+     * Calculate the product of the already known number of a cell array.
+     */
+    static getValueProduct(cells) {
+        const filledCells = cells.filter(c => c.getCandidates().length === 1)
+            .map(c => +c.getCandidates());
+        if (filledCells.length === 0) {
+            return 0;
+        }
+        else {
+            return filledCells.reduce((a, b) => a * b, 1);
+        }
     }
     /**
      * Checks if all cells of an array are filled with one value.
@@ -18050,8 +18157,8 @@ class Util {
     static containsDuplicates(cells) {
         // Remove empty values
         const filledCellValues = cells
-            .filter(c => c.candidates.length === 1)
-            .map(c => c.candidates);
+            .filter(c => c.getCandidates().length === 1)
+            .map(c => c.getCandidates());
         return lodash__WEBPACK_IMPORTED_MODULE_0__["uniq"](filledCellValues).length !== filledCellValues.length;
     }
 }
@@ -18144,7 +18251,6 @@ class SumUnit {
         this.cells = cells;
         this.totalSum = totalSum;
         this.noDuplicates = noDuplicates;
-        console.log('Creating sum unit with noDuplicates:', noDuplicates);
     }
     isSolved() {
         if (!_util__WEBPACK_IMPORTED_MODULE_0__["Util"].allFilled(this.cells)) {
@@ -18173,7 +18279,7 @@ class SumUnit {
         // If some cells are empty, check that sum can still be fulfilled
         const currentSum = _util__WEBPACK_IMPORTED_MODULE_0__["Util"].getValueSum(this.cells);
         const missingSum = this.totalSum - currentSum;
-        const unfilledCells = this.cells.filter(c => c.candidates.length > 1).length;
+        const unfilledCells = this.cells.filter(c => c.getCandidates().length > 1).length;
         if (missingSum < unfilledCells || missingSum > 9 * unfilledCells) {
             return false;
         }
@@ -18181,21 +18287,21 @@ class SumUnit {
     }
     propagate() {
         // If only one cell left, fill it
-        const unfilledCells = this.cells.filter(c => c.candidates.length > 1);
+        const unfilledCells = this.cells.filter(c => c.getCandidates().length > 1);
         if (unfilledCells.length === 1) {
             const cell = unfilledCells[0];
             const value = this.totalSum - _util__WEBPACK_IMPORTED_MODULE_0__["Util"].getValueSum(this.cells);
             if (value >= 1 && value <= 9) {
-                cell.candidates = value.toString();
+                cell.removeAllExcept(value.toString());
             }
         }
         // If noDuplicates option is on, propagate this
         if (this.noDuplicates) {
-            const filledCells = this.cells.filter(c => c.candidates.length === 1);
+            const filledCells = this.cells.filter(c => c.getCandidates().length === 1);
             filledCells.forEach(filledCell => {
                 for (const anyCell of this.cells) {
                     if (filledCell.cellId !== anyCell.cellId) {
-                        anyCell.removeCandidate(filledCell.candidates);
+                        anyCell.removeCandidates(filledCell.getCandidates());
                     }
                 }
             });
@@ -18276,19 +18382,42 @@ class Cell {
         if (isEven !== undefined) {
             this.allCandidates = isEven ? '2468' : '13579';
         }
+        // Reset candidates if cell was not yet set definitively
         this.candidates = (c.length === 1 ? c : this.allCandidates);
     }
     propagateToPeers() {
         if (this.candidates.length === 1) {
             for (const peer of this.peers) {
-                peer.removeCandidate(this.candidates);
+                peer.removeCandidates(this.candidates);
             }
             // TODO do propagation of greater/less than (exact or not)
             // we can also remove bigger / smaller numbers
         }
     }
-    removeCandidate(value) {
-        this.candidates = this.candidates.replace(value, '');
+    getCandidates() {
+        return this.candidates;
+    }
+    /**
+     * Sets candidates directly.
+     * This should only be used on (1) guessing and (2) resetting state,
+     * for all regular actions use removeCandidates / removeAllExcept!
+     */
+    setCandidates(candidates) {
+        this.candidates = candidates;
+    }
+    /**
+     * Remove all candidates except for given value.
+     */
+    removeAllExcept(value) {
+        this.removeCandidates('123456789'.replace(value, ''));
+    }
+    /**
+     * Remove one or more candidates.
+     */
+    removeCandidates(values) {
+        for (let i = 0; i < values.length; i++) {
+            this.candidates = this.candidates.replace(values[i], '');
+        }
     }
     toString() {
         return this.candidates.length === 1 ? this.candidates : ' ';
@@ -18337,7 +18466,7 @@ class Solver {
         let iterations = 0;
         const startTime = new Date();
         while (stack.length > 0) {
-            if (iterations % 100 === 0) {
+            if (iterations % 1000 === 0) {
                 console.log('>> Iteration ', iterations, 'stack size:', stack.length, 'stack:', stack.map(i => { var _a; return (_a = i[1]) === null || _a === void 0 ? void 0 : _a.toString(); }));
             }
             iterations += 1;
@@ -18369,7 +18498,7 @@ class Solver {
             // 2. Do the guess & add to stack
             const idx = nextGuess[0];
             const value = nextGuess[1];
-            sudoku.cells[idx].candidates = value;
+            sudoku.cells[idx].setCandidates(value);
             sudoku.propagate();
             // 3. Decide how to proceed
             if (sudoku.isSolved()) {
@@ -18401,9 +18530,9 @@ class Solver {
         const guesses = [];
         for (const cell of sudoku.cells) {
             // If no single candidate on cell, we can guess
-            if (cell.candidates.length > 1) {
+            if (cell.getCandidates().length > 1) {
                 const cellScore = Solver.getCellScore(cell, sudoku);
-                for (const c of cell.candidates) {
+                for (const c of cell.getCandidates()) {
                     guesses.push([cell.cellId, c, cellScore]);
                 }
             }
@@ -18417,14 +18546,34 @@ class Solver {
      * Heuristic which cell to try first. The lower the number, the sooner the cell will be up for a guess.
      */
     static getCellScore(cell, sudoku) {
-        let nr = cell.candidates.length;
+        let nr = cell.getCandidates().length;
         // Check if in sum units
+        // TODO check current open cells
         const cellsInSumUnit = sudoku.cellsPerSumUnit[nr];
         if (cellsInSumUnit !== undefined) {
-            nr = cell.candidates.length - 5 + cellsInSumUnit;
+            nr = cell.getCandidates().length - 5 + cellsInSumUnit;
         }
-        // TODO later: add other constraints into calculation
+        // Check if in product units
+        // TODO check current open cells
+        const cellsInProductUnit = sudoku.cellsPerProductUnit[nr];
+        if (cellsInProductUnit !== undefined) {
+            nr = cell.getCandidates().length - 5 + cellsInProductUnit;
+        }
+        // Check if cells are in multiple sum/product units, choose those first
+        const unitCount = this.countCellOccurence(cell, sudoku);
+        if (unitCount > 1) {
+            const smallestCellCount = Math.min(cellsInSumUnit !== null && cellsInSumUnit !== void 0 ? cellsInSumUnit : 0, cellsInSumUnit !== null && cellsInSumUnit !== void 0 ? cellsInSumUnit : 0);
+            nr = cell.getCandidates().length - 5 * unitCount + smallestCellCount;
+        }
         return nr;
+    }
+    /**
+     * Count the amount of sum- and product units the cell is in.
+     */
+    static countCellOccurence(cell, sudoku) {
+        var _a, _b;
+        return ((_a = sudoku.sumUnits.filter(sU => sU.cells.includes(cell)).length) !== null && _a !== void 0 ? _a : 0)
+            + ((_b = sudoku.productUnits.filter(sU => sU.cells.includes(cell)).length) !== null && _b !== void 0 ? _b : 0);
     }
 }
 
