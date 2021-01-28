@@ -41,8 +41,7 @@ describe('Solver', () => {
   });
 
   describe('Killer Sudoku', () => {
-    // Solved in 15s
-    xit('should solve Geocaching puzzle A', async () => {
+    it('should solve Geocaching puzzle A', async () => {
       const sudokuStr = '.................................................................................';
       const expectedSolution = '592176483416938275378254196167395824934862751825741369289513647741629538653487912';
       const cells = Util.getCellsFromString(sudokuStr);
@@ -80,8 +79,7 @@ describe('Solver', () => {
       expect(solution.toString()).toBe(expectedSolution);
     });
 
-    // Can't be solved for now, not sure why
-    xit('should solve Geocaching puzzle K', async () => {
+    it('should solve Geocaching puzzle K', async () => {
       const sudokuStr = '.................................................................................';
       const expectedSolution = '825749613194863752637512498769231584483975261512684937358497126276158349941326875';
       const cells = Util.getCellsFromString(sudokuStr);
@@ -247,8 +245,7 @@ describe('Solver', () => {
       expect(solution.toString()).toBe(expectedSolution);
     });
 
-    // Solved in 40s
-    xit('should solve Geocaching puzzle I', () => {
+    it('should solve Geocaching puzzle I', () => {
       const sudokuStr = '.................................................................................';
       const expectedSolution = '384671529716952348259834167975416283863297415421583796692745831538129674147368952';
       const cells = Util.getCellsFromString(sudokuStr);
@@ -387,22 +384,396 @@ describe('Solver', () => {
     });
   });
 
-  /*
-    // TODO
-    describe('Sum / factor (Geocache Sudoku B)', () => {
-      it('should solve black / white dots Sudoku', () => {
-        const sudokuStr = '.................................................................................';
+  describe('Difference / factor', () => {
+    it('should solve Geocaching puzzle S (black / white dots)', () => {
+      const sudokuStr = '.................................................................................';
+      const expectedSolution = '846153972572984361391267548287346195934521786615798423763819254128475639459632817';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const constraints = TestUtil.getBlackDotConstraints([
+        [0, 1],
+        [8, 17],
+        [11, 20],
+        [13, 14],
+        [15, 16],
+        [20, 21],
+        [25, 26],
+        [31, 40],
+        [40, 41],
+        [44, 53],
+        [50, 51],
+        [51, 52],
+        [51, 60],
+        [55, 56],
+        [57, 66],
+        [63, 64],
+        [65, 66],
+        [69, 70],
+        [75, 76],
+      ]);
+      TestUtil.getWhiteDotConstraints([
+        [5, 14],
+        [7, 16],
+        [12, 13],
+        [14, 15],
+        [18, 27],
+        [19, 28],
+        [21, 30],
+        [22, 23],
+        [23, 32],
+        [24, 25],
+        [28, 29],
+        [30, 31],
+        [34, 43],
+        [35, 44],
+        [37, 38],
+        [38, 39],
+        [38, 47],
+        [42, 43],
+        [45, 54],
+        [48, 57],
+        [49, 50],
+        [52, 53],
+        [54, 55],
+        [61, 62],
+        [65, 74],
+        [68, 69],
+        [72, 73],
+        [76, 77],
+      ]).forEach(c => constraints.push(c));
+      const solution = Solver.solve(new Sudoku(cells, constraints));
+      expect(solution.toString()).toBe(expectedSolution);
+    });
 
-        const expectedSolution = 'TODO';
-        const cells = Util.getCellsFromString(sudokuStr);
-        const constraints = [
-          new Constraint()
-        ];
-        const sudoku = new Sudoku(cells, constraints)
-        const solution = Solver.solve(sudoku);
-        expect(solution.toString()).toBe(expectedSolution);
-      });
-    });*/
+    it('should solve Geocaching puzzle B (black / white dots)', () => {
+      const sudokuStr = '.................................................................................';
+      const expectedSolution = '587136924624597813913248567891364752432715689756829431179653248368472195245981376';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const constraints = TestUtil.getBlackDotConstraints([
+        [4, 5],
+        [7, 8],
+        [7, 16],
+        [10, 11],
+        [10, 19],
+        [21, 22],
+        [22, 23],
+        [23, 32],
+        [27, 36],
+        [29, 38],
+        [30, 31],
+        [40, 49],
+        [51, 60],
+        [60, 61],
+        [61, 62],
+        [60, 69],
+        [63, 64],
+        [65, 66],
+        [68, 69],
+        [68, 77],
+        [72, 73],
+      ]);
+      TestUtil.getWhiteDotConstraints([
+        [0, 9],
+        [1, 2],
+        [5, 14],
+        [6, 15],
+        [8, 17],
+        [11, 12],
+        [11, 20],
+        [14, 15],
+        [18, 27],
+        [20, 21],
+        [21, 30],
+        [24, 25],
+        [25, 26],
+        [25, 34],
+        [27, 28],
+        [32, 41],
+        [33, 42],
+        [36, 37],
+        [37, 38],
+        [39, 48],
+        [41, 42],
+        [43, 44],
+        [46, 47],
+        [52, 61],
+        [55, 64],
+        [56, 65],
+        [57, 58],
+        [59, 60],
+        [59, 68],
+        [63, 72],
+        [67, 76],
+        [71, 80],
+        [73, 74],
+        [75, 76],
+        [79, 80],
+
+      ]).forEach(c => constraints.push(c));
+      const solution = Solver.solve(new Sudoku(cells, constraints));
+      expect(solution.toString()).toBe(expectedSolution);
+    });
+
+    it('should solve Geocaching puzzle X (black / white dots)', () => {
+      const sudokuStr = '.................................................................................';
+      const expectedSolution = '976354812485216973312987465259761348168432597734598621627845139543129786891673254';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const constraints = TestUtil.getBlackDotConstraints([
+        [2, 3],
+        [5, 6],
+        [7, 8],
+        [9, 10],
+        [12, 13],
+        [19, 20],
+        [27, 36],
+        [31, 40],
+        [32, 41],
+        [34, 35],
+        [37, 46],
+        [38, 39],
+        [38, 47],
+        [52, 53],
+        [55, 64],
+        [57, 58],
+        [58, 67],
+        [66, 67],
+      ]);
+      TestUtil.getWhiteDotConstraints([
+        [1, 2],
+        [1, 10],
+        [2, 11],
+        [3, 12],
+        [4, 5],
+        [6, 15],
+        [8, 17],
+        [9, 18],
+        [14, 23],
+        [16, 25],
+        [18, 27],
+        [21, 22],
+        [22, 23],
+        [24, 33],
+        [25, 26],
+        [28, 37],
+        [29, 38],
+        [30, 31],
+        [33, 34],
+        [35, 44],
+        [39, 40],
+        [39, 48],
+        [40, 41],
+        [42, 51],
+        [45, 54],
+        [46, 47],
+        [46, 55],
+        [47, 48],
+        [49, 50],
+        [52, 61],
+        [54, 63],
+        [56, 57],
+        [58, 59],
+        [63, 64],
+        [64, 65],
+        [69, 70],
+        [72, 73],
+        [75, 76],
+        [77, 78],
+        [79, 80],
+      ]).forEach(c => constraints.push(c));
+      const solution = Solver.solve(new Sudoku(cells, constraints));
+      expect(solution.toString()).toBe(expectedSolution);
+    });
+  });
+
+  describe('Difference', () => {
+    it('should solve Geocaching puzzle C (pen arrows)', () => {
+      const sudokuStr = '.................................................................................';
+      const expectedSolution = '563172984879534216421986735236845179785619342194723568942361857618257493357498621';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const constraints = TestUtil.getPenArrowConstraints([
+        [0, 1],
+        [1, 10],
+        [5, 13],
+        [7, 6],
+        [10, 9],
+        [13, 14],
+        [16, 15],
+        [15, 25],
+        [19, 28],
+        [20, 19],
+        [22, 21],
+        [23, 24],
+        [27, 28],
+        [28, 18],
+        [30, 21],
+        [31, 32],
+        [32, 23],
+        [36, 37],
+        [37, 46],
+        [38, 29],
+        [38, 39],
+        [40, 49],
+        [42, 43],
+        [43, 51],
+        [47, 38],
+        [49, 50],
+        [49, 57],
+        [51, 52],
+        [52, 62],
+        [56, 57],
+        [57, 47],
+        [58, 48],
+        [59, 49],
+        [60, 70],
+        [61, 52],
+        [62, 53],
+        [64, 56],
+        [66, 57],
+        [67, 58],
+        [68, 60],
+        [68, 77],
+        [69, 61],
+        [73, 63],
+        [74, 65],
+        [75, 67],
+        [77, 76],
+        [78, 68],
+        [79, 71],
+        [80, 79],
+      ]);
+      const solution = Solver.solve(new Sudoku(cells, constraints));
+      expect(solution.toString()).toBe(expectedSolution);
+    });
+
+    it('should solve Geocaching puzzle P (pen arrows)', () => {
+      const sudokuStr = '.................................................................................';
+      const expectedSolution = '284679315165483279937215468596831742473562891812947653621798534348156927759324186';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const constraints = TestUtil.getPenArrowConstraints([
+        [2, 11],
+        [10, 20],
+        [11, 3],
+        [11, 10],
+        [12, 11],
+        [16, 26],
+        [20, 30],
+        [25, 16],
+        [25, 33],
+        [26, 17],
+        [29, 20],
+        [29, 37],
+        [33, 42],
+        [37, 45],
+        [39, 29],
+        [39, 40],
+        [40, 50],
+        [42, 43],
+        [44, 35],
+        [49, 39],
+        [50, 42],
+        [50, 59],
+        [51, 50],
+        [52, 51],
+        [53, 62],
+        [56, 47],
+        [59, 58],
+        [59, 69],
+        [60, 51],
+        [61, 62],
+        [62, 52],
+        [64, 73],
+        [70, 61],
+        [71, 79],
+        [78, 70],
+        [80, 71],
+      ]);
+      const solution = Solver.solve(new Sudoku(cells, constraints));
+      expect(solution.toString()).toBe(expectedSolution);
+    });
+  });
+
+  describe('Bigger/smaller', () => {
+    it('should solve Geocaching puzzle Z', () => {
+      const sudokuStr = '.................................................................................';
+      const expectedSolution = '587326941342791856961845723429673185753182694618459372876534219195267438234918567';
+      const cells = Util.getCellsFromString(sudokuStr);
+      const constraints = TestUtil.getSudokuXConstraints();
+      TestUtil.getBiggerSmallerConstraints([
+        [0, 1],
+        [2, 1],
+        [4, 3],
+        [4, 5],
+        [7, 6],
+        [7, 16],
+        [8, 7],
+        [8, 17],
+        [9, 0],
+        [9, 18],
+        [9, 10],
+        [10, 1],
+        [10, 19],
+        [11, 2],
+        [11, 10],
+        [12, 13],
+        [14, 13],
+        [15, 6],
+        [16, 15],
+        [16, 17],
+        [19, 18],
+        [20, 19],
+        [20, 11],
+        [22, 21],
+        [22, 23],
+        [24, 15],
+        [25, 16],
+        [25, 24],
+        [25, 26],
+        [26, 17],
+        [27, 36],
+        [28, 37],
+        [33, 42],
+        [34, 43],
+        [38, 29],
+        [38, 47],
+        [44, 35],
+        [45, 36],
+        [46, 37],
+        [51, 42],
+        [52, 43],
+        [55, 54],
+        [55, 64],
+        [56, 55],
+        [58, 57],
+        [58, 59],
+        [60, 69],
+        [61, 60],
+        [61, 70],
+        [61, 62],
+        [63, 54],
+        [63, 64],
+        [63, 72],
+        [65, 56],
+        [65, 64],
+        [66, 67],
+        [67, 68],
+        [69, 78],
+        [70, 69],
+        [70, 71],
+        [70, 79],
+        [71, 62],
+        [72, 73],
+        [73, 64],
+        [73, 74],
+        [74, 65],
+        [76, 75],
+        [76, 77],
+        [78, 79],
+        [79, 80],
+        [80, 71],
+      ]).forEach(c => constraints.push(c));
+      const solution = Solver.solve(new Sudoku(cells, constraints));
+      expect(solution.toString()).toBe(expectedSolution);
+    });
+  });
 
   describe('countCellOccurence', () => {
     it('should', () => {
