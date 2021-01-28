@@ -1,8 +1,11 @@
+import {CellConnection} from './cell-connection';
+
 export class Cell {
   private candidates: string;
   public peers: Cell[];
   public cellId: number;
   private allCandidates: string = '123456789';
+  private cellConnections: CellConnection[] = [];
 
   public constructor(cellId: number, c: string, isEven?: boolean) {
     this.cellId = cellId;
@@ -19,8 +22,9 @@ export class Cell {
         peer.removeCandidates(this.candidates);
       }
 
-      // TODO do propagation of greater/less than (exact or not)
-      // we can also remove bigger / smaller numbers
+      for (const cellConnection of this.cellConnections) {
+        cellConnection.otherCell.removeAllExcept(cellConnection.getPossibleValuesForOtherCell(+this.candidates));
+      }
     }
   }
 
@@ -38,10 +42,14 @@ export class Cell {
   }
 
   /**
-   * Remove all candidates except for given value.
+   * Remove all candidates except for given values.
    */
   public removeAllExcept(value: string): void {
-    this.removeCandidates('123456789'.replace(value, ''));
+    let base = '123456789';
+    for (const v of value) {
+      base = base.replace(v, '');
+    }
+    this.removeCandidates(base);
   }
 
   /**
@@ -53,12 +61,33 @@ export class Cell {
     }
   }
 
+  public getCellConnections(): CellConnection[] {
+    return this.cellConnections;
+  }
+
+  public addCellConnection(cellConnection: CellConnection) {
+    this.cellConnections.push(cellConnection);
+  }
+
   public toString(): string {
     return this.candidates.length === 1 ? this.candidates : ' ';
   }
 
   public isValid(): boolean {
-    return this.candidates.length >= 1;
+    if (this.candidates.length === 0) {
+      return false;
+    }
+
+    // Check cellConnections
+    if (this.isSolved()) {
+      for (let cellConnection of this.cellConnections) {
+        if (cellConnection.isUnsatisfiableFor(+this.candidates)) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
   public isSolved(): boolean {
