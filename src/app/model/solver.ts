@@ -1,6 +1,8 @@
 import * as _ from 'lodash';
 import {Sudoku} from './sudoku';
 import {Cell} from './cell';
+import {ProductUnit} from './product-unit';
+import {SumUnit} from './sum-unit';
 
 export class Solver {
 
@@ -118,28 +120,29 @@ export class Solver {
   public static getCellScore(cell: Cell, sudoku: Sudoku): number {
     let nr = cell.getCandidates().length;
 
-    // Check if in sum units
-    // TODO check current open cells
-    const cellsInSumUnit = sudoku.cellsPerSumUnit[nr];
-    if (cellsInSumUnit !== undefined) {
-      nr = cell.getCandidates().length - 5 + cellsInSumUnit;
-    }
-
-    // Check if in product units
-    // TODO check current open cells
-    const cellsInProductUnit = sudoku.cellsPerProductUnit[nr];
-    if (cellsInProductUnit !== undefined) {
-      nr = cell.getCandidates().length - 5 + cellsInProductUnit;
-    }
-
     // Check if cells are in multiple sum/product units, choose those first
     const unitCount = this.countCellOccurence(cell, sudoku);
-    if (unitCount > 1) {
-      const smallestCellCount = Math.min(cellsInSumUnit ?? 0, cellsInSumUnit ?? 0);
-      nr = cell.getCandidates().length - 5 * unitCount + smallestCellCount;
-    }
+    const smallestCellCount = this.cellCountOfSmallestUnit(cell, sudoku);
+    nr = cell.getCandidates().length - 5 * unitCount + smallestCellCount;
+
+    // Account for cell connections - factor 3 chosen by experiment
+    nr = nr - 3 * cell.getCellConnections().length;
 
     return nr;
+  }
+
+  /**
+   * Return the count of the smallest unit
+   */
+  public static cellCountOfSmallestUnit(cell: Cell, sudoku: Sudoku): number {
+    const unitsContainingCell: (ProductUnit | SumUnit)[] = sudoku.sumUnits.filter(sU => sU.cells.includes(cell));
+    sudoku.productUnits.filter(pU => pU.cells.includes(cell)).forEach(pU => unitsContainingCell.push(pU));
+
+    if (unitsContainingCell.length === 0) {
+      return 0;
+    } else {
+      return _.minBy(unitsContainingCell, v => v.cells.length).cells.length;
+    }
   }
 
   /**
