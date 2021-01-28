@@ -6,14 +6,13 @@ import {SumUnit} from './sum-unit';
 import {Util} from './util';
 import {GlobalOptions} from './sudoku-options';
 import {ProductUnit} from './product-unit';
+import {CellConnection} from './cell-connection';
 
 export class Sudoku {
   public cells: Cell[] = [];
   public units: Cell[][] = [];
   public sumUnits: SumUnit[] = [];
-  public cellsPerSumUnit: { [key: number]: number } = {};
   public productUnits: ProductUnit[] = [];
-  public cellsPerProductUnit: { [key: number]: number } = {};
 
   public constructor(cells: string[], constraints: Constraint[] = [], globalOptions: GlobalOptions = {useBlockUnits: true}) {
     // Prepare odd/even cells
@@ -104,28 +103,44 @@ export class Sudoku {
 
     // Add sum units from constraints
     const sumConstraints = constraints.filter(c => c.type === ConstraintType.MULTI_CELL_SUM);
-    if (sumConstraints.length > 0) {
-      for (const sumConstraint of sumConstraints) {
-        const sumCells: Cell[] = sumConstraint.cellIds.map(c => this.cells[c]);
-        this.sumUnits.push(new SumUnit(sumCells, sumConstraint.sum, sumConstraint.noDuplicates));
-
-        for (const cell of sumCells) {
-          this.cellsPerSumUnit[cell.cellId] = sumCells.length;
-        }
-      }
+    for (const sumConstraint of sumConstraints) {
+      const sumCells: Cell[] = sumConstraint.cellIds.map(c => this.cells[c]);
+      this.sumUnits.push(new SumUnit(sumCells, sumConstraint.sum, sumConstraint.noDuplicates));
     }
+
 
     // Add product units from constraints
     const productConstraints = constraints.filter(c => c.type === ConstraintType.MULTI_CELL_PRODUCT);
-    if (productConstraints.length > 0) {
-      for (const productConstraint of productConstraints) {
-        const productCells: Cell[] = productConstraint.cellIds.map(c => this.cells[c]);
-        this.productUnits.push(new ProductUnit(productCells, productConstraint.product));
+    for (const productConstraint of productConstraints) {
+      const productCells: Cell[] = productConstraint.cellIds.map(c => this.cells[c]);
+      this.productUnits.push(new ProductUnit(productCells, productConstraint.product));
+    }
 
-        for (const cell of productCells) {
-          this.cellsPerProductUnit[cell.cellId] = productCells.length;
-        }
-      }
+    // Add difference constraints to cell
+    const differenceConstraints = constraints.filter(c => c.type === ConstraintType.TWO_CELLS_EXACT_DIFFERENCE);
+    for (const differenceConstraint of differenceConstraints) {
+      const cellA = this.cells[differenceConstraint.cellIds[0]];
+      const cellB = this.cells[differenceConstraint.cellIds[1]];
+      cellA.addCellConnection(CellConnection.difference(cellB, differenceConstraint.difference, differenceConstraint.unknownOrder));
+      cellB.addCellConnection(CellConnection.difference(cellA, -differenceConstraint.difference, differenceConstraint.unknownOrder));
+    }
+
+    // Add factor constraints to cell
+    const factorConstraints = constraints.filter(c => c.type === ConstraintType.TWO_CELLS_EXACT_FACTOR);
+    for (const factorConstraint of factorConstraints) {
+      const cellA = this.cells[factorConstraint.cellIds[0]];
+      const cellB = this.cells[factorConstraint.cellIds[1]];
+      cellA.addCellConnection(CellConnection.factor(cellB, factorConstraint.factor, factorConstraint.unknownOrder));
+      cellB.addCellConnection(CellConnection.factor(cellA, 1 / factorConstraint.factor, factorConstraint.unknownOrder));
+    }
+
+    // Add bigger/smaller constraints to cell
+    const biggerSmallerConstraints = constraints.filter(c => c.type === ConstraintType.TWO_CELLS_BIGGER_THAN);
+    for (const biggerSmallerConstraint of biggerSmallerConstraints) {
+      const cellA = this.cells[biggerSmallerConstraint.cellIds[0]];
+      const cellB = this.cells[biggerSmallerConstraint.cellIds[1]];
+      cellA.addCellConnection(CellConnection.biggerSmaller(cellB, true));
+      cellB.addCellConnection(CellConnection.biggerSmaller(cellA, false));
     }
   }
 

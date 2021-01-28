@@ -19,7 +19,6 @@ export class Constraint {
   public factor: number;
 
   // Used for TWO_CELLS_EXACT_DIFFERENCE, TWO_CELLS_EXACT_FACTOR
-  // TODO maybe not used, so remove first?
   public unknownOrder: boolean;
 
   // Used for MULTI_CELL_PRODUCT
@@ -56,7 +55,7 @@ export class Constraint {
         desc = 'Cells ' + cellStr + ' must multiply to ' + this.product;
         break;
       case ConstraintType.TWO_CELLS_BIGGER_THAN:
-        desc = 'First cell of ' + cellStr + ' is bigger than second';
+        desc = 'Second cell of ' + cellStr + ' is bigger than first one';
         break;
       case ConstraintType.TWO_CELLS_EXACT_DIFFERENCE:
         desc = 'Cells ' + cellStr + ' have difference of ' + this.difference;

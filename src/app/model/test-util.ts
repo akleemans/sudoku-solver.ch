@@ -94,4 +94,68 @@ export class TestUtil {
     }
     return constraints;
   }
+
+  /**
+   * Build constraint list for "black dots" (factor = 2, unknownOrder)
+   */
+  public static getBlackDotConstraints(list: number[][]): Constraint[] {
+    const constraints = [];
+    for (const item of list) {
+      const constraint = new Constraint();
+      constraint.type = ConstraintType.TWO_CELLS_EXACT_FACTOR;
+      constraint.cellIds = item;
+      constraint.factor = 2;
+      constraint.unknownOrder = true;
+      constraints.push(constraint);
+    }
+    return constraints;
+  }
+
+
+  /**
+   * Build constraint list for "white dots" (difference = 1, unknownOrder)
+   */
+  public static getWhiteDotConstraints(list: number[][]): Constraint[] {
+    const constraints = [];
+    for (const item of list) {
+      const constraint = new Constraint();
+      constraint.type = ConstraintType.TWO_CELLS_EXACT_DIFFERENCE;
+      constraint.cellIds = item;
+      constraint.difference = 1;
+      constraint.unknownOrder = true;
+      constraints.push(constraint);
+    }
+    return constraints;
+  }
+
+  /**
+   * Build constraint list for "pen arrows" (difference = 1, known order)
+   */
+  public static getPenArrowConstraints(list: number[][]): Constraint[] {
+    const constraints = [];
+    for (const item of list) {
+      const constraint = new Constraint();
+      constraint.type = ConstraintType.TWO_CELLS_EXACT_DIFFERENCE;
+      constraint.cellIds = item;
+      constraint.difference = 1;
+      constraint.unknownOrder = false;
+      constraints.push(constraint);
+    }
+    return constraints;
+  }
+
+  /**
+   * Build constraint list for bigger/smaller constraints.
+   * Second cell is bigger than first cell.
+   */
+  public static getBiggerSmallerConstraints(list: number[][]): Constraint[] {
+    const constraints = [];
+    for (const item of list) {
+      const constraint = new Constraint();
+      constraint.type = ConstraintType.TWO_CELLS_BIGGER_THAN;
+      constraint.cellIds = item;
+      constraints.push(constraint);
+    }
+    return constraints;
+  }
 }

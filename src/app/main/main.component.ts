@@ -4,6 +4,7 @@ import {Constraint} from '../model/constraint';
 import {ConstraintType} from '../model/constraint-type';
 import {WorkerMessage, WorkerStatus} from '../model/worker-message';
 import {SudokuOptions} from '../model/sudoku-options';
+import {HttpClient} from '@angular/common/http';
 
 enum ViewMode {
   numbers,
@@ -21,6 +22,11 @@ class GridCell {
   public constructor(cellId: number) {
     this.cellId = cellId;
   }
+}
+
+interface VisitorResponse {
+  visitorsMonth: number
+  visitorsTotal: number
 }
 
 @Component({
@@ -41,6 +47,11 @@ export class MainComponent implements OnInit {
   public status: string = '';
   public solvingInProgress = false;
 
+  public visitors: VisitorResponse;
+
+  public constructor(private readonly http: HttpClient) {
+  }
+
   public ngOnInit(): void {
     this.cells = _.range(81).map(i => new GridCell(i));
 
@@ -48,6 +59,8 @@ export class MainComponent implements OnInit {
     for (const i of _.range(81)) {
       this.cells[i].value = (sudokuStr[i] === '.' ? '' : sudokuStr[i]);
     }
+
+    this.fetchVisitorCount();
   }
 
   public setViewMode(viewMode: ViewMode): void {
@@ -156,5 +169,10 @@ export class MainComponent implements OnInit {
         cell.value = sudokuStr[i];
       }
     }
+  }
+
+  private fetchVisitorCount(): void {
+    this.http.get('https://akleemans.pythonanywhere.com/api/visitors')
+      .subscribe((visitorResponse: VisitorResponse) => this.visitors = visitorResponse);
   }
 }

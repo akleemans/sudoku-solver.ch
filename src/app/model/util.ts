@@ -3,6 +3,8 @@ import {randomColor} from 'randomcolor';
 import {Cell} from './cell';
 
 export class Util {
+  public static ALL_NUMBERS = '123456789';
+
   /**
    * Returns number of occurences of value in string.
    */
