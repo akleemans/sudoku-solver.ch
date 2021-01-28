@@ -628,6 +628,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _sum_unit__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sum-unit */ "dOW8");
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./util */ "M+Yo");
 /* harmony import */ var _product_unit__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./product-unit */ "CBs/");
+/* harmony import */ var _cell_connection__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./cell-connection */ "UPE7");
+
 
 
 
@@ -639,9 +641,7 @@ class Sudoku {
         this.cells = [];
         this.units = [];
         this.sumUnits = [];
-        this.cellsPerSumUnit = {};
         this.productUnits = [];
-        this.cellsPerProductUnit = {};
         // Prepare odd/even cells
         const oddEvenCellMap = [];
         constraints
@@ -720,25 +720,39 @@ class Sudoku {
         }
         // Add sum units from constraints
         const sumConstraints = constraints.filter(c => c.type === _constraint_type__WEBPACK_IMPORTED_MODULE_2__["ConstraintType"].MULTI_CELL_SUM);
-        if (sumConstraints.length > 0) {
-            for (const sumConstraint of sumConstraints) {
-                const sumCells = sumConstraint.cellIds.map(c => this.cells[c]);
-                this.sumUnits.push(new _sum_unit__WEBPACK_IMPORTED_MODULE_3__["SumUnit"](sumCells, sumConstraint.sum, sumConstraint.noDuplicates));
-                for (const cell of sumCells) {
-                    this.cellsPerSumUnit[cell.cellId] = sumCells.length;
-                }
-            }
+        for (const sumConstraint of sumConstraints) {
+            const sumCells = sumConstraint.cellIds.map(c => this.cells[c]);
+            this.sumUnits.push(new _sum_unit__WEBPACK_IMPORTED_MODULE_3__["SumUnit"](sumCells, sumConstraint.sum, sumConstraint.noDuplicates));
         }
         // Add product units from constraints
         const productConstraints = constraints.filter(c => c.type === _constraint_type__WEBPACK_IMPORTED_MODULE_2__["ConstraintType"].MULTI_CELL_PRODUCT);
-        if (productConstraints.length > 0) {
-            for (const productConstraint of productConstraints) {
-                const productCells = productConstraint.cellIds.map(c => this.cells[c]);
-                this.productUnits.push(new _product_unit__WEBPACK_IMPORTED_MODULE_5__["ProductUnit"](productCells, productConstraint.product));
-                for (const cell of productCells) {
-                    this.cellsPerProductUnit[cell.cellId] = productCells.length;
-                }
-            }
+        for (const productConstraint of productConstraints) {
+            const productCells = productConstraint.cellIds.map(c => this.cells[c]);
+            this.productUnits.push(new _product_unit__WEBPACK_IMPORTED_MODULE_5__["ProductUnit"](productCells, productConstraint.product));
+        }
+        // Add difference constraints to cell
+        const differenceConstraints = constraints.filter(c => c.type === _constraint_type__WEBPACK_IMPORTED_MODULE_2__["ConstraintType"].TWO_CELLS_EXACT_DIFFERENCE);
+        for (const differenceConstraint of differenceConstraints) {
+            const cellA = this.cells[differenceConstraint.cellIds[0]];
+            const cellB = this.cells[differenceConstraint.cellIds[1]];
+            cellA.addCellConnection(_cell_connection__WEBPACK_IMPORTED_MODULE_6__["CellConnection"].difference(cellB, differenceConstraint.difference, differenceConstraint.unknownOrder));
+            cellB.addCellConnection(_cell_connection__WEBPACK_IMPORTED_MODULE_6__["CellConnection"].difference(cellA, -differenceConstraint.difference, differenceConstraint.unknownOrder));
+        }
+        // Add factor constraints to cell
+        const factorConstraints = constraints.filter(c => c.type === _constraint_type__WEBPACK_IMPORTED_MODULE_2__["ConstraintType"].TWO_CELLS_EXACT_FACTOR);
+        for (const factorConstraint of factorConstraints) {
+            const cellA = this.cells[factorConstraint.cellIds[0]];
+            const cellB = this.cells[factorConstraint.cellIds[1]];
+            cellA.addCellConnection(_cell_connection__WEBPACK_IMPORTED_MODULE_6__["CellConnection"].factor(cellB, factorConstraint.factor, factorConstraint.unknownOrder));
+            cellB.addCellConnection(_cell_connection__WEBPACK_IMPORTED_MODULE_6__["CellConnection"].factor(cellA, 1 / factorConstraint.factor, factorConstraint.unknownOrder));
+        }
+        // Add bigger/smaller constraints to cell
+        const biggerSmallerConstraints = constraints.filter(c => c.type === _constraint_type__WEBPACK_IMPORTED_MODULE_2__["ConstraintType"].TWO_CELLS_BIGGER_THAN);
+        for (const biggerSmallerConstraint of biggerSmallerConstraints) {
+            const cellA = this.cells[biggerSmallerConstraint.cellIds[0]];
+            const cellB = this.cells[biggerSmallerConstraint.cellIds[1]];
+            cellA.addCellConnection(_cell_connection__WEBPACK_IMPORTED_MODULE_6__["CellConnection"].biggerSmaller(cellB, true));
+            cellB.addCellConnection(_cell_connection__WEBPACK_IMPORTED_MODULE_6__["CellConnection"].biggerSmaller(cellA, false));
         }
     }
     serialize() {
@@ -18162,6 +18176,117 @@ class Util {
         return lodash__WEBPACK_IMPORTED_MODULE_0__["uniq"](filledCellValues).length !== filledCellValues.length;
     }
 }
+Util.ALL_NUMBERS = '123456789';
+
+
+/***/ }),
+
+/***/ "UPE7":
+/*!******************************************!*\
+  !*** ./src/app/model/cell-connection.ts ***!
+  \******************************************/
+/*! exports provided: CellConnection */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CellConnection", function() { return CellConnection; });
+/* harmony import */ var _constraint_type__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./constraint-type */ "hk1m");
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util */ "M+Yo");
+
+
+class CellConnection {
+    static difference(cell, difference, unknownOrder) {
+        const newCellConnection = new CellConnection();
+        newCellConnection.type = _constraint_type__WEBPACK_IMPORTED_MODULE_0__["ConstraintType"].TWO_CELLS_EXACT_DIFFERENCE;
+        newCellConnection.otherCell = cell;
+        newCellConnection.difference = difference;
+        newCellConnection.unknownOrder = unknownOrder;
+        return newCellConnection;
+    }
+    static factor(cell, factor, unknownOrder) {
+        const newCellConnection = new CellConnection();
+        newCellConnection.type = _constraint_type__WEBPACK_IMPORTED_MODULE_0__["ConstraintType"].TWO_CELLS_EXACT_FACTOR;
+        newCellConnection.otherCell = cell;
+        newCellConnection.factor = factor;
+        newCellConnection.unknownOrder = unknownOrder;
+        return newCellConnection;
+    }
+    static biggerSmaller(cell, bigger) {
+        const newCellConnection = new CellConnection();
+        newCellConnection.type = _constraint_type__WEBPACK_IMPORTED_MODULE_0__["ConstraintType"].TWO_CELLS_BIGGER_THAN;
+        newCellConnection.otherCell = cell;
+        newCellConnection.bigger = bigger;
+        return newCellConnection;
+    }
+    getPossibleValuesForOtherCell(n) {
+        if (this.type === _constraint_type__WEBPACK_IMPORTED_MODULE_0__["ConstraintType"].TWO_CELLS_EXACT_DIFFERENCE) {
+            if (this.difference === undefined) {
+                return _util__WEBPACK_IMPORTED_MODULE_1__["Util"].ALL_NUMBERS;
+            }
+            const otherValues = [n + this.difference];
+            if (this.unknownOrder === true) {
+                otherValues.push(n - this.difference);
+            }
+            return otherValues.filter(v => v >= 1 && v <= 9).join('');
+        }
+        else if (this.type === _constraint_type__WEBPACK_IMPORTED_MODULE_0__["ConstraintType"].TWO_CELLS_EXACT_FACTOR) {
+            if (this.factor === undefined) {
+                return _util__WEBPACK_IMPORTED_MODULE_1__["Util"].ALL_NUMBERS;
+            }
+            const otherValues = [Math.round(n * this.factor)];
+            if (this.unknownOrder === true) {
+                otherValues.push(Math.round(n / this.factor));
+            }
+            return otherValues.filter(v => v >= 1 && v <= 9).join('');
+        }
+        else if (this.type === _constraint_type__WEBPACK_IMPORTED_MODULE_0__["ConstraintType"].TWO_CELLS_BIGGER_THAN) {
+            let baseNumbers = _util__WEBPACK_IMPORTED_MODULE_1__["Util"].ALL_NUMBERS;
+            if (this.bigger) {
+                for (let i = n; i >= 1; i--) {
+                    baseNumbers = baseNumbers.replace(i.toString(), '');
+                }
+            }
+            else {
+                for (let i = n; i <= 9; i++) {
+                    baseNumbers = baseNumbers.replace(i.toString(), '');
+                }
+            }
+            return baseNumbers;
+        }
+    }
+    isUnsatisfiableFor(baseValue) {
+        // If other cell is not yet solved, constraint can still be satisfied
+        if (!this.otherCell.isSolved()) {
+            return false;
+        }
+        const otherValue = +this.otherCell.getCandidates();
+        if (this.type === _constraint_type__WEBPACK_IMPORTED_MODULE_0__["ConstraintType"].TWO_CELLS_EXACT_DIFFERENCE) {
+            if (this.unknownOrder) {
+                return !(baseValue + this.difference === otherValue || baseValue - this.difference === otherValue);
+            }
+            else {
+                return baseValue + this.difference !== otherValue;
+            }
+        }
+        else if (this.type === _constraint_type__WEBPACK_IMPORTED_MODULE_0__["ConstraintType"].TWO_CELLS_EXACT_FACTOR) {
+            if (this.unknownOrder) {
+                return !(Math.round(baseValue * this.factor) === otherValue || Math.round(baseValue / this.factor) === otherValue);
+            }
+            else {
+                return Math.round(baseValue * this.factor) !== otherValue;
+            }
+        }
+        else if (this.type === _constraint_type__WEBPACK_IMPORTED_MODULE_0__["ConstraintType"].TWO_CELLS_BIGGER_THAN) {
+            if (this.bigger) {
+                return +otherValue <= baseValue;
+            }
+            else {
+                return +otherValue >= baseValue;
+            }
+        }
+    }
+}
 
 
 /***/ }),
@@ -18378,6 +18503,7 @@ __webpack_require__.r(__webpack_exports__);
 class Cell {
     constructor(cellId, c, isEven) {
         this.allCandidates = '123456789';
+        this.cellConnections = [];
         this.cellId = cellId;
         if (isEven !== undefined) {
             this.allCandidates = isEven ? '2468' : '13579';
@@ -18390,8 +18516,9 @@ class Cell {
             for (const peer of this.peers) {
                 peer.removeCandidates(this.candidates);
             }
-            // TODO do propagation of greater/less than (exact or not)
-            // we can also remove bigger / smaller numbers
+            for (const cellConnection of this.cellConnections) {
+                cellConnection.otherCell.removeAllExcept(cellConnection.getPossibleValuesForOtherCell(+this.candidates));
+            }
         }
     }
     getCandidates() {
@@ -18406,10 +18533,14 @@ class Cell {
         this.candidates = candidates;
     }
     /**
-     * Remove all candidates except for given value.
+     * Remove all candidates except for given values.
      */
     removeAllExcept(value) {
-        this.removeCandidates('123456789'.replace(value, ''));
+        let base = '123456789';
+        for (const v of value) {
+            base = base.replace(v, '');
+        }
+        this.removeCandidates(base);
     }
     /**
      * Remove one or more candidates.
@@ -18419,11 +18550,28 @@ class Cell {
             this.candidates = this.candidates.replace(values[i], '');
         }
     }
+    getCellConnections() {
+        return this.cellConnections;
+    }
+    addCellConnection(cellConnection) {
+        this.cellConnections.push(cellConnection);
+    }
     toString() {
         return this.candidates.length === 1 ? this.candidates : ' ';
     }
     isValid() {
-        return this.candidates.length >= 1;
+        if (this.candidates.length === 0) {
+            return false;
+        }
+        // Check cellConnections
+        if (this.isSolved()) {
+            for (let cellConnection of this.cellConnections) {
+                if (cellConnection.isUnsatisfiableFor(+this.candidates)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
     isSolved() {
         return this.candidates.length === 1;
@@ -18547,25 +18695,26 @@ class Solver {
      */
     static getCellScore(cell, sudoku) {
         let nr = cell.getCandidates().length;
-        // Check if in sum units
-        // TODO check current open cells
-        const cellsInSumUnit = sudoku.cellsPerSumUnit[nr];
-        if (cellsInSumUnit !== undefined) {
-            nr = cell.getCandidates().length - 5 + cellsInSumUnit;
-        }
-        // Check if in product units
-        // TODO check current open cells
-        const cellsInProductUnit = sudoku.cellsPerProductUnit[nr];
-        if (cellsInProductUnit !== undefined) {
-            nr = cell.getCandidates().length - 5 + cellsInProductUnit;
-        }
         // Check if cells are in multiple sum/product units, choose those first
         const unitCount = this.countCellOccurence(cell, sudoku);
-        if (unitCount > 1) {
-            const smallestCellCount = Math.min(cellsInSumUnit !== null && cellsInSumUnit !== void 0 ? cellsInSumUnit : 0, cellsInSumUnit !== null && cellsInSumUnit !== void 0 ? cellsInSumUnit : 0);
-            nr = cell.getCandidates().length - 5 * unitCount + smallestCellCount;
-        }
+        const smallestCellCount = this.cellCountOfSmallestUnit(cell, sudoku);
+        nr = cell.getCandidates().length - 5 * unitCount + smallestCellCount;
+        // Account for cell connections - factor 3 chosen by experiment
+        nr = nr - 3 * cell.getCellConnections().length;
         return nr;
+    }
+    /**
+     * Return the count of the smallest unit
+     */
+    static cellCountOfSmallestUnit(cell, sudoku) {
+        const unitsContainingCell = sudoku.sumUnits.filter(sU => sU.cells.includes(cell));
+        sudoku.productUnits.filter(pU => pU.cells.includes(cell)).forEach(pU => unitsContainingCell.push(pU));
+        if (unitsContainingCell.length === 0) {
+            return 0;
+        }
+        else {
+            return lodash__WEBPACK_IMPORTED_MODULE_0__["minBy"](unitsContainingCell, v => v.cells.length).cells.length;
+        }
     }
     /**
      * Count the amount of sum- and product units the cell is in.
