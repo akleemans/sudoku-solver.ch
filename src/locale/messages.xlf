@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="2.0" xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en">
+  <file id="ngi18n" original="ng.template">
+    <unit id="529729474738463175">
+      <notes>
+        <note category="location">src/app/app.component.html:2</note>
+      </notes>
+      <segment>
+        <source>Solve special-type Sudokus with custom constraints</source>
+      </segment>
+    </unit>
+    <unit id="2660385614639169108">
+      <notes>
+        <note category="location">src/app/main/main.component.html:4,5</note>
+      </notes>
+      <segment>
+        <source> Enter numbers </source>
+      </segment>
+    </unit>
+    <unit id="8924133813246894851">
+      <notes>
+        <note category="location">src/app/main/main.component.html:8,9</note>
+      </notes>
+      <segment>
+        <source> Add constraints </source>
+      </segment>
+    </unit>
+    <unit id="9141949208635842453">
+      <notes>
+        <note category="location">src/app/main/main.component.html:24,25</note>
+      </notes>
+      <segment>
+        <source> Enter the numbers which are already known. </source>
+      </segment>
+    </unit>
+    <unit id="7813475622114357457">
+      <notes>
+        <note category="location">src/app/main/main.component.html:28,30</note>
+      </notes>
+      <segment>
+        <source> For a regular Sudoku, click &quot;solve&quot; below, else add contraints by switching to the &quot;Add constraints&quot; view. </source>
+      </segment>
+    </unit>
+    <unit id="3950880483517055707">
+      <notes>
+        <note category="location">src/app/main/main.component.html:33,34</note>
+        <note category="location">src/app/main/main.component.html:187,188</note>
+      </notes>
+      <segment>
+        <source> Solve </source>
+      </segment>
+    </unit>
+    <unit id="406844996321321997">
+      <notes>
+        <note category="location">src/app/main/main.component.html:36,37</note>
+        <note category="location">src/app/main/main.component.html:211,212</note>
+      </notes>
+      <segment>
+        <source> Clear </source>
+      </segment>
+    </unit>
+    <unit id="2127733323563600634">
+      <notes>
+        <note category="location">src/app/main/main.component.html:59,61</note>
+      </notes>
+      <segment>
+        <source> Click on cells to select them (<ph id="0" equiv="INTERPOLATION" disp="{{currentConstraint.cellIds.length}}"/> selected) </source>
+      </segment>
+    </unit>
+    <unit id="6957315814584169836">
+      <notes>
+        <note category="location">src/app/main/main.component.html:64</note>
+      </notes>
+      <segment>
+        <source>Choose constraint type</source>
+      </segment>
+    </unit>
+    <unit id="7482856418191340629">
+      <notes>
+        <note category="location">src/app/main/main.component.html:66,67</note>
+      </notes>
+      <segment>
+        <source> Odd or even cell(s) </source>
+      </segment>
+    </unit>
+    <unit id="8147605394989172276">
+      <notes>
+        <note category="location">src/app/main/main.component.html:69,70</note>
+      </notes>
+      <segment>
+        <source> Two cells: Bigger/smaller than </source>
+      </segment>
+    </unit>
+    <unit id="5817699780001245536">
+      <notes>
+        <note category="location">src/app/main/main.component.html:73,74</note>
+      </notes>
+      <segment>
+        <source> Two cells: Exact difference </source>
+      </segment>
+    </unit>
+    <unit id="942203425140124595">
+      <notes>
+        <note category="location">src/app/main/main.component.html:76,77</note>
+      </notes>
+      <segment>
+        <source> Two cells: Exact factor </source>
+      </segment>
+    </unit>
+    <unit id="6566533314820247465">
+      <notes>
+        <note category="location">src/app/main/main.component.html:79,80</note>
+      </notes>
+      <segment>
+        <source> Multiple cells: Complete unit (1-9) </source>
+      </segment>
+    </unit>
+    <unit id="3479215663468355862">
+      <notes>
+        <note category="location">src/app/main/main.component.html:82,83</note>
+      </notes>
+      <segment>
+        <source> Multiple cells: sum </source>
+      </segment>
+    </unit>
+    <unit id="9183245938094603142">
+      <notes>
+        <note category="location">src/app/main/main.component.html:85,86</note>
+      </notes>
+      <segment>
+        <source> Multiple cells: product </source>
+      </segment>
+    </unit>
+    <unit id="6437183424989411551">
+      <notes>
+        <note category="location">src/app/main/main.component.html:91,92</note>
+      </notes>
+      <segment>
+        <source> Choose a constraint type to show its description. </source>
+      </segment>
+    </unit>
+    <unit id="6996799422725544865">
+      <notes>
+        <note category="location">src/app/main/main.component.html:95</note>
+        <note category="location">src/app/main/main.component.html:106</note>
+        <note category="location">src/app/main/main.component.html:120</note>
+        <note category="location">src/app/main/main.component.html:134</note>
+        <note category="location">src/app/main/main.component.html:138</note>
+        <note category="location">src/app/main/main.component.html:152</note>
+      </notes>
+      <segment>
+        <source>Description:</source>
+      </segment>
+    </unit>
+    <unit id="8518099779767930454">
+      <notes>
+        <note category="location">src/app/main/main.component.html:95</note>
+      </notes>
+      <segment>
+        <source>One or more cells which are odd or even.</source>
+      </segment>
+    </unit>
+    <unit id="3029982034121824222">
+      <notes>
+        <note category="location">src/app/main/main.component.html:97</note>
+      </notes>
+      <segment>
+        <source>Choose if odd/even:</source>
+      </segment>
+    </unit>
+    <unit id="8875643044231956259">
+      <notes>
+        <note category="location">src/app/main/main.component.html:99</note>
+      </notes>
+      <segment>
+        <source>Even</source>
+      </segment>
+    </unit>
+    <unit id="3013694939475783939">
+      <notes>
+        <note category="location">src/app/main/main.component.html:100</note>
+      </notes>
+      <segment>
+        <source>Odd</source>
+      </segment>
+    </unit>
+    <unit id="3049594772768036174">
+      <notes>
+        <note category="location">src/app/main/main.component.html:106</note>
+      </notes>
+      <segment>
+        <source> Two cells have a known difference.</source>
+      </segment>
+    </unit>
+    <unit id="6140832125546412935">
+      <notes>
+        <note category="location">src/app/main/main.component.html:108</note>
+      </notes>
+      <segment>
+        <source>Enter difference (first cell + difference = second cell):</source>
+      </segment>
+    </unit>
+    <unit id="9163675037253260908">
+      <notes>
+        <note category="location">src/app/main/main.component.html:120</note>
+      </notes>
+      <segment>
+        <source>Two cells have a known factor.</source>
+      </segment>
+    </unit>
+    <unit id="7905270931783724668">
+      <notes>
+        <note category="location">src/app/main/main.component.html:122</note>
+      </notes>
+      <segment>
+        <source>Enter factor (first cell * factor = second cell):</source>
+      </segment>
+    </unit>
+    <unit id="2622146154967759149">
+      <notes>
+        <note category="location">src/app/main/main.component.html:134</note>
+      </notes>
+      <segment>
+        <source>Second cell is bigger than first one.</source>
+      </segment>
+    </unit>
+    <unit id="7501166108579064766">
+      <notes>
+        <note category="location">src/app/main/main.component.html:138</note>
+      </notes>
+      <segment>
+        <source>Multiple cells must add up to a sum.</source>
+      </segment>
+    </unit>
+    <unit id="8236241212280308884">
+      <notes>
+        <note category="location">src/app/main/main.component.html:140</note>
+      </notes>
+      <segment>
+        <source>Enter sum:</source>
+      </segment>
+    </unit>
+    <unit id="5117028527605383985">
+      <notes>
+        <note category="location">src/app/main/main.component.html:152</note>
+      </notes>
+      <segment>
+        <source>Multiple cells form a product when multiplied.</source>
+      </segment>
+    </unit>
+    <unit id="3672875963066107995">
+      <notes>
+        <note category="location">src/app/main/main.component.html:154</note>
+      </notes>
+      <segment>
+        <source>Enter product:</source>
+      </segment>
+    </unit>
+    <unit id="9173104891472590226">
+      <notes>
+        <note category="location">src/app/main/main.component.html:161,162</note>
+      </notes>
+      <segment>
+        <source> Add </source>
+      </segment>
+    </unit>
+    <unit id="4071707518710620767">
+      <notes>
+        <note category="location">src/app/main/main.component.html:164</note>
+      </notes>
+      <segment>
+        <source>List of Constraints:</source>
+      </segment>
+    </unit>
+    <unit id="6673936298534012212">
+      <notes>
+        <note category="location">src/app/main/main.component.html:183</note>
+      </notes>
+      <segment>
+        <source>Use standard 3x3 block units</source>
+      </segment>
+    </unit>
+    <unit id="8766543515727166681">
+      <notes>
+        <note category="location">src/app/main/main.component.html:204</note>
+      </notes>
+      <segment>
+        <source>Status:</source>
+      </segment>
+    </unit>
+    <unit id="7129717373340451688">
+      <notes>
+        <note category="location">src/app/main/main.component.html:217</note>
+      </notes>
+      <segment>
+        <source>This webapp lets you solve custom Sudokus, and a wide range of known 9x9 Sudoku types:</source>
+      </segment>
+    </unit>
+    <unit id="461188758383543268">
+      <notes>
+        <note category="location">src/app/main/main.component.html:220</note>
+      </notes>
+      <segment>
+        <source>Sudoku X</source>
+      </segment>
+    </unit>
+    <unit id="6974960538288696496">
+      <notes>
+        <note category="location">src/app/main/main.component.html:220</note>
+      </notes>
+      <segment>
+        <source>Two additional diagonal units</source>
+      </segment>
+    </unit>
+    <unit id="4088879807767706296">
+      <notes>
+        <note category="location">src/app/main/main.component.html:223</note>
+      </notes>
+      <segment>
+        <source>Hyper Sudoku</source>
+      </segment>
+    </unit>
+    <unit id="6830477462119008314">
+      <notes>
+        <note category="location">src/app/main/main.component.html:223</note>
+      </notes>
+      <segment>
+        <source>Four additional units</source>
+      </segment>
+    </unit>
+    <unit id="3450943657040571869">
+      <notes>
+        <note category="location">src/app/main/main.component.html:226</note>
+      </notes>
+      <segment>
+        <source>Killer Sudoku (Sum Sudoku)</source>
+      </segment>
+    </unit>
+    <unit id="7138596921859465862">
+      <notes>
+        <note category="location">src/app/main/main.component.html:226</note>
+      </notes>
+      <segment>
+        <source>Regions of variable size must form sums</source>
+      </segment>
+    </unit>
+    <unit id="7854190906160310656">
+      <notes>
+        <note category="location">src/app/main/main.component.html:229</note>
+      </notes>
+      <segment>
+        <source>Nonomino</source>
+      </segment>
+    </unit>
+    <unit id="8810124040002264503">
+      <notes>
+        <note category="location">src/app/main/main.component.html:229</note>
+      </notes>
+      <segment>
+        <source>No 3x3 block units, but 9 custom, irregular units instead</source>
+      </segment>
+    </unit>
+    <unit id="6546394884745761663">
+      <notes>
+        <note category="location">src/app/main/main.component.html:232</note>
+      </notes>
+      <segment>
+        <source>Odd-Even Sudoku</source>
+      </segment>
+    </unit>
+    <unit id="6936230629359944052">
+      <notes>
+        <note category="location">src/app/main/main.component.html:232</note>
+      </notes>
+      <segment>
+        <source>Normal Sudoku with odd/even constraints</source>
+      </segment>
+    </unit>
+    <unit id="261457635020241601">
+      <notes>
+        <note category="location">src/app/main/main.component.html:235</note>
+      </notes>
+      <segment>
+        <source>Greater/Less Than Sudoku</source>
+      </segment>
+    </unit>
+    <unit id="5162652288299391716">
+      <notes>
+        <note category="location">src/app/main/main.component.html:235</note>
+      </notes>
+      <segment>
+        <source>Normal Sudoku with greater/less than constraints</source>
+      </segment>
+    </unit>
+    <unit id="9116446712580605942">
+      <notes>
+        <note category="location">src/app/main/main.component.html:238,239</note>
+      </notes>
+      <segment>
+        <source> Custom combinations of the above (for example special Sudokus for Geocaching puzzles) </source>
+      </segment>
+    </unit>
+    <unit id="3008670307707760482">
+      <notes>
+        <note category="location">src/app/main/main.component.html:242</note>
+      </notes>
+      <segment>
+        <source>Technical details</source>
+      </segment>
+    </unit>
+    <unit id="9005256499283994448">
+      <notes>
+        <note category="location">src/app/main/main.component.html:248</note>
+      </notes>
+      <segment>
+        <source>The solver is based on backtracking as described by</source>
+      </segment>
+    </unit>
+    <unit id="643002914549304501">
+      <notes>
+        <note category="location">src/app/main/main.component.html:249,250</note>
+      </notes>
+      <segment>
+        <source>It uses custom constraints for propagation and a different heuristic (based on the entered constraints) to optimize the search.</source>
+      </segment>
+    </unit>
+    <unit id="2583833961863846628">
+      <notes>
+        <note category="location">src/app/main/main.component.html:251</note>
+      </notes>
+      <segment>
+        <source>The solving is done inside of a</source>
+      </segment>
+    </unit>
+    <unit id="4594036539347313982">
+      <notes>
+        <note category="location">src/app/main/main.component.html:253</note>
+      </notes>
+      <segment>
+        <source>The grid is based on the work of</source>
+      </segment>
+    </unit>
+    <unit id="1797274847902663045">
+      <notes>
+        <note category="location">src/app/main/main.component.html:254</note>
+      </notes>
+      <segment>
+        <source>The random colors are generated by</source>
+      </segment>
+    </unit>
+    <unit id="450415536759820782">
+      <notes>
+        <note category="location">src/app/main/main.component.html:258</note>
+      </notes>
+      <segment>
+        <source>Page hits:</source>
+      </segment>
+    </unit>
+    <unit id="3646053136746522210">
+      <notes>
+        <note category="location">src/app/main/main.component.html:258</note>
+      </notes>
+      <segment>
+        <source>this month</source>
+      </segment>
+    </unit>
+    <unit id="6489441800790477240">
+      <notes>
+        <note category="location">src/app/main/main.component.html:258</note>
+      </notes>
+      <segment>
+        <source>total</source>
+      </segment>
+    </unit>
+    <unit id="3354050006560855155">
+      <notes>
+        <note category="location">src/app/main/main.component.ts:138</note>
+      </notes>
+      <segment>
+        <source>Solved!</source>
+      </segment>
+    </unit>
+    <unit id="151072030241332966">
+      <notes>
+        <note category="location">src/app/main/main.component.ts:143</note>
+      </notes>
+      <segment>
+        <source>Solving: </source>
+      </segment>
+    </unit>
+    <unit id="7489549797833727938">
+      <notes>
+        <note category="location">src/app/main/main.component.ts:149</note>
+      </notes>
+      <segment>
+        <source>Sudoku not solvable!</source>
+      </segment>
+    </unit>
+    <unit id="7757570879480570361">
+      <notes>
+        <note category="location">src/app/model/constraint.ts:40</note>
+      </notes>
+      <segment>
+        <source>Cells <ph id="0" equiv="PH" disp="cellStr"/> must be even</source>
+      </segment>
+    </unit>
+    <unit id="3796509611153975815">
+      <notes>
+        <note category="location">src/app/model/constraint.ts:42</note>
+      </notes>
+      <segment>
+        <source>Cells <ph id="0" equiv="PH" disp="cellStr"/> must be odd</source>
+      </segment>
+    </unit>
+    <unit id="4916244057973070426">
+      <notes>
+        <note category="location">src/app/model/constraint.ts:47</note>
+      </notes>
+      <segment>
+        <source>Cells <ph id="0" equiv="PH" disp="cellStr"/> must add up to <ph id="1" equiv="PH_1" disp="this.sum"/></source>
+      </segment>
+    </unit>
+    <unit id="3524784585201240485">
+      <notes>
+        <note category="location">src/app/model/constraint.ts:51</note>
+      </notes>
+      <segment>
+        <source>Cells <ph id="0" equiv="PH" disp="cellStr"/> form a unit</source>
+      </segment>
+    </unit>
+    <unit id="2919836406294176208">
+      <notes>
+        <note category="location">src/app/model/constraint.ts:54</note>
+      </notes>
+      <segment>
+        <source>Cells <ph id="0" equiv="PH" disp="cellStr"/> must multiply to <ph id="1" equiv="PH_1" disp="this.product"/></source>
+      </segment>
+    </unit>
+    <unit id="6112757822368454868">
+      <notes>
+        <note category="location">src/app/model/constraint.ts:57</note>
+      </notes>
+      <segment>
+        <source>Cell <ph id="0" equiv="PH" disp="this.cellIds[1]"/> is bigger than <ph id="1" equiv="PH_1" disp="this.cellIds[0]"/></source>
+      </segment>
+    </unit>
+    <unit id="2074478472345541988">
+      <notes>
+        <note category="location">src/app/model/constraint.ts:60</note>
+      </notes>
+      <segment>
+        <source>Cells <ph id="0" equiv="PH" disp="cellStr"/> have difference of <ph id="1" equiv="PH_1" disp="this.difference"/></source>
+      </segment>
+    </unit>
+    <unit id="5510449559975876511">
+      <notes>
+        <note category="location">src/app/model/constraint.ts:63</note>
+      </notes>
+      <segment>
+        <source>Cells <ph id="0" equiv="PH" disp="cellStr"/> have factor of <ph id="1" equiv="PH_1" disp="this.factor"/></source>
+      </segment>
+    </unit>
+  </file>
+</xliff>
