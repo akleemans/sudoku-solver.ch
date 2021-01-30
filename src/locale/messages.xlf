@@ -44,7 +44,7 @@
     <unit id="3950880483517055707">
       <notes>
         <note category="location">src/app/main/main.component.html:33,34</note>
-        <note category="location">src/app/main/main.component.html:187,188</note>
+        <note category="location">src/app/main/main.component.html:203,204</note>
       </notes>
       <segment>
         <source> Solve </source>
@@ -53,7 +53,7 @@
     <unit id="406844996321321997">
       <notes>
         <note category="location">src/app/main/main.component.html:36,37</note>
-        <note category="location">src/app/main/main.component.html:211,212</note>
+        <note category="location">src/app/main/main.component.html:228,229</note>
       </notes>
       <segment>
         <source> Clear </source>
@@ -77,7 +77,7 @@
     </unit>
     <unit id="7482856418191340629">
       <notes>
-        <note category="location">src/app/main/main.component.html:66,67</note>
+        <note category="location">src/app/main/main.component.html:67,68</note>
       </notes>
       <segment>
         <source> Odd or even cell(s) </source>
@@ -85,7 +85,7 @@
     </unit>
     <unit id="8147605394989172276">
       <notes>
-        <note category="location">src/app/main/main.component.html:69,70</note>
+        <note category="location">src/app/main/main.component.html:71,72</note>
       </notes>
       <segment>
         <source> Two cells: Bigger/smaller than </source>
@@ -93,7 +93,7 @@
     </unit>
     <unit id="5817699780001245536">
       <notes>
-        <note category="location">src/app/main/main.component.html:73,74</note>
+        <note category="location">src/app/main/main.component.html:75,76</note>
       </notes>
       <segment>
         <source> Two cells: Exact difference </source>
@@ -101,7 +101,7 @@
     </unit>
     <unit id="942203425140124595">
       <notes>
-        <note category="location">src/app/main/main.component.html:76,77</note>
+        <note category="location">src/app/main/main.component.html:79,80</note>
       </notes>
       <segment>
         <source> Two cells: Exact factor </source>
@@ -109,7 +109,7 @@
     </unit>
     <unit id="6566533314820247465">
       <notes>
-        <note category="location">src/app/main/main.component.html:79,80</note>
+        <note category="location">src/app/main/main.component.html:82,83</note>
       </notes>
       <segment>
         <source> Multiple cells: Complete unit (1-9) </source>
@@ -117,7 +117,7 @@
     </unit>
     <unit id="3479215663468355862">
       <notes>
-        <note category="location">src/app/main/main.component.html:82,83</note>
+        <note category="location">src/app/main/main.component.html:85,86</note>
       </notes>
       <segment>
         <source> Multiple cells: sum </source>
@@ -125,7 +125,7 @@
     </unit>
     <unit id="9183245938094603142">
       <notes>
-        <note category="location">src/app/main/main.component.html:85,86</note>
+        <note category="location">src/app/main/main.component.html:88,89</note>
       </notes>
       <segment>
         <source> Multiple cells: product </source>
@@ -133,7 +133,7 @@
     </unit>
     <unit id="6437183424989411551">
       <notes>
-        <note category="location">src/app/main/main.component.html:91,92</note>
+        <note category="location">src/app/main/main.component.html:94,95</note>
       </notes>
       <segment>
         <source> Choose a constraint type to show its description. </source>
@@ -141,12 +141,12 @@
     </unit>
     <unit id="6996799422725544865">
       <notes>
-        <note category="location">src/app/main/main.component.html:95</note>
-        <note category="location">src/app/main/main.component.html:106</note>
-        <note category="location">src/app/main/main.component.html:120</note>
-        <note category="location">src/app/main/main.component.html:134</note>
-        <note category="location">src/app/main/main.component.html:138</note>
-        <note category="location">src/app/main/main.component.html:152</note>
+        <note category="location">src/app/main/main.component.html:98</note>
+        <note category="location">src/app/main/main.component.html:111</note>
+        <note category="location">src/app/main/main.component.html:127</note>
+        <note category="location">src/app/main/main.component.html:143</note>
+        <note category="location">src/app/main/main.component.html:149</note>
+        <note category="location">src/app/main/main.component.html:165</note>
       </notes>
       <segment>
         <source>Description:</source>
@@ -154,7 +154,7 @@
     </unit>
     <unit id="8518099779767930454">
       <notes>
-        <note category="location">src/app/main/main.component.html:95</note>
+        <note category="location">src/app/main/main.component.html:99</note>
       </notes>
       <segment>
         <source>One or more cells which are odd or even.</source>
@@ -162,7 +162,7 @@
     </unit>
     <unit id="3029982034121824222">
       <notes>
-        <note category="location">src/app/main/main.component.html:97</note>
+        <note category="location">src/app/main/main.component.html:102</note>
       </notes>
       <segment>
         <source>Choose if odd/even:</source>
@@ -170,7 +170,7 @@
     </unit>
     <unit id="8875643044231956259">
       <notes>
-        <note category="location">src/app/main/main.component.html:99</note>
+        <note category="location">src/app/main/main.component.html:104</note>
       </notes>
       <segment>
         <source>Even</source>
@@ -178,7 +178,7 @@
     </unit>
     <unit id="3013694939475783939">
       <notes>
-        <note category="location">src/app/main/main.component.html:100</note>
+        <note category="location">src/app/main/main.component.html:105</note>
       </notes>
       <segment>
         <source>Odd</source>
@@ -186,7 +186,7 @@
     </unit>
     <unit id="3049594772768036174">
       <notes>
-        <note category="location">src/app/main/main.component.html:106</note>
+        <note category="location">src/app/main/main.component.html:112</note>
       </notes>
       <segment>
         <source> Two cells have a known difference.</source>
@@ -194,7 +194,7 @@
     </unit>
     <unit id="6140832125546412935">
       <notes>
-        <note category="location">src/app/main/main.component.html:108</note>
+        <note category="location">src/app/main/main.component.html:115</note>
       </notes>
       <segment>
         <source>Enter difference (first cell + difference = second cell):</source>
@@ -202,7 +202,7 @@
     </unit>
     <unit id="9163675037253260908">
       <notes>
-        <note category="location">src/app/main/main.component.html:120</note>
+        <note category="location">src/app/main/main.component.html:128</note>
       </notes>
       <segment>
         <source>Two cells have a known factor.</source>
@@ -210,7 +210,7 @@
     </unit>
     <unit id="7905270931783724668">
       <notes>
-        <note category="location">src/app/main/main.component.html:122</note>
+        <note category="location">src/app/main/main.component.html:131</note>
       </notes>
       <segment>
         <source>Enter factor (first cell * factor = second cell):</source>
@@ -218,7 +218,7 @@
     </unit>
     <unit id="2622146154967759149">
       <notes>
-        <note category="location">src/app/main/main.component.html:134</note>
+        <note category="location">src/app/main/main.component.html:144</note>
       </notes>
       <segment>
         <source>Second cell is bigger than first one.</source>
@@ -226,7 +226,7 @@
     </unit>
     <unit id="7501166108579064766">
       <notes>
-        <note category="location">src/app/main/main.component.html:138</note>
+        <note category="location">src/app/main/main.component.html:150</note>
       </notes>
       <segment>
         <source>Multiple cells must add up to a sum.</source>
@@ -234,7 +234,7 @@
     </unit>
     <unit id="8236241212280308884">
       <notes>
-        <note category="location">src/app/main/main.component.html:140</note>
+        <note category="location">src/app/main/main.component.html:153</note>
       </notes>
       <segment>
         <source>Enter sum:</source>
@@ -242,7 +242,7 @@
     </unit>
     <unit id="5117028527605383985">
       <notes>
-        <note category="location">src/app/main/main.component.html:152</note>
+        <note category="location">src/app/main/main.component.html:166</note>
       </notes>
       <segment>
         <source>Multiple cells form a product when multiplied.</source>
@@ -250,7 +250,7 @@
     </unit>
     <unit id="3672875963066107995">
       <notes>
-        <note category="location">src/app/main/main.component.html:154</note>
+        <note category="location">src/app/main/main.component.html:169</note>
       </notes>
       <segment>
         <source>Enter product:</source>
@@ -258,7 +258,7 @@
     </unit>
     <unit id="9173104891472590226">
       <notes>
-        <note category="location">src/app/main/main.component.html:161,162</note>
+        <note category="location">src/app/main/main.component.html:176,177</note>
       </notes>
       <segment>
         <source> Add </source>
@@ -266,7 +266,7 @@
     </unit>
     <unit id="4071707518710620767">
       <notes>
-        <note category="location">src/app/main/main.component.html:164</note>
+        <note category="location">src/app/main/main.component.html:179</note>
       </notes>
       <segment>
         <source>List of Constraints:</source>
@@ -274,7 +274,7 @@
     </unit>
     <unit id="987288973350564835">
       <notes>
-        <note category="location">src/app/main/main.component.html:181</note>
+        <note category="location">src/app/main/main.component.html:196</note>
       </notes>
       <segment>
         <source>Global options</source>
@@ -282,7 +282,7 @@
     </unit>
     <unit id="6673936298534012212">
       <notes>
-        <note category="location">src/app/main/main.component.html:183</note>
+        <note category="location">src/app/main/main.component.html:199</note>
       </notes>
       <segment>
         <source>Use standard 3x3 block units</source>
@@ -290,23 +290,23 @@
     </unit>
     <unit id="8766543515727166681">
       <notes>
-        <note category="location">src/app/main/main.component.html:204</note>
+        <note category="location">src/app/main/main.component.html:220</note>
       </notes>
       <segment>
         <source>Status:</source>
       </segment>
     </unit>
-    <unit id="7129717373340451688">
+    <unit id="622137440243354834">
       <notes>
-        <note category="location">src/app/main/main.component.html:217</note>
+        <note category="location">src/app/main/main.component.html:234,235</note>
       </notes>
       <segment>
-        <source>This webapp lets you solve custom Sudokus, and a wide range of known 9x9 Sudoku types:</source>
+        <source>This webapp lets you solve custom Sudokus, and a wide range of known 9x9 Sudoku types: </source>
       </segment>
     </unit>
     <unit id="461188758383543268">
       <notes>
-        <note category="location">src/app/main/main.component.html:220</note>
+        <note category="location">src/app/main/main.component.html:238</note>
       </notes>
       <segment>
         <source>Sudoku X</source>
@@ -314,7 +314,7 @@
     </unit>
     <unit id="6974960538288696496">
       <notes>
-        <note category="location">src/app/main/main.component.html:220</note>
+        <note category="location">src/app/main/main.component.html:239</note>
       </notes>
       <segment>
         <source>Two additional diagonal units</source>
@@ -322,7 +322,7 @@
     </unit>
     <unit id="4088879807767706296">
       <notes>
-        <note category="location">src/app/main/main.component.html:223</note>
+        <note category="location">src/app/main/main.component.html:242</note>
       </notes>
       <segment>
         <source>Hyper Sudoku</source>
@@ -330,7 +330,7 @@
     </unit>
     <unit id="6830477462119008314">
       <notes>
-        <note category="location">src/app/main/main.component.html:223</note>
+        <note category="location">src/app/main/main.component.html:243</note>
       </notes>
       <segment>
         <source>Four additional units</source>
@@ -338,7 +338,7 @@
     </unit>
     <unit id="3450943657040571869">
       <notes>
-        <note category="location">src/app/main/main.component.html:226</note>
+        <note category="location">src/app/main/main.component.html:246</note>
       </notes>
       <segment>
         <source>Killer Sudoku (Sum Sudoku)</source>
@@ -346,7 +346,7 @@
     </unit>
     <unit id="7138596921859465862">
       <notes>
-        <note category="location">src/app/main/main.component.html:226</note>
+        <note category="location">src/app/main/main.component.html:247</note>
       </notes>
       <segment>
         <source>Regions of variable size must form sums</source>
@@ -354,7 +354,7 @@
     </unit>
     <unit id="7854190906160310656">
       <notes>
-        <note category="location">src/app/main/main.component.html:229</note>
+        <note category="location">src/app/main/main.component.html:250</note>
       </notes>
       <segment>
         <source>Nonomino</source>
@@ -362,7 +362,7 @@
     </unit>
     <unit id="8810124040002264503">
       <notes>
-        <note category="location">src/app/main/main.component.html:229</note>
+        <note category="location">src/app/main/main.component.html:251</note>
       </notes>
       <segment>
         <source>No 3x3 block units, but 9 custom, irregular units instead</source>
@@ -370,7 +370,7 @@
     </unit>
     <unit id="6546394884745761663">
       <notes>
-        <note category="location">src/app/main/main.component.html:232</note>
+        <note category="location">src/app/main/main.component.html:254</note>
       </notes>
       <segment>
         <source>Odd-Even Sudoku</source>
@@ -378,7 +378,7 @@
     </unit>
     <unit id="6936230629359944052">
       <notes>
-        <note category="location">src/app/main/main.component.html:232</note>
+        <note category="location">src/app/main/main.component.html:255</note>
       </notes>
       <segment>
         <source>Normal Sudoku with odd/even constraints</source>
@@ -386,7 +386,7 @@
     </unit>
     <unit id="261457635020241601">
       <notes>
-        <note category="location">src/app/main/main.component.html:235</note>
+        <note category="location">src/app/main/main.component.html:258</note>
       </notes>
       <segment>
         <source>Greater/Less Than Sudoku</source>
@@ -394,7 +394,7 @@
     </unit>
     <unit id="5162652288299391716">
       <notes>
-        <note category="location">src/app/main/main.component.html:235</note>
+        <note category="location">src/app/main/main.component.html:259</note>
       </notes>
       <segment>
         <source>Normal Sudoku with greater/less than constraints</source>
@@ -402,7 +402,7 @@
     </unit>
     <unit id="9116446712580605942">
       <notes>
-        <note category="location">src/app/main/main.component.html:238,239</note>
+        <note category="location">src/app/main/main.component.html:262,263</note>
       </notes>
       <segment>
         <source> Custom combinations of the above (for example special Sudokus for Geocaching puzzles) </source>
@@ -410,39 +410,39 @@
     </unit>
     <unit id="3008670307707760482">
       <notes>
-        <note category="location">src/app/main/main.component.html:242</note>
+        <note category="location">src/app/main/main.component.html:266</note>
       </notes>
       <segment>
         <source>Technical details</source>
       </segment>
     </unit>
-    <unit id="644221108713555091">
+    <unit id="1013171407738243740">
       <notes>
-        <note category="location">src/app/main/main.component.html:244</note>
+        <note category="location">src/app/main/main.component.html:268</note>
       </notes>
       <segment>
-        <source> The solver is open source (MIT license) and available on </source>
+        <source> The solver is open source (MIT license) and available on</source>
       </segment>
     </unit>
     <unit id="9005256499283994448">
       <notes>
-        <note category="location">src/app/main/main.component.html:248</note>
+        <note category="location">src/app/main/main.component.html:273</note>
       </notes>
       <segment>
         <source>The solver is based on backtracking as described by</source>
       </segment>
     </unit>
-    <unit id="643002914549304501">
+    <unit id="2699705762657400794">
       <notes>
-        <note category="location">src/app/main/main.component.html:249,250</note>
+        <note category="location">src/app/main/main.component.html:275,278</note>
       </notes>
       <segment>
-        <source>It uses custom constraints for propagation and a different heuristic (based on the entered constraints) to optimize the search.</source>
+        <source>It uses custom constraints for propagation and a different heuristic (based on the entered constraints) to optimize the search. </source>
       </segment>
     </unit>
     <unit id="2583833961863846628">
       <notes>
-        <note category="location">src/app/main/main.component.html:251</note>
+        <note category="location">src/app/main/main.component.html:279</note>
       </notes>
       <segment>
         <source>The solving is done inside of a</source>
@@ -450,7 +450,7 @@
     </unit>
     <unit id="4594036539347313982">
       <notes>
-        <note category="location">src/app/main/main.component.html:253</note>
+        <note category="location">src/app/main/main.component.html:282</note>
       </notes>
       <segment>
         <source>The grid is based on the work of</source>
@@ -458,7 +458,7 @@
     </unit>
     <unit id="1797274847902663045">
       <notes>
-        <note category="location">src/app/main/main.component.html:254</note>
+        <note category="location">src/app/main/main.component.html:284</note>
       </notes>
       <segment>
         <source>The random colors are generated by</source>
@@ -466,7 +466,7 @@
     </unit>
     <unit id="450415536759820782">
       <notes>
-        <note category="location">src/app/main/main.component.html:258</note>
+        <note category="location">src/app/main/main.component.html:290</note>
       </notes>
       <segment>
         <source>Page hits:</source>
@@ -474,7 +474,7 @@
     </unit>
     <unit id="3646053136746522210">
       <notes>
-        <note category="location">src/app/main/main.component.html:258</note>
+        <note category="location">src/app/main/main.component.html:292</note>
       </notes>
       <segment>
         <source>this month</source>
@@ -482,7 +482,7 @@
     </unit>
     <unit id="6489441800790477240">
       <notes>
-        <note category="location">src/app/main/main.component.html:258</note>
+        <note category="location">src/app/main/main.component.html:294</note>
       </notes>
       <segment>
         <source>total</source>

@@ -7,7 +7,6 @@ import {Component, Inject, LOCALE_ID} from '@angular/core';
 })
 export class AppComponent {
   public constructor(@Inject(LOCALE_ID) public readonly locale: string) {
-    console.log('locale:', locale);
   }
 
   public changeLocale(newLocale: string): void {

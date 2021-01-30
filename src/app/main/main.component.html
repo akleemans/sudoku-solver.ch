@@ -62,17 +62,20 @@
 
     <select class="custom-select" [(ngModel)]="currentConstraint.type">
       <option selected i18n>Choose constraint type</option>
-      <option [disabled]="currentConstraint.cellIds.length === 0" [ngValue]="constraintTypeEnum.SINGLE_CELL_ODD_EVEN" i18n>
+      <option [disabled]="currentConstraint.cellIds.length === 0" [ngValue]="constraintTypeEnum.SINGLE_CELL_ODD_EVEN"
+              i18n>
         Odd or even cell(s)
       </option>
-      <option [disabled]="currentConstraint.cellIds.length !== 2" [ngValue]="constraintTypeEnum.TWO_CELLS_BIGGER_THAN" i18n>
+      <option [disabled]="currentConstraint.cellIds.length !== 2" [ngValue]="constraintTypeEnum.TWO_CELLS_BIGGER_THAN"
+              i18n>
         Two cells: Bigger/smaller than
       </option>
       <option [disabled]="currentConstraint.cellIds.length !== 2"
               [ngValue]="constraintTypeEnum.TWO_CELLS_EXACT_DIFFERENCE" i18n>
         Two cells: Exact difference
       </option>
-      <option [disabled]="currentConstraint.cellIds.length !== 2" [ngValue]="constraintTypeEnum.TWO_CELLS_EXACT_FACTOR" i18n>
+      <option [disabled]="currentConstraint.cellIds.length !== 2" [ngValue]="constraintTypeEnum.TWO_CELLS_EXACT_FACTOR"
+              i18n>
         Two cells: Exact factor
       </option>
       <option [disabled]="currentConstraint.cellIds.length !== 9" [ngValue]="constraintTypeEnum.MULTI_CELL_UNIT" i18n>
@@ -92,7 +95,9 @@
     </div>
 
     <div *ngIf="currentConstraint.type === constraintTypeEnum.SINGLE_CELL_ODD_EVEN">
-      <p><b i18n>Description:</b> <ng-container i18n>One or more cells which are odd or even.</ng-container></p>
+      <p><b i18n>Description:</b>
+        <ng-container i18n>One or more cells which are odd or even.</ng-container>
+      </p>
       <div class="form-inline">
         <b i18n>Choose if odd/even:</b>
         <select class="form-control custom-select" [(ngModel)]="currentConstraint.isEven">
@@ -103,7 +108,9 @@
     </div>
 
     <div *ngIf="currentConstraint.type === constraintTypeEnum.TWO_CELLS_EXACT_DIFFERENCE">
-      <p><b i18n>Description:</b> <ng-container i18n> Two cells have a known difference.</ng-container></p>
+      <p><b i18n>Description:</b>
+        <ng-container i18n> Two cells have a known difference.</ng-container>
+      </p>
       <div class="form-inline">
         <b i18n>Enter difference (first cell + difference = second cell):</b>
         <input class="form-control" type="number" [(ngModel)]="currentConstraint.difference">
@@ -117,7 +124,9 @@
     </div>
 
     <div *ngIf="currentConstraint.type === constraintTypeEnum.TWO_CELLS_EXACT_FACTOR">
-      <p><b i18n>Description:</b> <ng-container i18n>Two cells have a known factor.</ng-container></p>
+      <p><b i18n>Description:</b>
+        <ng-container i18n>Two cells have a known factor.</ng-container>
+      </p>
       <div class="form-inline">
         <b i18n>Enter factor (first cell * factor = second cell):</b>
         <input class="form-control" type="number" [(ngModel)]="currentConstraint.factor">
@@ -131,11 +140,15 @@
     </div>
 
     <div *ngIf="currentConstraint.type === constraintTypeEnum.TWO_CELLS_BIGGER_THAN">
-      <p><b i18n>Description:</b> <ng-container i18n>Second cell is bigger than first one.</ng-container></p>
+      <p><b i18n>Description:</b>
+        <ng-container i18n>Second cell is bigger than first one.</ng-container>
+      </p>
     </div>
 
     <div *ngIf="currentConstraint.type === constraintTypeEnum.MULTI_CELL_SUM">
-      <p><b i18n>Description:</b> <ng-container i18n>Multiple cells must add up to a sum.</ng-container></p>
+      <p><b i18n>Description:</b>
+        <ng-container i18n>Multiple cells must add up to a sum.</ng-container>
+      </p>
       <div class="form-inline">
         <b i18n>Enter sum:</b>
         <input class="form-control" type="number" [(ngModel)]="currentConstraint.sum">
@@ -149,7 +162,9 @@
     </div>
 
     <div *ngIf="currentConstraint.type === constraintTypeEnum.MULTI_CELL_PRODUCT">
-      <p><b i18n>Description:</b> <ng-container i18n>Multiple cells form a product when multiplied.</ng-container></p>
+      <p><b i18n>Description:</b>
+        <ng-container i18n>Multiple cells form a product when multiplied.</ng-container>
+      </p>
       <div class="form-inline" style="margin-bottom: 10px;">
         <b i18n>Enter product:</b>
         <input class="form-control" type="number" [(ngModel)]="currentConstraint.product">
@@ -180,7 +195,8 @@
 
     <b i18n>Global options</b>
     <div style="margin-bottom: 20px;">
-      <input type="checkbox" [(ngModel)]="useBlockUnits"> <ng-container i18n>Use standard 3x3 block units</ng-container>
+      <input type="checkbox" [(ngModel)]="useBlockUnits">
+      <ng-container i18n>Use standard 3x3 block units</ng-container>
     </div>
 
     <button type="button" class="btn btn-outline-dark" (click)="solve()" i18n>
@@ -201,7 +217,8 @@
 
   <div class="right-side">
     <p>
-      <ng-container i18n>Status:</ng-container> {{status}}
+      <ng-container i18n>Status:</ng-container>
+      {{status}}
     </p>
 
     <div *ngIf="solvingInProgress" class="spinner-border" role="status">
@@ -214,25 +231,32 @@
 </div>
 
 <div class="showcase">
-  <ng-container i18n>This webapp lets you solve custom Sudokus, and a wide range of known 9x9 Sudoku types:</ng-container>
+  <ng-container i18n>This webapp lets you solve custom Sudokus, and a wide range of known 9x9 Sudoku types:
+  </ng-container>
   <ul>
     <li>
-      <b i18n>Sudoku X</b>: <ng-container i18n>Two additional diagonal units</ng-container>
+      <b i18n>Sudoku X</b>:
+      <ng-container i18n>Two additional diagonal units</ng-container>
     </li>
     <li>
-      <b i18n>Hyper Sudoku</b>: <ng-container i18n>Four additional units</ng-container>
+      <b i18n>Hyper Sudoku</b>:
+      <ng-container i18n>Four additional units</ng-container>
     </li>
     <li>
-      <b i18n>Killer Sudoku (Sum Sudoku)</b>: <ng-container i18n>Regions of variable size must form sums</ng-container>
+      <b i18n>Killer Sudoku (Sum Sudoku)</b>:
+      <ng-container i18n>Regions of variable size must form sums</ng-container>
     </li>
     <li>
-      <b i18n>Nonomino</b>: <ng-container i18n>No 3x3 block units, but 9 custom, irregular units instead</ng-container>
+      <b i18n>Nonomino</b>:
+      <ng-container i18n>No 3x3 block units, but 9 custom, irregular units instead</ng-container>
     </li>
     <li>
-      <b i18n>Odd-Even Sudoku</b>: <ng-container i18n>Normal Sudoku with odd/even constraints</ng-container>
+      <b i18n>Odd-Even Sudoku</b>:
+      <ng-container i18n>Normal Sudoku with odd/even constraints</ng-container>
     </li>
     <li>
-      <b i18n>Greater/Less Than Sudoku</b>: <ng-container i18n>Normal Sudoku with greater/less than constraints</ng-container>
+      <b i18n>Greater/Less Than Sudoku</b>:
+      <ng-container i18n>Normal Sudoku with greater/less than constraints</ng-container>
     </li>
     <li i18n>
       Custom combinations of the above (for example special Sudokus for Geocaching puzzles)
@@ -241,20 +265,33 @@
 
   <h3 i18n>Technical details</h3>
   <p>
-    <ng-container i18n> The solver is open source (MIT license) and available on </ng-container><a
-    href="https://github.com/akleemans/sudoku-solver.ch">Github</a>.
+    <ng-container i18n> The solver is open source (MIT license) and available on</ng-container>
+    <a
+      href="https://github.com/akleemans/sudoku-solver.ch">Github</a>.
   </p>
   <p>
-    <ng-container i18n>The solver is based on backtracking as described by</ng-container> <a href="https://norvig.com/sudoku.html">Peter Norvig</a>.
-    <ng-container i18n>It uses custom constraints for propagation and a different heuristic (based on the entered constraints) to optimize
-      the search.</ng-container>
-    <ng-container i18n>The solving is done inside of a</ng-container> <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API">
-    Web Worker</a>.
-    <ng-container i18n>The grid is based on the work of</ng-container> <a href="https://codepen.io/sdobson">Sam Dobson</a>.
-    <ng-container i18n>The random colors are generated by</ng-container> <a href="https://github.com/davidmerfield/randomColor">randomColor</a>.
+    <ng-container i18n>The solver is based on backtracking as described by</ng-container>
+    <a href="https://norvig.com/sudoku.html">Peter Norvig</a>.
+    <ng-container i18n>It uses custom constraints for propagation and a different heuristic (based on the entered
+      constraints) to optimize
+      the search.
+    </ng-container>
+    <ng-container i18n>The solving is done inside of a</ng-container>
+    <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API">
+      Web Worker</a>.
+    <ng-container i18n>The grid is based on the work of</ng-container>
+    <a href="https://codepen.io/sdobson">Sam Dobson</a>.
+    <ng-container i18n>The random colors are generated by</ng-container>
+    <a href="https://github.com/davidmerfield/randomColor">randomColor</a>.
   </p>
   <div style="display: flex;">
     <div style="flex: 1;">&copy; 2021 by <a href="https://www.kleemans.ch">Adrianus Kleemans</a>.</div>
-    <div><ng-container i18n>Page hits:</ng-container> {{visitors?.visitorsMonth || '?'}} <ng-container i18n>this month</ng-container>, {{visitors?.visitorsTotal || '?'}} <ng-container i18n>total</ng-container></div>
+    <div>
+      <ng-container i18n>Page hits:</ng-container>
+      {{visitors?.visitorsMonth || '?'}}
+      <ng-container i18n>this month</ng-container>
+      , {{visitors?.visitorsTotal || '?'}}
+      <ng-container i18n>total</ng-container>
+    </div>
   </div>
 </div>
