@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xliff version="2.0" xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en-US">
+<xliff version="2.0" xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en">
   <file id="ngi18n" original="ng.template">
     <unit id="529729474738463175">
       <notes>
@@ -528,6 +528,33 @@
       <segment>
         <source>total</source>
         <target>total</target>
+      </segment>
+    </unit>
+    <unit id="3354050006560855155">
+      <notes>
+        <note category="location">src/app/main/main.component.ts:138</note>
+      </notes>
+      <segment>
+        <source>Solved!</source>
+        <target>Gelöst</target>
+      </segment>
+    </unit>
+    <unit id="151072030241332966">
+      <notes>
+        <note category="location">src/app/main/main.component.ts:143</note>
+      </notes>
+      <segment>
+        <source>Solving: </source>
+        <target>Löse: </target>
+      </segment>
+    </unit>
+    <unit id="7489549797833727938">
+      <notes>
+        <note category="location">src/app/main/main.component.ts:149</note>
+      </notes>
+      <segment>
+        <source>Sudoku not solvable!</source>
+        <target>Sudoku nicht lösbar!</target>
       </segment>
     </unit>
     <unit id="7757570879480570361">
