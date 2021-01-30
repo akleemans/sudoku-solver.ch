@@ -156,7 +156,7 @@
         <target> Wähle einen Bedingungstyp um seine Beschreibung anzuzeigen. </target>
       </segment>
     </unit>
-    <unit id="6996799422725544865">
+    <unit id="4678185361290766066">
       <notes>
         <note category="location">src/app/main/main.component.html:98</note>
         <note category="location">src/app/main/main.component.html:109</note>
@@ -166,8 +166,8 @@
         <note category="location">src/app/main/main.component.html:155</note>
       </notes>
       <segment>
-        <source>Description:</source>
-        <target>Beschreibung:</target>
+        <source>Description: </source>
+        <target>Beschreibung: </target>
       </segment>
     </unit>
     <unit id="8518099779767930454">

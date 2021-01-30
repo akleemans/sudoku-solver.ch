@@ -139,7 +139,7 @@
         <source> Choose a constraint type to show its description. </source>
       </segment>
     </unit>
-    <unit id="6996799422725544865">
+    <unit id="4678185361290766066">
       <notes>
         <note category="location">src/app/main/main.component.html:98</note>
         <note category="location">src/app/main/main.component.html:109</note>
@@ -149,7 +149,7 @@
         <note category="location">src/app/main/main.component.html:155</note>
       </notes>
       <segment>
-        <source>Description:</source>
+        <source>Description: </source>
       </segment>
     </unit>
     <unit id="8518099779767930454">
