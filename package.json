@@ -4,13 +4,13 @@
   "scripts": {
     "start": "ng serve --configuration=en",
     "start:de": "ng serve --configuration=de",
-    "build:prod": "ng build --prod --localize",
+    "build:prod": "ng build --prod --localize && npm run reorder-build",
     "test": "ng test",
     "test-headless": "ng test --watch=false --browsers=ChromeHeadless",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "extract-i18n": "ng extract-i18n --ivy --output-path src/locale --format=xlf2",
-    "reorder-build": "cp docs/de/* docs/* && rm -rf docs/de"
+    "reorder-build": "cp -r docs/en/ docs/ && rm -rf docs/en"
   },
   "private": true,
   "dependencies": {
