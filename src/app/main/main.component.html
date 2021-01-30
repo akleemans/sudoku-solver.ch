@@ -95,9 +95,7 @@
     </div>
 
     <div *ngIf="currentConstraint.type === constraintTypeEnum.SINGLE_CELL_ODD_EVEN">
-      <p><b i18n>Description:</b>
-        <ng-container i18n>One or more cells which are odd or even.</ng-container>
-      </p>
+      <p><b i18n>Description:</b> <ng-container i18n>One or more cells which are odd or even.</ng-container></p>
       <div class="form-inline">
         <b i18n>Choose if odd/even:</b>
         <select class="form-control custom-select" [(ngModel)]="currentConstraint.isEven">
@@ -108,9 +106,7 @@
     </div>
 
     <div *ngIf="currentConstraint.type === constraintTypeEnum.TWO_CELLS_EXACT_DIFFERENCE">
-      <p><b i18n>Description:</b>
-        <ng-container i18n> Two cells have a known difference.</ng-container>
-      </p>
+      <p><b i18n>Description:</b> <ng-container i18n>Two cells have a known difference.</ng-container></p>
       <div class="form-inline">
         <b i18n>Enter difference (first cell + difference = second cell):</b>
         <input class="form-control" type="number" [(ngModel)]="currentConstraint.difference">
@@ -124,9 +120,7 @@
     </div>
 
     <div *ngIf="currentConstraint.type === constraintTypeEnum.TWO_CELLS_EXACT_FACTOR">
-      <p><b i18n>Description:</b>
-        <ng-container i18n>Two cells have a known factor.</ng-container>
-      </p>
+      <p><b i18n>Description:</b> <ng-container i18n>Two cells have a known factor.</ng-container></p>
       <div class="form-inline">
         <b i18n>Enter factor (first cell * factor = second cell):</b>
         <input class="form-control" type="number" [(ngModel)]="currentConstraint.factor">
@@ -140,15 +134,11 @@
     </div>
 
     <div *ngIf="currentConstraint.type === constraintTypeEnum.TWO_CELLS_BIGGER_THAN">
-      <p><b i18n>Description:</b>
-        <ng-container i18n>Second cell is bigger than first one.</ng-container>
-      </p>
+      <p><b i18n>Description:</b> <ng-container i18n>Second cell is bigger than first one.</ng-container></p>
     </div>
 
     <div *ngIf="currentConstraint.type === constraintTypeEnum.MULTI_CELL_SUM">
-      <p><b i18n>Description:</b>
-        <ng-container i18n>Multiple cells must add up to a sum.</ng-container>
-      </p>
+      <p><b i18n>Description:</b> <ng-container i18n>Multiple cells must add up to a sum.</ng-container></p>
       <div class="form-inline">
         <b i18n>Enter sum:</b>
         <input class="form-control" type="number" [(ngModel)]="currentConstraint.sum">
@@ -162,9 +152,7 @@
     </div>
 
     <div *ngIf="currentConstraint.type === constraintTypeEnum.MULTI_CELL_PRODUCT">
-      <p><b i18n>Description:</b>
-        <ng-container i18n>Multiple cells form a product when multiplied.</ng-container>
-      </p>
+      <p><b i18n>Description:</b> <ng-container i18n>Multiple cells form a product when multiplied.</ng-container></p>
       <div class="form-inline" style="margin-bottom: 10px;">
         <b i18n>Enter product:</b>
         <input class="form-control" type="number" [(ngModel)]="currentConstraint.product">
@@ -282,13 +270,10 @@
     <a href="https://github.com/davidmerfield/randomColor">randomColor</a>.
   </p>
   <div style="display: flex;">
-    <div style="flex: 1;">&copy; 2021 by <a href="https://www.kleemans.ch">Adrianus Kleemans</a>.</div>
+    <div style="flex: 1;">&copy; 2021 <a href="https://www.kleemans.ch">Adrianus Kleemans</a>.</div>
     <div>
-      <ng-container i18n>Page hits:</ng-container>
-      {{visitors?.visitorsMonth || '?'}}
-      <ng-container i18n>this month</ng-container>
-      , {{visitors?.visitorsTotal || '?'}}
-      <ng-container i18n>total</ng-container>
+      <ng-container i18n>Page hits:</ng-container> {{visitors?.visitorsMonth || '?'}}
+      <ng-container i18n>this month</ng-container>, {{visitors?.visitorsTotal || '?'}} <ng-container i18n>total</ng-container>
     </div>
   </div>
 </div>

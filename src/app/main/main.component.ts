@@ -86,10 +86,7 @@ export class MainComponent implements OnInit {
     const savedType = this.currentConstraint.type;
     // On every marked cell, add color dot
     this.cells.filter(c => this.currentConstraint.cellIds.includes(c.cellId))
-      .forEach(c => {
-        console.log('Pushing color', this.currentConstraint.color, 'to c:', c.cellId);
-        c.colors.push(this.currentConstraint.color);
-      });
+      .forEach(c => c.colors.push(this.currentConstraint.color));
 
     this.currentConstraint = new Constraint();
     this.currentConstraint.type = savedType;

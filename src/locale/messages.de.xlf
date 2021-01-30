@@ -491,7 +491,7 @@
       </notes>
       <segment>
         <source>It uses custom constraints for propagation and a different heuristic (based on the entered constraints) to optimize the search. </source>
-        <target>Er benützt zusätzlich definierbare Bedingungen zur "propagation" (Ausbreitung) und darauf basierend eine eigene Heuristik zur Auswahl der nächsten zu ratenden Zelle zur Optimierung der Suche. </target>
+        <target>Er benützt zusätzliche Bedingungen zur Propagation (Ausbreitung) und darauf basierend eine angepasste Heuristik zur Auswahl der nächsten zu ratenden Zelle zur Optimierung der Suche. </target>
       </segment>
     </unit>
     <unit id="8617312069932218235">
