@@ -3,7 +3,7 @@
   <file id="ngi18n" original="ng.template">
     <unit id="529729474738463175">
       <notes>
-        <note category="location">src/app/app.component.html:2</note>
+        <note category="location">src/app/app.component.html:6</note>
       </notes>
       <segment>
         <source>Solve special-type Sudokus with custom constraints</source>
@@ -406,6 +406,14 @@
       </notes>
       <segment>
         <source>Technical details</source>
+      </segment>
+    </unit>
+    <unit id="644221108713555091">
+      <notes>
+        <note category="location">src/app/main/main.component.html:244</note>
+      </notes>
+      <segment>
+        <source> The solver is open source (MIT license) and available on </source>
       </segment>
     </unit>
     <unit id="9005256499283994448">

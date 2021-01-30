@@ -458,6 +458,15 @@
         <target>Technische Details</target>
       </segment>
     </unit>
+    <unit id="644221108713555091">
+      <notes>
+        <note category="location">src/app/main/main.component.html:244</note>
+      </notes>
+      <segment>
+        <source> The solver is open source (MIT license) and available on </source>
+        <target> Der Solver ist Open Source (MIT Lizenz) und verfügbar auf </target>
+      </segment>
+    </unit>
     <unit id="9005256499283994448">
       <notes>
         <note category="location">src/app/main/main.component.html:248</note>
