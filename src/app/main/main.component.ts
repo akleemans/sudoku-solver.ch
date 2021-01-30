@@ -135,18 +135,18 @@ export class MainComponent implements OnInit {
       switch (message.status) {
         case WorkerStatus.SOLVED:
           this.adaptSolution(message.content);
-          this.status = `Solved!`;
+          this.status = $localize`Solved!`;
           this.solvingInProgress = false;
           worker.terminate();
           break;
         case WorkerStatus.SOLVING:
-          this.status = 'Solving: ' + message.content;
+          this.status = $localize`Solving: ` + message.content;
           break;
         case WorkerStatus.INVALID:
         case WorkerStatus.UNSOLVABLE:
           worker.terminate();
           this.solvingInProgress = false;
-          this.status = 'Sudoku not solvable!';
+          this.status = $localize`Sudoku not solvable!`;
           break;
       }
     };

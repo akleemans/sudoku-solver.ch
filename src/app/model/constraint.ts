@@ -36,32 +36,31 @@ export class Constraint {
     let desc = '';
     switch (this.type) {
       case ConstraintType.SINGLE_CELL_ODD_EVEN:
-        desc = 'Cells ' + cellStr;
         if (this.isEven) {
-          desc += ' must be even';
+          desc = $localize`Cells ${cellStr} must be even`;
         } else {
-          desc += ' must be odd';
+          desc = $localize`Cells ${cellStr} must be odd`;
         }
         break;
 
       case ConstraintType.MULTI_CELL_SUM:
-        desc = 'Cells ' + cellStr + ' must add up to ' + this.sum;
+        desc = $localize`Cells ${cellStr} must add up to ${this.sum}`;
         break;
 
       case ConstraintType.MULTI_CELL_UNIT:
-        desc = 'Cells ' + cellStr + ' form a unit';
+        desc = $localize`Cells ${cellStr} form a unit`;
         break;
       case ConstraintType.MULTI_CELL_PRODUCT:
-        desc = 'Cells ' + cellStr + ' must multiply to ' + this.product;
+        desc = $localize`Cells ${cellStr} must multiply to ${this.product}`;
         break;
       case ConstraintType.TWO_CELLS_BIGGER_THAN:
-        desc = 'Second cell of ' + cellStr + ' is bigger than first one';
+        desc = $localize`Cell ${this.cellIds[1]} is bigger than ${this.cellIds[0]}`;
         break;
       case ConstraintType.TWO_CELLS_EXACT_DIFFERENCE:
-        desc = 'Cells ' + cellStr + ' have difference of ' + this.difference;
+        desc = $localize`Cells ${cellStr} have difference of ${this.difference}`;
         break;
       case ConstraintType.TWO_CELLS_EXACT_FACTOR:
-        desc = 'Cells ' + cellStr + ' have factor of ' + this.factor;
+        desc = $localize`Cells ${cellStr} have factor of ${this.factor}`;
         break;
     }
     return desc;
