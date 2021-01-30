@@ -43,7 +43,7 @@
       </notes>
       <segment>
         <source> For a regular Sudoku, click &quot;solve&quot; below, else add contraints by switching to the &quot;Add constraints&quot; view. </source>
-        <target> Um ein normales Sudoku zu kösen, klicke "lösen", ansonsten gib die Bedingungen ein indem du auf die Ansicht "Bedingungen eingeben" wechselst.</target>
+        <target> Klicke "Lösen" um ein normales Sudoku zu lösen, ansonsten gib die Bedingungen ein indem du auf die Ansicht "Bedingungen eingeben" wechselst.</target>
       </segment>
     </unit>
     <unit id="3950880483517055707">
