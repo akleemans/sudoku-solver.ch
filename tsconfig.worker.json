@@ -6,8 +6,12 @@
       "es2018",
       "webworker"
     ],
-    "types": []
+    "types": [],
+    "skipLibCheck": true
   },
+  "files": [
+    "src/polyfills.ts"
+  ],
   "include": [
     "src/**/*.worker.ts"
   ]
