@@ -3,7 +3,7 @@
   <file id="ngi18n" original="ng.template">
     <unit id="529729474738463175">
       <notes>
-        <note category="location">src/app/app.component.html:2</note>
+        <note category="location">src/app/app.component.html:10</note>
       </notes>
       <segment>
         <source>Solve special-type Sudokus with custom constraints</source>
@@ -303,6 +303,15 @@
       <segment>
         <source>List of Constraints:</source>
         <target>Liste der Bedingungen:</target>
+      </segment>
+    </unit>
+    <unit id="987288973350564835">
+      <notes>
+        <note category="location">src/app/main/main.component.html:181</note>
+      </notes>
+      <segment>
+        <source>Global options</source>
+        <target>Globale Optionen</target>
       </segment>
     </unit>
     <unit id="6673936298534012212">
