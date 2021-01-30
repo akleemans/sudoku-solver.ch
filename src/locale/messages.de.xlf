@@ -224,6 +224,15 @@
         <target>Differenz eingeben (erste Zelle + Differenz = zweite Zelle):</target>
       </segment>
     </unit>
+    <unit id="1492280194343502321">
+      <notes>
+        <note category="location">src/app/main/main.component.html:118</note>
+      </notes>
+      <segment>
+        <source>Unknown order</source>
+        <target>Unbekannte Reihenfolge</target>
+      </segment>
+    </unit>
     <unit id="9163675037253260908">
       <notes>
         <note category="location">src/app/main/main.component.html:123</note>
@@ -550,7 +559,7 @@
     </unit>
     <unit id="3354050006560855155">
       <notes>
-        <note category="location">src/app/main/main.component.ts:138</note>
+        <note category="location">src/app/main/main.component.ts:135</note>
       </notes>
       <segment>
         <source>Solved!</source>
@@ -559,7 +568,7 @@
     </unit>
     <unit id="151072030241332966">
       <notes>
-        <note category="location">src/app/main/main.component.ts:143</note>
+        <note category="location">src/app/main/main.component.ts:140</note>
       </notes>
       <segment>
         <source>Solving: </source>
@@ -568,7 +577,7 @@
     </unit>
     <unit id="7489549797833727938">
       <notes>
-        <note category="location">src/app/main/main.component.ts:149</note>
+        <note category="location">src/app/main/main.component.ts:146</note>
       </notes>
       <segment>
         <source>Sudoku not solvable!</source>
