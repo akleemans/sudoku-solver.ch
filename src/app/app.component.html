@@ -1,5 +1,13 @@
-<h1>sudoku-solver.ch</h1>
-<p class="subtitle">Solve special-type Sudokus with custom constraints</p>
+<div class="header-row">
+  <div style="width: 100px;"></div>
+  <h1>sudoku-solver.ch</h1>
+  <select (ngModelChange)="changeLocale($event)" [ngModel]="locale" class="form-select" style="width: 100px;">
+    <option value="de">Deutsch</option>
+    <option value="en">English</option>
+  </select>
+</div>
+
+<p class="subtitle" i18n>Solve special-type Sudokus with custom constraints</p>
 <div class="content">
   <router-outlet></router-outlet>
 </div>
