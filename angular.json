@@ -14,9 +14,15 @@
       "sourceRoot": "src",
       "prefix": "app",
       "i18n": {
-        "sourceLocale": "en",
+        "sourceLocale": {
+          "code": "en",
+          "baseHref": "/"
+        },
         "locales": {
-          "de": "src/locale/messages.de.xlf"
+          "de": {
+            "translation": "src/locale/messages.de.xlf",
+            "baseHref": "/de/"
+          }
         }
       },
       "architect": {
